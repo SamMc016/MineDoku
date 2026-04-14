@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 200px);
+    grid-template-rows: repeat(3, 200px);
+}
+
+.grid img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
