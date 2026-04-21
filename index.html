@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <!-- placeholder id's will be marked with a !! in their comment -->
+    <head>
+        <link rel="stylesheet" type="text/css" href=""></link>
+        <style> /* move all of this to an external style sheet that the loss/win page can then copy over */
+            body {margin: 0; display: flex; flex-direction: column; height: 100vh;}
+            table {border: 1px solid; width: 500px; height: 500px; align-items: center;}
+            .game {display: flex; justify-content: center; align-items: flex-start; text-align: center; flex-direction: row; flex-grow: 1; gap: 20px; padding-top: 25px;}
+            .table {display: flex; justify-content: center; align-items: center;} 
+            .table td {border: 1px solid;}
+            header {display: flex; align-items: center; justify-content: center; padding: 10px; border-bottom: 2px solid;}
+            .btn1 {width: 150px; height: 60px; border: 1px solid;}
+            .btn2 {width: 75px; height: 60px; border: 1px solid;}
+            .right-header {display: flex; justify-content: flex-end; gap: 10px;}
+            #name {flex: 2; text-align: center; font-size: 48px; font-weight: bold;} /* !! placeholder in case we wanna do something with this */
+            #give-up {width: 80px; height: 80px; font-size: 16px;}
+            .scores {display: block;}
+            .side-column-table {width: 150px; height: 500px; border-style: hidden;} 
+            .side-column {flex: 1; display: flex; flex-direction: column; justify-content: center;}
+            #left-conditions {align-items: flex-end; padding-top: 100px;}
+            #extra {align-items: flex-start; padding-top: 100px;}
+            .center-elements {display: flex; flex-direction: column; align-items: center; justify-content: flex-start;}
+            .top-row-table {width: 500px; height: 100px; table-layout: fixed; border-style: hidden;}
+            .top-row-table td {width: 33.33%; text-align: center;}
+        </style>
+
+        <title> MineDoku </title>
+
+    </head>
+
+    <body>
+        <header> <!-- should be a bottom border like a shadow if that makes sense -->
+            <button class="btn1"> Login / Signup </button> <!-- this will change to account once logged in -->
+            <span id="name"> MineDoku </span> <!-- !!. make this look better than just text -->
+            <div class="right-header">
+                <button class="btn2" id="settings"> Settings </button> <!-- !!. change this to a cog --> 
+                <button class="btn2 id="rules"> How to Play </button> <!-- !!. change this to a question mark -->
+            </div>
+        </header>
+
+        <div class="game">
+
+            <div class="side-column" id="left-conditions">
+                <table class="side-column-table">
+                    <tr><td><p id="LTCon"> Left Top Condition </p></td></tr> <!-- !!. change these so that they can be inputted automatically -->
+                    <tr><td><p id="LMCon"> Left Middle Condition </p></td></tr> <!-- !!. -->
+                    <tr><td><p id="LBCon"> Left Bottom Condition </p></td></tr> <!-- !!. -->
+                </table>
+            </div>
+
+            <div class="center-elements">
+
+                <div class="top-row">
+                    <table class="top-row-table">
+                        <tr>
+                            <td><p id="TLCon"> Top Left Condition </p></td> <!-- !!. change these so that they can be inputted automatically -->
+                            <td><p id="TMCon"> Top Middle Condition </p></td> <!-- !!. -->
+                            <td><p id="TRCon"> Top Right Condition </p></td> <!-- !!. -->
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="table"> <!-- each cell is a placeholder to be linked with the database. -->
+                    <table>
+                        <tr>
+                            <td id="1"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="2"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="3"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="4"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="5"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="6"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="7"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="8"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                            <td id="9"> <!-- !!. -->
+                                <img src="">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="side-column" id="extra">
+                <table class="side-column-table">
+                    <tr><td> <p id="dur"> Durability <spa class="scores"> 9/9 </span> </p></td></tr> <!-- !!. make it so each guess this decrements -->
+                    <tr><td><button id="give-up"> Give Up? </button></td></tr>
+                    <tr><td><p id="US"> US <span class="scores"> 1000 </span> </p></td></tr> <!-- !!. make it so this changes every guess -->
+                </table>
+            </div>
+
+    </div>
+
+    </body>
+</html>
