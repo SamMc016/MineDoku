@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=2.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
     <title>MineDoku</title>
 </head>
@@ -11,14 +12,17 @@
 <body>
     <header>
         <!-- should be a bottom border like a shadow if that makes sense -->
-        <button class="btn1">Login / Signup</button>
+        <button class="btn">Login / Signup</button>
         <!-- this will change to account once logged in -->
-        <span id="name">MineDoku</span>
+    
+        <h1 id="name">MINEDOKU</h1>
         <!-- !!. make this look better than just text -->
+    
         <div class="right-header">
-            <button class="btn2" id="settings">Settings</button>
+            <button class="btn" id="settings">Settings</button>
             <!-- !!. change this to a cog -->
-            <button class="btn2" id="rules">How to Play</button>
+    
+            <button class="btn" id="rules">How to play</button>
             <!-- !!. change this to a question mark -->
         </div>
     </header>

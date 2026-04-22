@@ -1,10 +1,16 @@
+/* ===== Index / Game Page ===== */
+
 body {
     margin: 0;
     display: flex;
     flex-direction: column;
     height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
 }
 
+/* Keep old board/table sizing/layout */
 table {
     border: 1px solid;
     width: 500px;
@@ -30,44 +36,27 @@ table {
 }
 
 .table td {
-    border: 1px solid;
+    border: 1px solid #e1e5ea;
+    padding: 0;
 }
 
-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-bottom: 2px solid;
-}
-
-.btn1 {
-    width: 150px;
-    height: 60px;
-    border: 1px solid;
-}
-
-.btn2 {
-    width: 75px;
-    height: 60px;
-    border: 1px solid;
-}
-
+/* Header-specific structure for index */
 .right-header {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    width: 310px; /* 2 buttons + gap */
+    flex-shrink: 0;
 }
 
-#name {
-    flex: 2;
-    text-align: center;
-    font-size: 48px;
-    font-weight: bold;
+/* Invisible spacer to balance the right side and keep title truly centered */
+header > .btn:first-child {
+    width: 150px;
+    height: 50px;
+    flex-shrink: 0;
 }
 
-/* !! placeholder in case we wanna do something with this */
-
+/* Keep give up separate from header button sizing */
 #give-up {
     width: 80px;
     height: 80px;
