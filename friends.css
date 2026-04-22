@@ -66,6 +66,14 @@ h2 {
     color: #444;
 }
 
+.panel:nth-child(2) h2 {
+    text-align: center;
+}
+
+.second-board-title {
+    margin-top: 24px;
+}
+
 /* Friends List */
 .friends-panel {
     display: flex;
