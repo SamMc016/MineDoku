@@ -1,47 +1,5 @@
-/* Base Page */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8; /* light neutral */
-    color: #222;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
+/* ===== Friends Page ===== */
 
-/* Top Bar */
-.top-bar {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    padding: 15px;
-    background: #e3e7eb;
-    border-bottom: 1px solid #c9ced6;
-}
-
-.title {
-    text-align: center;
-    margin: 0;
-    font-size: 22px;
-    letter-spacing: 1px;
-    color: #333;
-}
-
-/* Buttons */
-.btn {
-    padding: 8px 12px;
-    background: #d0d5db;
-    border: 1px solid #b5bcc4;
-    color: #222;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.btn:hover {
-    background: #c3c9d1;
-}
-
-/* Layout */
 .container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -50,28 +8,7 @@ body {
     flex: 1;
 }
 
-/* Panels */
-.panel {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 6px;
-    border: 1px solid #d3d8de;
-    display: flex;
-    flex-direction: column;
-}
-
-h2 {
-    margin-top: 0;
-    font-size: 16px;
-    color: #444;
-}
-
-/* Friends List */
-.friends-panel {
-    display: flex;
-    flex-direction: column;
-}
-
+/* Friends list */
 .friends-list {
     flex: 1;
     overflow-y: auto;
@@ -88,23 +25,7 @@ h2 {
     cursor: pointer;
 }
 
-/* Input + Button */
-.search-box input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #c9ced6;
-    margin-bottom: 10px;
-}
-
-.panel .btn {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 10px;
-}
-
-/* Leaderboards */
+/* Leaderboard */
 .leaderboard-item {
     display: flex;
     justify-content: space-between;
@@ -115,12 +36,9 @@ h2 {
     border-radius: 4px;
 }
 
-/* Scrollbar (subtle) */
-.friends-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.friends-list::-webkit-scrollbar-thumb {
-    background: #c3c9d1;
-    border-radius: 3px;
+/* Panel buttons */
+.panel .btn {
+    width: 100%;
+    margin-top: 10px;
+    white-space: normal;
 }
