@@ -1,0 +1,105 @@
+/* ===== Base / Shared Styles ===== */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Shared Header ===== */
+
+header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 78px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    background: #e3e7eb;
+    border-bottom: 1px solid #c9ced6;
+    flex-shrink: 0;
+}
+
+/* Shared title styling */
+.title,
+#name {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #333;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* Shared header button styling */
+.btn {
+    width: 150px;
+    height: 50px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    background: #d0d5db;
+    border: 1px solid #b5bcc4;
+    color: #222;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.btn:hover {
+    background: #c3c9d1;
+}
+
+/* Non-header buttons can share same visual style */
+#give-up {
+    background: #d0d5db;
+    border: 1px solid #b5bcc4;
+    color: #222;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    transition: background 0.2s ease;
+}
+
+#give-up:hover {
+    background: #c3c9d1;
+}
+
+/* Shared panel styling */
+.panel {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #d3d8de;
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+/* Shared input styling */
+input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #c9ced6;
+}

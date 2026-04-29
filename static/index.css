@@ -1,0 +1,117 @@
+/* ===== Index / Game Page ===== */
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+/* Keep old board/table sizing/layout */
+table {
+    border: 1px solid;
+    width: 500px;
+    height: 500px;
+    align-items: center;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 20px;
+    padding-top: 25px;
+}
+
+.table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table td {
+    border: 1px solid #e1e5ea;
+    padding: 0;
+}
+
+/* Header-specific structure for index */
+.right-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 310px; /* 2 buttons + gap */
+    flex-shrink: 0;
+}
+
+/* Invisible spacer to balance the right side and keep title truly centered */
+header > .btn:first-child {
+    width: 150px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+/* Keep give up separate from header button sizing */
+#give-up {
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+}
+
+.scores {
+    display: block;
+}
+
+.side-column-table {
+    width: 150px;
+    height: 500px;
+    border-style: hidden;
+}
+
+.side-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#left-conditions {
+    align-items: flex-end;
+    padding-top: 100px;
+}
+
+#extra {
+    align-items: flex-start;
+    padding-top: 100px;
+}
+
+.center-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.top-row-table {
+    width: 500px;
+    height: 100px;
+    table-layout: fixed;
+    border-style: hidden;
+}
+
+.top-row-table td {
+    width: 33.33%;
+    text-align: center;
+}
+
+.table img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
