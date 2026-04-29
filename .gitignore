@@ -2,3 +2,7 @@
 venv/
 # ignores python cache
 __pycache__
+# ignores the js version of venv
+node_modules/
+# ignores any vscode extensions
+.vscode 
