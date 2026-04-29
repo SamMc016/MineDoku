@@ -1,2 +1,4 @@
+# ignores virtual environment folder
 venv/
-.DS_Store/
+# ignores python cache
+__pycache__
