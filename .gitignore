@@ -6,3 +6,5 @@ __pycache__
 node_modules/
 # ignores any vscode extensions
 .vscode 
+# ignores macos metadata
+.DS_Store
