@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ page_title }} - Friends</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='friends.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
 </head>
 <body>
 
-<header>
+<div class="top-bar">
     <button class="btn" onclick="window.location.href='{{ url_for('index') }}'">← Back to Game</button>
-    <h1 class="title">{{ page_title }}</h1>
+    <h1 class="page-title">{{ page_title }}</h1>
     <button class="btn">Account</button>
-</header>
+</div>
 
 <div class="container">
 

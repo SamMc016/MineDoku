@@ -1,0 +1,264 @@
+@import "tailwindcss";
+
+/* === GLOBAL STYLES === */
+
+    /* === Shared Styling === */
+
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url("../assets/background-image.jpg");
+    background-size: cover;
+    }
+
+    /* === Header Styling === */
+
+    .top-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 78px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    background: #e3e7eb;
+    border-bottom: 1px solid #c9ced6;
+    flex-shrink: 0;
+    }
+
+    /* === Page Title Styling === */
+
+    .page-title,
+    #name {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #333;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    }
+
+    /* === Button Styling === */
+
+    .btn {
+    width: 150px;
+    height: 50px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    background: #d0d5db;
+    border: 1px solid #b5bcc4;
+    color: #222;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+    background: #c3c9d1;
+    }
+
+
+/* === INDEX STYLES === */
+
+    /* === Game Board Styling === */
+
+    table {
+        border: 1px solid;
+        width: 500px;
+        height: 500px;
+        align-items: center;
+    }
+
+    .game {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        text-align: center;
+        flex-direction: row;
+        flex-grow: 1;
+        gap: 20px;
+        padding-top: 25px;
+    }
+
+    .table {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .table td {
+        border: 1px solid #e1e5ea;
+        padding: 0;
+    }
+
+    .table img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* === Side Columns Styling === */
+
+    .scores {
+        display: block;
+    }
+
+    .side-column-table {
+        width: 150px;
+        height: 500px;
+        border-style: hidden;
+    }
+
+    .side-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    #left-conditions {
+        align-items: flex-end;
+        padding-top: 100px;
+    }
+
+    #extra {
+        align-items: flex-start;
+        padding-top: 100px;
+    }
+
+    /* === Top Column Styling === */
+
+    .center-elements {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .top-row-table {
+        width: 500px;
+        height: 100px;
+        table-layout: fixed;
+        border-style: hidden;
+    }
+
+    .top-row-table td {
+        width: 33.33%;
+        text-align: center;
+    }
+
+    /* === Give Up Button Styling === */
+
+    #give-up {
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+    background: #d0d5db;
+    border: 1px solid #b5bcc4;
+    color: #222;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    transition: background 0.2s ease;
+    }
+
+    #give-up:hover {
+    background: #c3c9d1;
+    }
+
+
+/* === FRIENDS STYLES === */
+
+    /* === Panel Styling === */
+
+    .panel {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #d3d8de;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    }
+
+    h2 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #444;
+    }
+
+    .panel .btn {
+        width: 100%;
+        margin-top: 10px;
+        white-space: normal;
+    }
+
+    /* === Input Styling === */
+
+    input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #c9ced6;
+    }
+
+    /* === Main Styling === */
+
+    .container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 15px;
+    padding: 15px;
+    width: 100%;
+    max-width: 100vw;
+    min-height: calc(100vh - 78px);
+    }
+
+    /* === Friends List Styling === */
+
+    .friends-list {
+        flex: 1;
+        overflow-y: auto;
+        margin-top: 10px;
+    }
+
+    .friend {
+        padding: 8px;
+        border-bottom: 1px solid #e0e4e8;
+    }
+
+    .friend:hover {
+        background: #f0f2f5;
+        cursor: pointer;
+    }
+
+    /* === Leaderboard Styling === */
+    
+    .leaderboard-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        margin-bottom: 5px;
+        background: #f7f9fb;
+        border: 1px solid #e1e5ea;
+        border-radius: 4px;
+    }
+    
