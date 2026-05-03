@@ -39,5 +39,5 @@ Developed as part of a university project for CITS3403.
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/minedoku.git
+git clone https://github.com/SamMc016/MineDoku.git
 cd minedoku
