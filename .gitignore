@@ -8,3 +8,6 @@ node_modules/
 .vscode 
 # ignores macos metadata
 .DS_Store
+# ignores the database folder and any database files
+instance/ 
+*.db 
