@@ -41,3 +41,10 @@ Developed as part of a university project for CITS3403.
 ```bash
 git clone https://github.com/SamMc016/MineDoku.git
 cd minedoku
+
+<!-- just for us REMOVE BEFORE FINAL SUBMISSION
+if you want a functioning database:
+sqlite3 instance/minedoku.db < schema.sql
+sqlite3 instance/minedoku.db < seeds.sql
+>
+
