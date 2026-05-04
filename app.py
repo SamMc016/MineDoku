@@ -36,7 +36,9 @@ def account():
 def login():
     return render_template("login.html")
 
-
+@app.route('/end-game')
+def end_game():
+    return render_template('end_game_page.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
