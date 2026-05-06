@@ -1,6 +1,5 @@
-from flask import Flask, render_template
-
-app = Flask(__name__)
+from app import app
+from flask import render_template
 
 @app.route("/")
 def index():
@@ -36,10 +35,6 @@ def account():
 def login():
     return render_template("login.html")
 
-@app.route('/end-game')
-def end_game():
-    return render_template('end_game_page.html')
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
+@app.route("/end_game_page")
+def end_game_page():
+        return render_template("end_game_page.html")
