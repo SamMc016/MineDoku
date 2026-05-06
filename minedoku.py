@@ -36,3 +36,14 @@ so... for the databases...
     THEN in routes.py we can respond to requests for data by building models from database and then populating views w data
     make a controllers.py class to move big functions there
 """
+"""
+what do i need to do
+    download textures for all blocks
+    hardcode conditions and blocks in 
+    start on game logic
+        client side for 
+            gameplay
+            inventory pop up for guesses
+    change condition/stats to grids
+
+"""

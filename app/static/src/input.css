@@ -12,7 +12,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-image: url("../assets/background-image.jpg");
+    background-image: url("../assets/background_image.jpg");
+    background-color: #222;
     background-size: cover;
     }
 
@@ -78,7 +79,6 @@
     /* === Game Board Styling === */
 
     table {
-        border: 1px solid;
         width: 500px;
         height: 500px;
         align-items: center;
@@ -101,16 +101,30 @@
         align-items: center;
     }
 
-    .table td {
-        border: 1px solid #e1e5ea;
+    .gameboard-cell {
         padding: 0;
+        background-color: #f5f5f5;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
     }
 
-    .table img {
+    .gameboard-cell img {
+        pointer-events: none;
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
+    }
+
+    .gameboard-cell:hover {
+        transform: scale(1.1);
+        color: #7e7e7e;
+    }
+
+    .gameboard-cell:active {
+        transform: scale(0.9);
+        background-color: rgba(255,255,255,0.2);
+        z-index: 10;
     }
 
     /* === Side Columns Styling === */
@@ -166,22 +180,78 @@
     /* === Give Up Button Styling === */
 
     #give-up {
-    width: 80px;
-    height: 80px;
-    font-size: 16px;
-    background: #d0d5db;
-    border: 1px solid #b5bcc4;
-    color: #222;
-    cursor: pointer;
-    border-radius: 4px;
-    font-family: Arial, sans-serif;
-    transition: background 0.2s ease;
+        width: 80px;
+        height: 80px;
+        font-size: 16px;
+        background: #d0d5db;
+        border: 1px solid #b5bcc4;
+        color: #222;
+        cursor: pointer;
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+        transition: background 0.2s ease;
     }
 
     #give-up:hover {
-    background: #c3c9d1;
+        background: #c3c9d1;
     }
 
+    /* === Inventory Panel Styling === */
+
+    .inventory-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+
+    #backFromInventory {
+        width: 120px;
+        height: 40px;
+    }
+
+    #inventory-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    #inventory-overlay.hidden {
+        display: none;
+    }
+
+    .inventory-display {  /* SORT THIS CENTRAL SHIT OUT. surely tailwind can */
+        width: 466px;
+        height: 200px;   
+        display: grid;
+        border-radius: 12px;
+        grid-template-columns: repeat(9, 45.6px);
+        grid-template-rows: repeat(3, 45px);
+        justify-items: center;
+        align-items: center;
+        padding-left: 18px;
+        padding-top: 40px;
+        gap: 2px;
+        background-image: url("../assets/inventory_slots.png");
+        background-size: 100%; 
+        background-repeat: no-repeat;
+    }
+
+    .slot {
+        background-color: #000000;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
 /* === FRIENDS STYLES === */
 

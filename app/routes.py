@@ -1,9 +1,11 @@
-from app import app
+from app import app, db
+from app.models import Blocks
 from flask import render_template
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    all_blocks = Blocks.query.all()
+    return render_template("index.html", blocks=all_blocks)
 
 @app.route("/friends")
 def friends():
