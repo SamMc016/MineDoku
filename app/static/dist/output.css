@@ -7,6 +7,8 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-gray-100: oklch(96.7% 0.003 264.542);
+    --spacing: 0.25rem;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
   }
@@ -163,6 +165,12 @@
   .static {
     position: static;
   }
+  .start {
+    inset-inline-start: var(--spacing);
+  }
+  .end {
+    inset-inline-end: var(--spacing);
+  }
   .container {
     width: 100%;
     @media (width >= 40rem) {
@@ -181,16 +189,44 @@
       max-width: 96rem;
     }
   }
+  .block {
+    display: block;
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
   .table {
     display: table;
+  }
+  .h-screen {
+    height: 100vh;
+  }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .flex-col {
+    flex-direction: column;
   }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .bg-gray-100 {
+    background-color: var(--color-gray-100);
+  }
   .shadow {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
   }
 }
 body {
@@ -201,7 +237,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: url("../assets/background-image.jpg");
+  background-image: url("../assets/background_image.jpg");
+  background-color: #222;
   background-size: cover;
 }
 .top-bar {
@@ -250,7 +287,6 @@ body {
   background: #c3c9d1;
 }
 table {
-  border: 1px solid;
   width: 500px;
   height: 500px;
   align-items: center;
@@ -270,15 +306,27 @@ table {
   justify-content: center;
   align-items: center;
 }
-.table td {
-  border: 1px solid #e1e5ea;
+.gameboard-cell {
   padding: 0;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
-.table img {
+.gameboard-cell img {
+  pointer-events: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+.gameboard-cell:hover {
+  transform: scale(1.1);
+  color: #7e7e7e;
+}
+.gameboard-cell:active {
+  transform: scale(0.9);
+  background-color: rgba(255,255,255,0.2);
+  z-index: 10;
 }
 .scores {
   display: block;
@@ -332,6 +380,55 @@ table {
 }
 #give-up:hover {
   background: #c3c9d1;
+}
+.inventory-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+#backFromInventory {
+  width: 120px;
+  height: 40px;
+}
+#inventory-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+#inventory-overlay.hidden {
+  display: none;
+}
+.inventory-display {
+  width: 466px;
+  height: 200px;
+  display: grid;
+  border-radius: 12px;
+  grid-template-columns: repeat(9, 45.6px);
+  grid-template-rows: repeat(3, 45px);
+  justify-items: center;
+  align-items: center;
+  padding-left: 18px;
+  padding-top: 40px;
+  gap: 2px;
+  background-image: url("../assets/inventory_slots.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.slot {
+  background-color: #000000;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .panel {
   background: #ffffff;
@@ -390,6 +487,26 @@ input {
   background: #f7f9fb;
   border: 1px solid #e1e5ea;
   border-radius: 4px;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
 }
 @property --tw-border-style {
   syntax: "*";
@@ -461,9 +578,19 @@ input {
   inherits: false;
   initial-value: 0 0 #0000;
 }
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
       --tw-border-style: solid;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
@@ -479,6 +606,7 @@ input {
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
     }
   }
 }

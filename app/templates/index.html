@@ -54,47 +54,47 @@
                 </table>
             </div>
 
-            <div class="table">
+            <div class="table"> <!-- ids here MUST be 1-9 for the square_id attribute in the db to work -->
                 <!-- each cell is a placeholder to be linked with the database. -->
                 <table>
                     <tr>
-                        <td id="cell-1">
+                        <td id="1" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img1.jpg') }}" alt="">
                         </td>
-                        <td id="cell-2">
+                        <td id="2" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img2.jpg') }}" alt="">
                         </td>
-                        <td id="cell-3">
+                        <td id="3" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img3.jpg') }}" alt="">
                         </td>
                     </tr>
                     <tr>
-                        <td id="cell-4">
+                        <td id="4" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img4.jpg') }}" alt="">
                         </td>
-                        <td id="cell-5">
+                        <td id="5" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img5.jpg') }}" alt="">
                         </td>
-                        <td id="cell-6">
+                        <td id="6" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img6.jpg') }}" alt="">
                         </td>
                     </tr>
                     <tr>
-                        <td id="cell-7">
+                        <td id="7" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img7.jpg') }}" alt="">
                         </td>
-                        <td id="cell-8">
+                        <td id="8" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img8.jpg') }}" alt="">
                         </td>
-                        <td id="cell-9">
+                        <td id="9" class="gameboard-cell">
                             <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img9.jpg') }}" alt="">
                         </td>
@@ -123,5 +123,19 @@
         </div>
 
     </div>
+
+    <div id="inventory-overlay" class="hidden">
+        <div class="inventory-container">
+            <div class="inventory-display">
+                {% for block in blocks %}
+                <div class="slot" data-block="{{ block.name }}">
+                    <img src="{{ url_for("static", filename=block.texture_path) }}">
+                </div>
+                {% endfor %}
+            </div>
+        <button id="backFromInventory" class="btn"> Back </button>
+        </div>
+    </div>
+    <script src="{{ url_for("static", filename="js/index.js")}}"></script>
 </body>
 </html>
