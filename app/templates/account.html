@@ -7,14 +7,14 @@
 <link rel="stylesheet" href="/static/dist/output.css">
 </head>
 
-<body>
+<body class="accounts_body">
 
-<div class="title">ACCOUNT</div>
+<div class="accounts_title">ACCOUNT</div>
 
-<div class="main">
+<div class="accounts_main">
 
     <!-- LEFT PANEL -->
-    <div class="left">
+    <div class="accounts_left">
         <h3>Menu</h3>
         <p>Settings</p>
         <p>Saved</p>
@@ -23,13 +23,15 @@
     </div>
 
     <!-- CENTER PANEL -->
-    <div class="center">
+    <div class="accounts_center">
         <h3>Inventory</h3>
 
-        <div class="Inventory" id="Inventory"></div>
+        <div class="Inventory" id="accounts_Inventory"></div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right">
+</div>
+
+ <!-- RIGHT PANEL -->
+    <div class="accounts_right">
         <h3>Stats</h3>
         <p>Games Played: </p>
         <p>Wins: </p>
@@ -37,17 +39,15 @@
         <p>Level: </p>
     </div>
 
-</div>
-
 </body>
 
 <script>
-    const Inventory = document.getElementById('Inventory');
+    const Inventory = document.getElementById('accounts_Inventory');
 
     // create 27 slots
     for (let i = 0; i < 27; i++) {
         const item = document.createElement('div');
-        item.classList.add('item');
+        item.classList.add('accounts_item');
         Inventory.appendChild(item);
     }
 

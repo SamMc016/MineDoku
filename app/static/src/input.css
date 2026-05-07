@@ -258,14 +258,16 @@
     /* === Panel Styling === */
 
     .panel {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 6px;
-    border: 1px solid #d3d8de;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
+        background-image: url("../assets/transperant_glass.png");
+        background-repeat: repeat;
+        background-size: auto;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #d3d8de;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
     }
 
     h2 {
@@ -330,5 +332,112 @@
         background: #f7f9fb;
         border: 1px solid #e1e5ea;
         border-radius: 4px;
+    }
+
+    /* === Accounts page Styling CSS === */
+
+    .accounts_body {
+        font-family: "Minecraft";
+        margin: 0;
+        height: 100vh;
+
+        /* ✅ BACKGROUND GIF GOES HERE */
+        background: url("../assets/minegif.gif") no-repeat center center fixed;
+        background-size: cover;
+
+        font-family: 'Minecraft';
+        color: white;
+    }
+
+    .accounts_main {
+        display: flex;
+        height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,0.6); /* dark overlay */
+    }
+
+    /* LEFT PANEL */
+    .accounts_left {
+        width: 20%;
+        border: 3px solid white;
+        padding: 15px;
+    }
+
+    .accounts_left h3 {
+        margin-bottom: 20px;
+    }
+
+    .accounts_left p {
+        margin: 15px 0;
+        cursor: pointer;
+    }
+
+    /* CENTER PANEL */
+    .accounts_center {
+        width: 60%;
+        margin: 0 20px;
+        border: 3px solid white;
+        padding: 15px;
+    }
+
+    #accounts_Inventory {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .accounts_item {
+        width: 35px;
+        height: 35px;
+        background: #555;
+        border: 4px solid #000;
+        box-shadow:
+            inset -6px -6px grey,  
+            inset 6px 6px white,   
+            4px 4px 0px black;          
+        
+        image-rendering: pixelated;
+    }
+
+    .accounts_item:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .accounts_item:active {
+        transform: scale(0.95);
+    }
+
+    .accounts_item.selected {
+        border: 4px solid white;
+        box-shadow:
+            inset -6px -6px grey,
+            inset 6px 6px white, 
+            0 0 10px white;
+    }
+
+    /* RIGHT PANEL */
+    .accounts_right {
+        width: 20%;
+        border: 3px solid white;
+        padding: 15px;
+        justify-self: end;
+    }
+
+    .accounts_right p {
+        margin: 15px 0;
+    }
+
+    /* TITLE */
+    .accounts_title {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 3px solid white;
+        padding: 10px 20px;
+        background: black;
     }
     
