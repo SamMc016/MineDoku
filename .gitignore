@@ -5,8 +5,12 @@ __pycache__
 # ignores the js version of venv
 node_modules/
 # ignores any vscode extensions
+<<<<<<< HEAD
 .vscode 
 # ignores macos metadata
 .DS_Store
 # ignores the database file
 *.db 
+=======
+.vscode 
+>>>>>>> main
