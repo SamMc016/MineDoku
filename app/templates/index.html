@@ -10,19 +10,13 @@
 
 <body>
     <header class="top-bar">
-        <!-- should be a bottom border like a shadow if that makes sense -->
         <button class="btn">Login / Signup</button>
-        <!-- this will change to account once logged in -->
     
         <h1 class="page-title">MINEDOKU</h1>
-        <!-- make this look better than just text -->
     
         <div class="right-header">
             <button class="btn" id="settings">Settings</button>
-            <!-- !!. change this to a cog -->
-    
             <button class="btn" id="rules">How to play</button>
-            <!-- !!. change this to a question mark -->
         </div>
     </header>
 
@@ -31,11 +25,8 @@
         <div class="side-column" id="left-conditions">
             <table class="side-column-table">
                 <tr><td><p id="LTCon">Left Top Condition</p></td></tr>
-                <!-- !!. change these so that they can be inputted automatically -->
                 <tr><td><p id="LMCon">Left Middle Condition</p></td></tr>
-                <!-- !!. -->
                 <tr><td><p id="LBCon">Left Bottom Condition</p></td></tr>
-                <!-- !!. -->
             </table>
         </div>
 
@@ -45,57 +36,44 @@
                 <table class="top-row-table">
                     <tr>
                         <td><p id="TLCon">Top Left Condition</p></td>
-                        <!-- !!. change these so that they can be inputted automatically -->
                         <td><p id="TMCon">Top Middle Condition</p></td>
-                        <!-- !!. -->
                         <td><p id="TRCon">Top Right Condition</p></td>
-                        <!-- !!. -->
                     </tr>
                 </table>
             </div>
 
-            <div class="table"> <!-- ids here MUST be 1-9 for the square_id attribute in the db to work -->
-                <!-- each cell is a placeholder to be linked with the database. -->
+            <div class="table">
                 <table>
                     <tr>
                         <td id="1" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img1.jpg') }}" alt="">
                         </td>
                         <td id="2" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img2.jpg') }}" alt="">
                         </td>
                         <td id="3" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img3.jpg') }}" alt="">
                         </td>
                     </tr>
                     <tr>
                         <td id="4" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img4.jpg') }}" alt="">
                         </td>
                         <td id="5" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img5.jpg') }}" alt="">
                         </td>
                         <td id="6" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img6.jpg') }}" alt="">
                         </td>
                     </tr>
                     <tr>
                         <td id="7" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img7.jpg') }}" alt="">
                         </td>
                         <td id="8" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img8.jpg') }}" alt="">
                         </td>
                         <td id="9" class="gameboard-cell">
-                            <!-- !!. -->
                             <img src="{{ url_for('static', filename='images/img9.jpg') }}" alt="">
                         </td>
                     </tr>
@@ -111,14 +89,12 @@
                         <p id="dur">Durability <span class="scores">9/9</span></p>
                     </td>
                 </tr>
-                <!-- !!. make it so each guess this decrements -->
                 <tr><td><button id="give-up">Give Up?</button></td></tr>
                 <tr>
                     <td>
                         <p id="US">US <span class="scores">1000</span></p>
                     </td>
                 </tr>
-                <!-- !!. make it so this changes every guess -->
             </table>
         </div>
 
@@ -127,15 +103,123 @@
     <div id="inventory-overlay" class="hidden">
         <div class="inventory-container">
             <div class="inventory-display">
-                {% for block in blocks %}
-                <div class="slot" data-block="{{ block.name }}">
-                    <img src="{{ url_for("static", filename=block.texture_path) }}">
+                <div class="inventory-grid">
+
+                    <div class="inventory-cell" data-block="bedrock">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/bedrock.png') }}" alt="Bedrock">
+                    </div>
+
+                    <div class="inventory-cell" data-block="clay">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/clay.png') }}" alt="Clay">
+                    </div>
+
+                    <div class="inventory-cell" data-block="cobblestone">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/cobblestone.png') }}" alt="Cobblestone">
+                    </div>
+
+                    <div class="inventory-cell" data-block="crafting_table">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/crafting_table.png') }}" alt="Crafting Table">
+                    </div>
+
+                    <div class="inventory-cell" data-block="diamond_block">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/diamond_block.png') }}" alt="Diamond Block">
+                    </div>
+
+                    <div class="inventory-cell" data-block="dirt">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/dirt.png') }}" alt="Dirt">
+                    </div>
+
+                    <div class="inventory-cell" data-block="emerald_block">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/emerald_block.png') }}" alt="Emerald Block">
+                    </div>
+
+                    <div class="inventory-cell" data-block="end_stone">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/end_stone.png') }}" alt="End Stone">
+                    </div>
+
+                    <div class="inventory-cell" data-block="furnace">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/furnace.png') }}" alt="Furnace">
+                    </div>
+
+                    <div class="inventory-cell" data-block="gold_block">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/gold_block.png') }}" alt="Gold Block">
+                    </div>
+
+                    <div class="inventory-cell" data-block="grass_block">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/grass_block.png') }}" alt="Grass Block">
+                    </div>
+
+                    <div class="inventory-cell" data-block="gravel">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/gravel.png') }}" alt="Gravel">
+                    </div>
+
+                    <div class="inventory-cell" data-block="hay_bale">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/hay_bale.png') }}" alt="Hay Bale">
+                    </div>
+
+                    <div class="inventory-cell" data-block="magma_block">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/magma_block.png') }}" alt="Magma Block">
+                    </div>
+
+                    <div class="inventory-cell" data-block="melon">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/melon.png') }}" alt="Melon">
+                    </div>
+
+                    <div class="inventory-cell" data-block="nether_bricks">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/nether_bricks.png') }}" alt="Nether Bricks">
+                    </div>
+
+                    <div class="inventory-cell" data-block="netherrack">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/netherrack.png') }}" alt="Netherrack">
+                    </div>
+
+                    <div class="inventory-cell" data-block="oak_log">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/oak_log.png') }}" alt="Oak Log">
+                    </div>
+
+                    <div class="inventory-cell" data-block="oak_planks">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/oak_planks.png') }}" alt="Oak Planks">
+                    </div>
+
+                    <div class="inventory-cell" data-block="obsidian">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/obsidian.png') }}" alt="Obsidian">
+                    </div>
+
+                    <div class="inventory-cell" data-block="pumpkin">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/pumpkin.png') }}" alt="Pumpkin">
+                    </div>
+
+                    <div class="inventory-cell" data-block="sand">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/sand.png') }}" alt="Sand">
+                    </div>
+
+                    <div class="inventory-cell" data-block="sponge">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/sponge.png') }}" alt="Sponge">
+                    </div>
+
+                    <div class="inventory-cell" data-block="stone_bricks">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/stone_bricks.png') }}" alt="Stone Bricks">
+                    </div>
+
+                    <div class="inventory-cell" data-block="stone">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/stone.png') }}" alt="Stone">
+                    </div>
+
+                    <div class="inventory-cell" data-block="tnt">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/tnt.png') }}" alt="TNT">
+                    </div>
+
+                    <div class="inventory-cell" data-block="white_wool">
+                        <img src="{{ url_for('static', filename='assets/inventory_textures/white_wool.png') }}" alt="White Wool">
+                    </div>
+
                 </div>
-                {% endfor %}
             </div>
-        <button id="backFromInventory" class="btn"> Back </button>
+
+            <button id="backFromInventory" class="btn">Back</button>
         </div>
     </div>
-    <script src="{{ url_for("static", filename="js/index.js")}}"></script>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

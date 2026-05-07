@@ -217,10 +217,6 @@
   .bg-gray-100 {
     background-color: var(--color-gray-100);
   }
-  .shadow {
-    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
@@ -304,26 +300,81 @@ table {
   align-items: center;
 }
 .gameboard-cell {
+  position: relative;
+  width: 166px;
+  height: 166px;
   padding: 0;
-  background-color: #f5f5f5;
+  overflow: visible;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .gameboard-cell img {
-  pointer-events: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  image-rendering: pixelated;
+}
+.gameboard-cell {
+  position: relative;
+  width: 166px;
+  height: 166px;
+  padding: 0;
+  overflow: visible;
+  cursor: pointer;
+}
+.gameboard-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  image-rendering: pixelated;
+}
+.block-3d {
+  position: relative;
+  width: 166px;
+  height: 166px;
+  transform: scale(1.015);
+  transform-origin: center center;
+}
+.block-face {
+  position: absolute;
+  background-size: cover;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.block-front {
+  left: 0;
+  top: 0;
+  width: 166px;
+  height: 166px;
+  z-index: 10;
+}
+.block-side, .block-top, .block-bottom {
+  z-index: 5;
+  filter: brightness(0.7);
+}
+.block-top {
+  filter: brightness(1.15);
+}
+.newly-placed {
+  animation: placeBlock 0.28s ease-out forwards;
+}
+@keyframes placeBlock {
+  from {
+    transform: scale(0.15);
+    opacity: 0.4;
+  }
+  to {
+    transform: scale(1.015);
+    opacity: 1;
+  }
 }
 .gameboard-cell:hover {
-  transform: scale(1.1);
-  color: #7e7e7e;
+  transform: none;
 }
 .gameboard-cell:active {
-  transform: scale(0.9);
-  background-color: rgba(255,255,255,0.2);
-  z-index: 10;
+  transform: none;
 }
 .scores {
   display: block;
@@ -406,26 +457,42 @@ table {
 .inventory-display {
   width: 466px;
   height: 200px;
-  display: grid;
-  border-radius: 12px;
-  grid-template-columns: repeat(9, 45.6px);
-  grid-template-rows: repeat(3, 45px);
-  justify-items: center;
-  align-items: center;
-  padding-left: 18px;
-  padding-top: 40px;
-  gap: 2px;
-  background-image: url("../assets/inventory_slots.png");
-  background-size: 100%;
-  background-repeat: no-repeat;
-}
-.slot {
-  background-color: #000000;
-  width: 35px;
-  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 12px;
+  background-image: url("../assets/inventory_slots.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: -1px center;
+}
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 45px);
+  grid-template-rows: repeat(3, 45px);
+  gap: 3px;
+  margin-top: 24px;
+  background: transparent;
+  border: none;
+}
+.inventory-cell {
+  width: 42px;
+  height: 42px;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.inventory-cell img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transition: transform 0.15s ease;
+}
+.inventory-cell:hover img {
+  transform: scale(1.2);
 }
 .panel {
   background-image: url("../assets/transperant_glass.png");
@@ -569,71 +636,6 @@ input {
   inherits: false;
   initial-value: solid;
 }
-@property --tw-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-shadow-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-shadow-alpha {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
-@property --tw-inset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-inset-shadow-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-inset-shadow-alpha {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 100%;
-}
-@property --tw-ring-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-ring-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-inset-ring-color {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-inset-ring-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
-@property --tw-ring-inset {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-ring-offset-width {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-@property --tw-ring-offset-color {
-  syntax: "*";
-  inherits: false;
-  initial-value: #fff;
-}
-@property --tw-ring-offset-shadow {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0 0 #0000;
-}
 @property --tw-outline-style {
   syntax: "*";
   inherits: false;
@@ -643,20 +645,6 @@ input {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
       --tw-border-style: solid;
-      --tw-shadow: 0 0 #0000;
-      --tw-shadow-color: initial;
-      --tw-shadow-alpha: 100%;
-      --tw-inset-shadow: 0 0 #0000;
-      --tw-inset-shadow-color: initial;
-      --tw-inset-shadow-alpha: 100%;
-      --tw-ring-color: initial;
-      --tw-ring-shadow: 0 0 #0000;
-      --tw-inset-ring-color: initial;
-      --tw-inset-ring-shadow: 0 0 #0000;
-      --tw-ring-inset: initial;
-      --tw-ring-offset-width: 0px;
-      --tw-ring-offset-color: #fff;
-      --tw-ring-offset-shadow: 0 0 #0000;
       --tw-outline-style: solid;
     }
   }
