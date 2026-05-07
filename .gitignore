@@ -9,4 +9,4 @@ node_modules/
 # ignores macos metadata
 .DS_Store
 # ignores the database file
-*.db 
+*.db
