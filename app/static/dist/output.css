@@ -7,7 +7,6 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-gray-100: oklch(96.7% 0.003 264.542);
     --spacing: 0.25rem;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
@@ -207,17 +206,8 @@
   .table {
     display: table;
   }
-  .h-screen {
-    height: 100vh;
-  }
-  .flex-col {
-    flex-direction: column;
-  }
   .justify-center {
     justify-content: center;
-  }
-  .gap-6 {
-    gap: calc(var(--spacing) * 6);
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
@@ -225,9 +215,6 @@
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
-  }
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
   }
   .outline {
     outline-style: var(--tw-outline-style);
@@ -307,9 +294,14 @@ table {
   padding-top: 25px;
 }
 .table {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.table table {
+  position: relative;
+  z-index: 1;
 }
 .gameboard-cell {
   position: relative;
@@ -326,12 +318,17 @@ table {
   display: block;
   image-rendering: pixelated;
 }
-.block-3d {
-  position: relative;
-  width: 166px;
-  height: 166px;
-  transform: scale(1.015);
-  transform-origin: center center;
+#side-face-layer, #front-face-layer {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+#side-face-layer {
+  z-index: 20;
+}
+#front-face-layer {
+  z-index: 30;
 }
 .block-face {
   position: absolute;
@@ -339,23 +336,24 @@ table {
   background-repeat: no-repeat;
   image-rendering: pixelated;
   pointer-events: none;
+  transform-origin: center center;
 }
 .block-front {
-  left: 0;
-  top: 0;
   width: 166px;
   height: 166px;
-  z-index: 10;
 }
-.block-side, .block-top, .block-bottom {
-  z-index: 5;
+.block-side, .block-bottom {
   filter: brightness(0.7);
 }
 .block-top {
   filter: brightness(1.15);
 }
+.rendered-block-face {
+  transform-origin: center center;
+}
 .newly-placed {
   animation: placeBlock 0.28s ease-out forwards;
+  transform-origin: center center;
 }
 @keyframes placeBlock {
   from {
@@ -363,15 +361,9 @@ table {
     opacity: 0.4;
   }
   to {
-    transform: scale(1.015);
+    transform: scale(1.01);
     opacity: 1;
   }
-}
-.gameboard-cell:hover {
-  transform: scale(1.03);
-}
-.gameboard-cell:active {
-  transform: none;
 }
 .scores {
   display: block;
@@ -420,7 +412,7 @@ table {
   color: #222;
   cursor: pointer;
   border-radius: 4px;
-  font-family: 'Minecraft';
+  font-family: "Minecraft";
   transition: background 0.2s ease;
 }
 #give-up:hover {
@@ -557,7 +549,6 @@ input {
   height: 100vh;
   background: url("../assets/minegif.gif") no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Minecraft';
   color: white;
 }
 .accounts_main {
@@ -565,7 +556,7 @@ input {
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
 }
 .accounts_left {
   width: 20%;

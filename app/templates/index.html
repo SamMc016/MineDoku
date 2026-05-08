@@ -103,11 +103,15 @@
     <div id="inventory-overlay" class="hidden">
         <div class="inventory-container">
             <div class="inventory-display">
-                {% for block in blocks %}
-                <div class="slot" data-block="{{ block.name }}">
-                    <img src="{{ url_for("static", filename=block.texture_path) }}" alt="{{ block.name }}">
+                <div class="inventory-grid">
+                    {% for block in blocks %}
+                    <div class="inventory-cell"
+                        data-block="{{ block.block_name }}"
+                        data-texture="{{ url_for('static', filename=block.face_texture_path) }}">
+                        <img src="{{ url_for('static', filename=block.inv_texture_path) }}" alt="{{ block.block_name }}">
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
 
             <button id="backFromInventory" class="btn">Back</button>

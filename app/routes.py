@@ -4,8 +4,8 @@ from flask import render_template
 
 @app.route("/")
 def index():
-    all_blocks = Blocks.query.all()
-    return render_template("index.html", blocks=all_blocks)
+    blocks = Blocks.query.all()
+    return render_template("index.html", blocks=blocks)
 
 @app.route("/friends")
 def friends():
