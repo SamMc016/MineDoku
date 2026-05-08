@@ -8,6 +8,17 @@ const gameCells = document.querySelectorAll(".gameboard-cell");
 const inventoryCells = document.querySelectorAll(".inventory-cell");
 const overlay = document.getElementById("inventory-overlay");
 const backButton = document.getElementById("backFromInventory");
+const tableContainer = document.querySelector(".table");
+
+/* Create separate rendering layers */
+const sideFaceLayer = document.createElement("div");
+sideFaceLayer.id = "side-face-layer";
+
+const frontFaceLayer = document.createElement("div");
+frontFaceLayer.id = "front-face-layer";
+
+tableContainer.appendChild(sideFaceLayer);
+tableContainer.appendChild(frontFaceLayer);
 
 /* Opens inventory when a main grid cell is clicked */
 gameCells.forEach(cell => {
@@ -26,9 +37,13 @@ backButton.addEventListener("click", () => {
 inventoryCells.forEach(cell => {
     cell.addEventListener("click", () => {
         const blockName = cell.dataset.block;
+        const texturePath = cell.dataset.texture;
+
         const selectedGameCell = document.getElementById(window.currentSquare);
 
         selectedGameCell.dataset.block = blockName;
+        selectedGameCell.dataset.texture = texturePath;
+        selectedGameCell.innerHTML = "";
 
         renderBoard(window.currentSquare);
         overlay.classList.add("hidden");
@@ -36,8 +51,13 @@ inventoryCells.forEach(cell => {
 });
 
 function renderBoard(newlyPlacedId = null) {
+    window.newlyPlacedId = newlyPlacedId;
+    sideFaceLayer.innerHTML = "";
+    frontFaceLayer.innerHTML = "";
+
     const board = document.querySelector(".table table");
     const boardRect = board.getBoundingClientRect();
+    const containerRect = tableContainer.getBoundingClientRect();
 
     const vanishingPoint = {
         x: boardRect.left + boardRect.width / 2,
@@ -48,8 +68,9 @@ function renderBoard(newlyPlacedId = null) {
 
     gameCells.forEach(cell => {
         const blockName = cell.dataset.block;
+        const texturePath = cell.dataset.texture;
 
-        if (!blockName) {
+        if (!blockName || !texturePath) {
             return;
         }
 
@@ -68,37 +89,61 @@ function renderBoard(newlyPlacedId = null) {
         const hasBelow = row < 2 && document.getElementById(String(id + 3)).dataset.block;
         const hasAbove = row > 0 && document.getElementById(String(id - 3)).dataset.block;
 
-        const texturePath = `/static/assets/game_textures/${blockName}.png`;
-        const animationClass = String(id) === String(newlyPlacedId) ? "newly-placed" : "";
-
-        let blockHTML = `
-            <div class="block-3d ${animationClass}">
-                <div class="block-face block-front" style="background-image: url('${texturePath}')"></div>
-        `;
-
         if (isLeftColumn && !hasRight) {
-            blockHTML += createPerspectiveFace(cell, "right", texturePath, vanishingPoint, depthAmount);
+            sideFaceLayer.insertAdjacentHTML(
+                "beforeend",
+                createPerspectiveFace(cell, "right", texturePath, vanishingPoint, depthAmount, containerRect)
+            );
         }
 
         if (isRightColumn && !hasLeft) {
-            blockHTML += createPerspectiveFace(cell, "left", texturePath, vanishingPoint, depthAmount);
+            sideFaceLayer.insertAdjacentHTML(
+                "beforeend",
+                createPerspectiveFace(cell, "left", texturePath, vanishingPoint, depthAmount, containerRect)
+            );
         }
 
         if (isTopRow && !hasBelow) {
-            blockHTML += createPerspectiveFace(cell, "bottom", texturePath, vanishingPoint, depthAmount);
+            sideFaceLayer.insertAdjacentHTML(
+                "beforeend",
+                createPerspectiveFace(cell, "bottom", texturePath, vanishingPoint, depthAmount, containerRect)
+            );
         }
 
         if (isBottomRow && !hasAbove) {
-            blockHTML += createPerspectiveFace(cell, "top", texturePath, vanishingPoint, depthAmount);
+            sideFaceLayer.insertAdjacentHTML(
+                "beforeend",
+                createPerspectiveFace(cell, "top", texturePath, vanishingPoint, depthAmount, containerRect)
+            );
         }
 
-        blockHTML += `</div>`;
-
-        cell.innerHTML = blockHTML;
+        frontFaceLayer.insertAdjacentHTML(
+            "beforeend",
+            createFrontFace(cell, texturePath, containerRect)
+        );
     });
 }
 
-function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmount) {
+function createFrontFace(cell, texturePath, containerRect) {
+    const rect = cell.getBoundingClientRect();
+
+    const left = rect.left - containerRect.left;
+    const top = rect.top - containerRect.top;
+
+    return `
+        <div
+            class="block-face block-front rendered-block-face ${String(cell.id) === String(window.newlyPlacedId) ? 'newly-placed' : ''}"
+            data-square-id="${cell.id}"
+            style="
+                left: ${left}px;
+                top: ${top}px;
+                background-image: url('${texturePath}');
+            ">
+        </div>
+    `;
+}
+
+function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmount, containerRect) {
     const rect = cell.getBoundingClientRect();
 
     const corners = {
@@ -147,8 +192,8 @@ function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmo
     ];
 
     const localPoints = points.map(point => ({
-        x: point.x - rect.left,
-        y: point.y - rect.top
+        x: point.x - containerRect.left,
+        y: point.y - containerRect.top
     }));
 
     const minX = Math.min(...localPoints.map(p => p.x));
@@ -167,7 +212,8 @@ function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmo
 
     return `
         <div 
-            class="block-face ${className}"
+            class="block-face ${className} rendered-block-face ${String(cell.id) === String(window.newlyPlacedId) ? 'newly-placed' : ''}"
+            data-square-id="${cell.id}"
             style="
                 left: ${minX}px;
                 top: ${minY}px;
@@ -186,15 +232,3 @@ function projectTowardPoint(point, target, amount) {
         y: point.y + (target.y - point.y) * amount
     };
 }
-
-/* need a function that picks random conditions and checks that they work with each other (holy time complexity..) */
-
-/* (maybe inside the one above) need a function that returns a list of acceptable block ids for each square */
-
-/* need a function that actually checks if the block clicked is acceptable (if yes its placed, if no the square goes red and shakes) */
-
-/* need a function that adds to block stats */
-
-/* need a function that calculates US and drops durability by 1 per guess */
-
-/* need functions that provide navigation to other parts of the website */

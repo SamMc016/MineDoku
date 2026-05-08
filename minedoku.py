@@ -1,7 +1,11 @@
 from app import app
+from app.populate_blocks import populate_blocks
+
+with app.app_context():
+    populate_blocks()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
 
 
 """

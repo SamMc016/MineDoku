@@ -2,9 +2,9 @@
 
 /* === GLOBAL STYLES === */
 
-    /* === Shared Styling === */
+/* === Shared Styling === */
 
-    body {
+body {
     margin: 0;
     font-family: "Minecraft";
     background: #f4f6f8;
@@ -15,11 +15,11 @@
     background-image: url("../assets/background_image.jpg");
     background-color: #222;
     background-size: cover;
-    }
+}
 
-    /* === Header Styling === */
+/* === Header Styling === */
 
-    .top-bar {
+.top-bar {
     position: relative;
     display: flex;
     align-items: center;
@@ -30,12 +30,12 @@
     background: #e3e7eb;
     border-bottom: 1px solid #c9ced6;
     flex-shrink: 0;
-    }
+}
 
-    /* === Page Title Styling === */
+/* === Page Title Styling === */
 
-    .page-title,
-    #name {
+.page-title,
+#name {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -48,11 +48,11 @@
     text-align: center;
     white-space: nowrap;
     pointer-events: none;
-    }
+}
 
-    /* === Button Styling === */
+/* === Button Styling === */
 
-    .btn {
+.btn {
     width: 150px;
     height: 50px;
     padding: 0 12px;
@@ -67,187 +67,192 @@
     line-height: 1;
     white-space: nowrap;
     transition: background 0.2s ease;
-    }
+}
 
-    .btn:hover {
+.btn:hover {
     background: #c3c9d1;
-    }
-
+}
 
 /* === INDEX STYLES === */
 
-    /* === Game Board Styling === */
+/* === Game Board Styling === */
 
-    table {
-        width: 500px;
-        height: 500px;
-        align-items: center;
+table {
+    width: 500px;
+    height: 500px;
+    align-items: center;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 20px;
+    padding-top: 25px;
+}
+
+.table {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table table {
+    position: relative;
+    z-index: 1;
+}
+
+/* === 3D Block Styling: Layered Version === */
+
+.gameboard-cell {
+    position: relative;
+    width: 166px;
+    height: 166px;
+    padding: 0;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.gameboard-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    image-rendering: pixelated;
+}
+
+#side-face-layer,
+#front-face-layer {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+}
+
+#side-face-layer {
+    z-index: 20;
+}
+
+#front-face-layer {
+    z-index: 30;
+}
+
+.block-face {
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    pointer-events: none;
+    transform-origin: center center;
+}
+
+.block-front {
+    width: 166px;
+    height: 166px;
+}
+
+.block-side,
+.block-bottom {
+    filter: brightness(0.7);
+}
+
+.block-top {
+    filter: brightness(1.15);
+}
+
+.rendered-block-face {
+    transform-origin: center center;
+}
+
+.newly-placed {
+    animation: placeBlock 0.28s ease-out forwards;
+    transform-origin: center center;
+}
+
+@keyframes placeBlock {
+    from {
+        transform: scale(0.15);
+        opacity: 0.4;
     }
 
-    .game {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        text-align: center;
-        flex-direction: row;
-        flex-grow: 1;
-        gap: 20px;
-        padding-top: 25px;
+    to {
+        transform: scale(1.01);
+        opacity: 1;
     }
+}
 
-    .table {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+/* === Side Columns Styling === */
 
-    /* === 3D Block Styling: Vanishing Point Version === */
+.scores {
+    display: block;
+}
 
-    .gameboard-cell {
-        position: relative;
-        width: 166px;
-        height: 166px;
-        padding: 0;
-        overflow: visible;
-        cursor: pointer;
-    }
+.side-column-table {
+    width: 150px;
+    height: 500px;
+    border-style: hidden;
+}
 
-    .gameboard-cell img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        image-rendering: pixelated;
-    }
+.side-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-    .block-3d {
-        position: relative;
-        width: 166px;
-        height: 166px;
-        transform: scale(1.015);
-        transform-origin: center center;
-    }
+#left-conditions {
+    align-items: flex-end;
+    padding-top: 100px;
+}
 
-    .block-face {
-        position: absolute;
-        background-size: cover;
-        background-repeat: no-repeat;
-        image-rendering: pixelated;
-        pointer-events: none;
-    }
+#extra {
+    align-items: flex-start;
+    padding-top: 100px;
+}
 
-    .block-front {
-        left: 0;
-        top: 0;
-        width: 166px;
-        height: 166px;
-        z-index: 10;
-    }
+/* === Top Column Styling === */
 
-    .block-side,
-    .block-top,
-    .block-bottom {
-        z-index: 5;
-        filter: brightness(0.7);
-    }
+.center-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
 
-    .block-top {
-        filter: brightness(1.15);
-    }
+.top-row-table {
+    width: 500px;
+    height: 100px;
+    table-layout: fixed;
+    border-style: hidden;
+}
 
+.top-row-table td {
+    width: 33.33%;
+    text-align: center;
+}
 
-    .newly-placed {
-        animation: placeBlock 0.28s ease-out forwards;
-    }
-    
-    @keyframes placeBlock {
-        from {
-            transform: scale(0.15);
-            opacity: 0.4;
-        }
-    
-        to {
-            transform: scale(1.015);
-            opacity: 1;
-        }
-    }
+/* === Give Up Button Styling === */
 
-    .gameboard-cell:hover {
-        transform: scale(1.03);
-    }
-    
-    .gameboard-cell:active {
-        transform: none;
-    }
+#give-up {
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+    background: #d0d5db;
+    border: 1px solid #b5bcc4;
+    color: #222;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: "Minecraft";
+    transition: background 0.2s ease;
+}
 
-    /* === Side Columns Styling === */
-
-    .scores {
-        display: block;
-    }
-
-    .side-column-table {
-        width: 150px;
-        height: 500px;
-        border-style: hidden;
-    }
-
-    .side-column {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    #left-conditions {
-        align-items: flex-end;
-        padding-top: 100px;
-    }
-
-    #extra {
-        align-items: flex-start;
-        padding-top: 100px;
-    }
-
-    /* === Top Column Styling === */
-
-    .center-elements {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    .top-row-table {
-        width: 500px;
-        height: 100px;
-        table-layout: fixed;
-        border-style: hidden;
-    }
-
-    .top-row-table td {
-        width: 33.33%;
-        text-align: center;
-    }
-
-    /* === Give Up Button Styling === */
-
-    #give-up {
-        width: 80px;
-        height: 80px;
-        font-size: 16px;
-        background: #d0d5db;
-        border: 1px solid #b5bcc4;
-        color: #222;
-        cursor: pointer;
-        border-radius: 4px;
-        font-family: 'Minecraft';
-        transition: background 0.2s ease;
-    }
-
-    #give-up:hover {
-        background: #c3c9d1;
-    }
+#give-up:hover {
+    background: #c3c9d1;
+}
 
 /* === Inventory Panel Styling === */
 
@@ -327,46 +332,46 @@
 
 /* === FRIENDS STYLES === */
 
-    /* === Panel Styling === */
+/* === Panel Styling === */
 
-    .panel {
-        background-image: url("../assets/transperant_glass.png");
-        background-repeat: repeat;
-        background-size: auto;
-        padding: 15px;
-        border-radius: 6px;
-        border: 1px solid #d3d8de;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 0;
-    }
+.panel {
+    background-image: url("../assets/transperant_glass.png");
+    background-repeat: repeat;
+    background-size: auto;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #d3d8de;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
 
-    h2 {
+h2 {
     margin-top: 0;
     font-size: 16px;
     color: #444;
-    }
+}
 
-    .panel .btn {
-        width: 100%;
-        margin-top: 10px;
-        white-space: normal;
-    }
+.panel .btn {
+    width: 100%;
+    margin-top: 10px;
+    white-space: normal;
+}
 
-    /* === Input Styling === */
+/* === Input Styling === */
 
-    input {
+input {
     width: 100%;
     box-sizing: border-box;
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #c9ced6;
-    }
+}
 
-    /* === Main Styling === */
+/* === Main Styling === */
 
-    .container {
+.container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 15px;
@@ -374,142 +379,140 @@
     width: 100%;
     max-width: 100vw;
     min-height: calc(100vh - 78px);
-    }
+}
 
-    /* === Friends List Styling === */
+/* === Friends List Styling === */
 
-    .friends-list {
-        flex: 1;
-        overflow-y: auto;
-        margin-top: 10px;
-    }
+.friends-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 10px;
+}
 
-    .friend {
-        padding: 8px;
-        border-bottom: 1px solid #e0e4e8;
-    }
+.friend {
+    padding: 8px;
+    border-bottom: 1px solid #e0e4e8;
+}
 
-    .friend:hover {
-        background: #f0f2f5;
-        cursor: pointer;
-    }
+.friend:hover {
+    background: #f0f2f5;
+    cursor: pointer;
+}
 
-    /* === Leaderboard Styling === */
-    
-    .leaderboard-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px;
-        margin-bottom: 5px;
-        background: #f7f9fb;
-        border: 1px solid #e1e5ea;
-        border-radius: 4px;
-    }
+/* === Leaderboard Styling === */
 
-    /* === Accounts page Styling CSS === */
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #f7f9fb;
+    border: 1px solid #e1e5ea;
+    border-radius: 4px;
+}
 
-    .accounts_body {
-        font-family: "Minecraft";
-        margin: 0;
-        height: 100vh;
+/* === Accounts page Styling CSS === */
 
-        /* ✅ BACKGROUND GIF GOES HERE */
-        background: url("../assets/minegif.gif") no-repeat center center fixed;
-        background-size: cover;
+.accounts_body {
+    font-family: "Minecraft";
+    margin: 0;
+    height: 100vh;
+    background: url("../assets/minegif.gif") no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
 
-        font-family: 'Minecraft';
-        color: white;
-    }
+.accounts_main {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.6);
+}
 
-    .accounts_main {
-        display: flex;
-        height: 100vh;
-        padding: 20px;
-        box-sizing: border-box;
-        background: rgba(0,0,0,0.6); /* dark overlay */
-    }
+/* LEFT PANEL */
 
-    /* LEFT PANEL */
-    .accounts_left {
-        width: 20%;
-        border: 3px solid white;
-        padding: 15px;
-    }
+.accounts_left {
+    width: 20%;
+    border: 3px solid white;
+    padding: 15px;
+}
 
-    .accounts_left h3 {
-        margin-bottom: 20px;
-    }
+.accounts_left h3 {
+    margin-bottom: 20px;
+}
 
-    .accounts_left p {
-        margin: 15px 0;
-        cursor: pointer;
-    }
+.accounts_left p {
+    margin: 15px 0;
+    cursor: pointer;
+}
 
-    /* CENTER PANEL */
-    .accounts_center {
-        width: 60%;
-        margin: 0 20px;
-        border: 3px solid white;
-        padding: 15px;
-    }
+/* CENTER PANEL */
 
-    #accounts_Inventory {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        gap: 15px;
-        margin-top: 20px;
-    }
+.accounts_center {
+    width: 60%;
+    margin: 0 20px;
+    border: 3px solid white;
+    padding: 15px;
+}
 
-    .accounts_item {
-        width: 35px;
-        height: 35px;
-        background: #555;
-        border: 4px solid #000;
-        box-shadow:
-            inset -6px -6px grey,  
-            inset 6px 6px white,   
-            4px 4px 0px black;          
-        
-        image-rendering: pixelated;
-    }
+#accounts_Inventory {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
 
-    .accounts_item:hover {
-        transform: scale(1.05);
-        cursor: pointer;
-    }
+.accounts_item {
+    width: 35px;
+    height: 35px;
+    background: #555;
+    border: 4px solid #000;
+    box-shadow:
+        inset -6px -6px grey,
+        inset 6px 6px white,
+        4px 4px 0px black;
+    image-rendering: pixelated;
+}
 
-    .accounts_item:active {
-        transform: scale(0.95);
-    }
+.accounts_item:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
 
-    .accounts_item.selected {
-        border: 4px solid white;
-        box-shadow:
-            inset -6px -6px grey,
-            inset 6px 6px white, 
-            0 0 10px white;
-    }
+.accounts_item:active {
+    transform: scale(0.95);
+}
 
-    /* RIGHT PANEL */
-    .accounts_right {
-        width: 20%;
-        border: 3px solid white;
-        padding: 15px;
-        justify-self: end;
-    }
+.accounts_item.selected {
+    border: 4px solid white;
+    box-shadow:
+        inset -6px -6px grey,
+        inset 6px 6px white,
+        0 0 10px white;
+}
 
-    .accounts_right p {
-        margin: 15px 0;
-    }
+/* RIGHT PANEL */
 
-    /* TITLE */
-    .accounts_title {
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 3px solid white;
-        padding: 10px 20px;
-        background: black;
-    }
-    
+.accounts_right {
+    width: 20%;
+    border: 3px solid white;
+    padding: 15px;
+    justify-self: end;
+}
+
+.accounts_right p {
+    margin: 15px 0;
+}
+
+/* TITLE */
+
+.accounts_title {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 3px solid white;
+    padding: 10px 20px;
+    background: black;
+}
