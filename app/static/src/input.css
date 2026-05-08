@@ -4,9 +4,22 @@
 
 /* === Shared Styling === */
 
-body {
+    @font-face {
+        font-family: "Minecraft";
+        src: url("../assets/minecraft.ttf") format("truetype");
+        font-weight: lighter;
+        font-style: normal;
+    }
+
+    * {
+        color: #ffffff !important;
+        text-shadow: 2px 2px 0px #3f3f3f;
+    }
+
+    body {
     margin: 0;
     font-family: "Minecraft";
+    color: #ffffff !important;
     background: #f4f6f8;
     color: #222;
     min-height: 100vh;
@@ -27,8 +40,8 @@ body {
     height: 78px;
     padding: 0 18px;
     box-sizing: border-box;
-    background: #e3e7eb;
-    border-bottom: 1px solid #c9ced6;
+    background: #61a9f0;
+    border-bottom: 1px solid #61a9f0;
     flex-shrink: 0;
 }
 
@@ -57,8 +70,8 @@ body {
     height: 50px;
     padding: 0 12px;
     box-sizing: border-box;
-    background: #d0d5db;
-    border: 1px solid #b5bcc4;
+    background: #93bef4;
+    border: 1px solid #93bef4;
     color: #222;
     cursor: pointer;
     border-radius: 4px;
@@ -109,6 +122,7 @@ table {
 /* === 3D Block Styling: Layered Version === */
 
 .gameboard-cell {
+    border: 1px solid #ffffff;
     position: relative;
     width: 166px;
     height: 166px;
@@ -118,11 +132,10 @@ table {
 }
 
 .gameboard-cell img {
-    width: 100%;
-    height: 100%;
+    width: 166px;
+    height: 166px;
     object-fit: cover;
     display: block;
-    image-rendering: pixelated;
 }
 
 #side-face-layer,
@@ -185,74 +198,82 @@ table {
     }
 }
 
-/* === Side Columns Styling === */
+    .gameboard-cell:hover {
+        outline: 2px solid #ffffff;
+    }
+    
+    .gameboard-cell:active {
+        transform: none;
+    }
 
-.scores {
-    display: block;
-}
+    /* === Side Columns Styling === */
 
-.side-column-table {
-    width: 150px;
-    height: 500px;
-    border-style: hidden;
-}
+    .scores {
+        display: block;
+    }
 
-.side-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+    .side-column-table {
+        width: 150px;
+        height: 500px;
+        border-style: hidden;
+    }
 
-#left-conditions {
-    align-items: flex-end;
-    padding-top: 100px;
-}
+    .side-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-#extra {
-    align-items: flex-start;
-    padding-top: 100px;
-}
+    #left-conditions {
+        align-items: flex-end;
+        padding-top: 100px;
+    }
 
-/* === Top Column Styling === */
+    #extra {
+        align-items: flex-start;
+        padding-top: 100px;
+    }
 
-.center-elements {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
+    /* === Top Column Styling === */
 
-.top-row-table {
-    width: 500px;
-    height: 100px;
-    table-layout: fixed;
-    border-style: hidden;
-}
+    .center-elements {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
 
-.top-row-table td {
-    width: 33.33%;
-    text-align: center;
-}
+    .top-row-table {
+        width: 500px;
+        height: 100px;
+        table-layout: fixed;
+        border-style: hidden;
+    }
 
-/* === Give Up Button Styling === */
+    .top-row-table td {
+        width: 33.33%;
+        text-align: center;
+    }
 
-#give-up {
-    width: 80px;
-    height: 80px;
-    font-size: 16px;
-    background: #d0d5db;
-    border: 1px solid #b5bcc4;
-    color: #222;
-    cursor: pointer;
-    border-radius: 4px;
-    font-family: "Minecraft";
-    transition: background 0.2s ease;
-}
+    /* === Give Up Button Styling === */
 
-#give-up:hover {
-    background: #c3c9d1;
-}
+    #give-up {
+        width: 80px;
+        height: 80px;
+        font-size: 16px;
+        background: #93bef4;
+        border: 1px solid #93bef4;
+        color: #222;
+        cursor: pointer;
+        border-radius: 4px;
+        font-family: 'Minecraft';
+        transition: background 0.2s ease;
+    }
+
+    #give-up:hover {
+        background: #c3c9d1;
+    }
 
 /* === Inventory Panel Styling === */
 
