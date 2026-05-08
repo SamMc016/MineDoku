@@ -10,7 +10,8 @@ class Blocks(db.Model):
     block_id = db.Column(db.Integer, primary_key=True)
     block_name = db.Column(db.String(100), nullable=False)
     condition_compatibility = db.Column(db.String(100), nullable=False) # integers in a csl in a strong. e.g. "1,2,5"
-    texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
+    face_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
+    inv_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
 
 
 class Conditions(db.Model):

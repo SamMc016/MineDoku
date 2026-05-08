@@ -305,9 +305,14 @@ table {
   padding-top: 25px;
 }
 .table {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.table table {
+  position: relative;
+  z-index: 1;
 }
 .gameboard-cell {
   border: 1px solid #ffffff;
@@ -324,12 +329,17 @@ table {
   object-fit: cover;
   display: block;
 }
-.block-3d {
-  position: relative;
-  width: 166px;
-  height: 166px;
-  transform: scale(1.015);
-  transform-origin: center center;
+#side-face-layer, #front-face-layer {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+#side-face-layer {
+  z-index: 20;
+}
+#front-face-layer {
+  z-index: 30;
 }
 .block-face {
   position: absolute;
@@ -337,23 +347,24 @@ table {
   background-repeat: no-repeat;
   image-rendering: pixelated;
   pointer-events: none;
+  transform-origin: center center;
 }
 .block-front {
-  left: 0;
-  top: 0;
   width: 166px;
   height: 166px;
-  z-index: 10;
 }
-.block-side, .block-top, .block-bottom {
-  z-index: 5;
+.block-side, .block-bottom {
   filter: brightness(0.7);
 }
 .block-top {
   filter: brightness(1.15);
 }
+.rendered-block-face {
+  transform-origin: center center;
+}
 .newly-placed {
   animation: placeBlock 0.28s ease-out forwards;
+  transform-origin: center center;
 }
 @keyframes placeBlock {
   from {
@@ -361,7 +372,7 @@ table {
     opacity: 0.4;
   }
   to {
-    transform: scale(1.015);
+    transform: scale(1.01);
     opacity: 1;
   }
 }
@@ -555,7 +566,6 @@ input {
   height: 100vh;
   background: url("../assets/minegif.gif") no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Minecraft';
   color: white;
 }
 .accounts_main {
@@ -563,7 +573,7 @@ input {
   height: 100vh;
   padding: 20px;
   box-sizing: border-box;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
 }
 .accounts_left {
   width: 20%;
