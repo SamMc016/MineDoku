@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- placeholder id's will be marked with a !! in their comment -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=2.1">
@@ -10,13 +11,16 @@
 
 <body>
     <header class="top-bar">
-        <button class="btn">Login / Signup</button>
-    
+        <button class="btn" onclick="window.location.href='{{ url_for('login') }}'">
+            Login / Signup
+        </button>
+
         <h1 class="page-title">MINEDOKU</h1>
-    
+
         <div class="right-header">
-            <button class="btn" id="settings">Settings</button>
-            <button class="btn" id="rules">How to play</button>
+            <button class="btn" id="rules" onclick="window.location.href='{{ url_for('friends') }}'">
+                Friends
+            </button>
         </div>
     </header>
 
@@ -24,9 +28,21 @@
 
         <div class="side-column" id="left-conditions">
             <table class="side-column-table">
-                <tr><td><p id="LTCon">Left Top Condition</p></td></tr>
-                <tr><td><p id="LMCon">Left Middle Condition</p></td></tr>
-                <tr><td><p id="LBCon">Left Bottom Condition</p></td></tr>
+                <tr>
+                    <td>
+                        <p id="LTCon">Left Top Condition</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p id="LMCon">Left Middle Condition</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p id="LBCon">Left Bottom Condition</p>
+                    </td>
+                </tr>
             </table>
         </div>
 
@@ -35,9 +51,15 @@
             <div class="top-row">
                 <table class="top-row-table">
                     <tr>
-                        <td><p id="TLCon">Top Left Condition</p></td>
-                        <td><p id="TMCon">Top Middle Condition</p></td>
-                        <td><p id="TRCon">Top Right Condition</p></td>
+                        <td>
+                            <p id="TLCon">Top Left Condition</p>
+                        </td>
+                        <td>
+                            <p id="TMCon">Top Middle Condition</p>
+                        </td>
+                        <td>
+                            <p id="TRCon">Top Right Condition</p>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -46,32 +68,32 @@
                 <table>
                     <tr>
                         <td id="1" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="2" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="3" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                     </tr>
                     <tr>
                         <td id="4" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="5" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="6" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                     </tr>
                     <tr>
                         <td id="7" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="8" class="gameboard-cell">
-                           <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                         <td id="9" class="gameboard-cell">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
@@ -89,7 +111,9 @@
                         <p id="dur">Durability <span class="scores">9/9</span></p>
                     </td>
                 </tr>
-                <tr><td><button id="give-up">Give Up?</button></td></tr>
+                <tr>
+                    <td><button id="give-up">Give Up?</button></td>
+                </tr>
                 <tr>
                     <td>
                         <p id="US">US <span class="scores">1000</span></p>
@@ -105,10 +129,10 @@
             <div class="inventory-display">
                 <div class="inventory-grid">
                     {% for block in blocks %}
-                    <div class="inventory-cell"
-                        data-block="{{ block.block_name }}"
+                    <div class="inventory-cell" data-block="{{ block.block_name }}"
                         data-texture="{{ url_for('static', filename=block.face_texture_path) }}">
-                        <img src="{{ url_for('static', filename=block.inv_texture_path) }}" alt="{{ block.block_name }}">
+                        <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
+                            alt="{{ block.block_name }}">
                     </div>
                     {% endfor %}
                 </div>
@@ -120,4 +144,5 @@
 
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
+
 </html>
