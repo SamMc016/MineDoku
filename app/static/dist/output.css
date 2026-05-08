@@ -224,7 +224,7 @@
 }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: "Minecraft";
   background: #f4f6f8;
   color: #222;
   min-height: 100vh;
@@ -270,7 +270,7 @@ body {
   color: #222;
   cursor: pointer;
   border-radius: 4px;
-  font-family: Arial, sans-serif;
+  font-family: "Minecraft";
   font-size: 16px;
   line-height: 1;
   white-space: nowrap;
@@ -298,21 +298,6 @@ table {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.gameboard-cell {
-  position: relative;
-  width: 166px;
-  height: 166px;
-  padding: 0;
-  overflow: visible;
-  cursor: pointer;
-}
-.gameboard-cell img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  image-rendering: pixelated;
 }
 .gameboard-cell {
   position: relative;
@@ -371,7 +356,7 @@ table {
   }
 }
 .gameboard-cell:hover {
-  transform: none;
+  transform: scale(1.03);
 }
 .gameboard-cell:active {
   transform: none;
@@ -423,7 +408,7 @@ table {
   color: #222;
   cursor: pointer;
   border-radius: 4px;
-  font-family: Arial, sans-serif;
+  font-family: 'Minecraft';
   transition: background 0.2s ease;
 }
 #give-up:hover {

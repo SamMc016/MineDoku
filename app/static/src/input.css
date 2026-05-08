@@ -6,7 +6,7 @@
 
     body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Minecraft";
     background: #f4f6f8;
     color: #222;
     min-height: 100vh;
@@ -62,7 +62,7 @@
     color: #222;
     cursor: pointer;
     border-radius: 4px;
-    font-family: Arial, sans-serif;
+    font-family: "Minecraft";
     font-size: 16px;
     line-height: 1;
     white-space: nowrap;
@@ -99,23 +99,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    .gameboard-cell {
-        position: relative;
-        width: 166px;
-        height: 166px;
-        padding: 0;
-        overflow: visible;
-        cursor: pointer;
-    }
-    
-    .gameboard-cell img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        image-rendering: pixelated;
     }
 
     /* === 3D Block Styling: Vanishing Point Version === */
@@ -190,7 +173,7 @@
     }
 
     .gameboard-cell:hover {
-        transform: none;
+        transform: scale(1.03);
     }
     
     .gameboard-cell:active {
@@ -258,7 +241,7 @@
         color: #222;
         cursor: pointer;
         border-radius: 4px;
-        font-family: Arial, sans-serif;
+        font-family: 'Minecraft';
         transition: background 0.2s ease;
     }
 
