@@ -37,6 +37,6 @@ def account():
 def login():
     return render_template("login.html")
 
-@app.route("/end_game_page")
+@app.route("/end_game")
 def end_game_page():
-        return render_template("end_game_page.html")
+        return render_template("end_game.html")
