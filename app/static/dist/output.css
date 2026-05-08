@@ -7,7 +7,6 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-gray-100: oklch(96.7% 0.003 264.542);
     --spacing: 0.25rem;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
@@ -207,17 +206,8 @@
   .table {
     display: table;
   }
-  .h-screen {
-    height: 100vh;
-  }
-  .flex-col {
-    flex-direction: column;
-  }
   .justify-center {
     justify-content: center;
-  }
-  .gap-6 {
-    gap: calc(var(--spacing) * 6);
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
@@ -226,17 +216,25 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-  .bg-gray-100 {
-    background-color: var(--color-gray-100);
-  }
   .outline {
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
   }
 }
+@font-face {
+  font-family: "Minecraft";
+  src: url("../assets/minecraft.ttf") format("truetype");
+  font-weight: lighter;
+  font-style: normal;
+}
+* {
+  color: #ffffff !important;
+  text-shadow: 2px 2px 0px #3f3f3f;
+}
 body {
   margin: 0;
   font-family: "Minecraft";
+  color: #ffffff !important;
   background: #f4f6f8;
   color: #222;
   min-height: 100vh;
@@ -254,8 +252,8 @@ body {
   height: 78px;
   padding: 0 18px;
   box-sizing: border-box;
-  background: #e3e7eb;
-  border-bottom: 1px solid #c9ced6;
+  background: #61a9f0;
+  border-bottom: 1px solid #61a9f0;
   flex-shrink: 0;
 }
 .page-title, #name {
@@ -277,8 +275,8 @@ body {
   height: 50px;
   padding: 0 12px;
   box-sizing: border-box;
-  background: #d0d5db;
-  border: 1px solid #b5bcc4;
+  background: #93bef4;
+  border: 1px solid #93bef4;
   color: #222;
   cursor: pointer;
   border-radius: 4px;
@@ -312,6 +310,7 @@ table {
   align-items: center;
 }
 .gameboard-cell {
+  border: 1px solid #ffffff;
   position: relative;
   width: 166px;
   height: 166px;
@@ -320,11 +319,10 @@ table {
   cursor: pointer;
 }
 .gameboard-cell img {
-  width: 100%;
-  height: 100%;
+  width: 166px;
+  height: 166px;
   object-fit: cover;
   display: block;
-  image-rendering: pixelated;
 }
 .block-3d {
   position: relative;
@@ -368,7 +366,7 @@ table {
   }
 }
 .gameboard-cell:hover {
-  transform: scale(1.03);
+  outline: 2px solid #ffffff;
 }
 .gameboard-cell:active {
   transform: none;
@@ -415,8 +413,8 @@ table {
   width: 80px;
   height: 80px;
   font-size: 16px;
-  background: #d0d5db;
-  border: 1px solid #b5bcc4;
+  background: #93bef4;
+  border: 1px solid #93bef4;
   color: #222;
   cursor: pointer;
   border-radius: 4px;
