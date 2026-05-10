@@ -482,6 +482,11 @@
   .underline {
     text-decoration-line: underline;
   }
+  .placeholder-white {
+    &::placeholder {
+      color: var(--color-white);
+    }
+  }
   .placeholder-white\/70 {
     &::placeholder {
       color: color-mix(in srgb, #fff 70%, transparent);
