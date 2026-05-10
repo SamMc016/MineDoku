@@ -37,6 +37,10 @@ def account():
 def login():
     return render_template("login.html")
 
+@app.route("/signup")
+def signup():
+    return render_template("signup.html")
+
 @app.route("/end_game")
 def end_game_page():
         return render_template("end_game.html")
