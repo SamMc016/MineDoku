@@ -1,63 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Account Page</title>
 
-<link rel="stylesheet" href="/static/dist/output.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.1">
+    <title>Account</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
 </head>
 
-<body class="accounts_body">
+<body class="min-h-screen flex flex-col bg-cover bg-center bg-fixed"
+    style="background-image: url('{{ url_for('static', filename='assets/minegif.gif') }}');">
 
-<div class="accounts_title">ACCOUNT</div>
+    <!-- HEADER -->
+    <header class="top-bar">
+        <button class="btn" onclick="window.location.href='{{ url_for('index') }}'">
+            ← Back to Game
+        </button>
 
-<div class="accounts_main">
+        <h1 class="page-title">MINEDOKU</h1>
 
-    <!-- LEFT PANEL -->
-    <div class="accounts_left">
-        <h3>Menu</h3>
-        <p>Settings</p>
-        <p>Saved</p>
-        <p>Devices</p>
-        <p>Log Out</p>
+        <div class="right-header">
+            <button class="btn" onclick="window.location.href='{{ url_for('friends') }}'">
+                Friends
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex flex-col items-center justify-center flex-1 px-6 pb-28">
+        <h2 class="!text-4xl font-bold mb-4 text-white">
+            Inventory
+        </h2>
+
+        <div class="backdrop-blur-md bg-white/20 border border-white/30 rounded-xl p-8 shadow-xl">
+            <div id="accounts_inventory" class="grid grid-cols-9 gap-4"></div>
+        </div>
     </div>
 
-    <!-- CENTER PANEL -->
-    <div class="accounts_center">
-        <h3>Inventory</h3>
+    <!-- STATS BAR -->
+    <div class="fixed bottom-0 left-0 w-full backdrop-blur-md bg-white/20 border-t border-white/30 p-6">
+        <div class="flex justify-center gap-16 text-white font-semibold">
 
-        <div class="Inventory" id="accounts_Inventory"></div>
+            <div>Games Played: --</div>
+            <div>Games Won: --</div>
+            <div>Lowest US: --</div>
+            <div>Avg US: --</div>
 
-</div>
-
- <!-- RIGHT PANEL -->
-    <div class="accounts_right">
-        <h3>Stats</h3>
-        <p>Games Played: </p>
-        <p>Wins: </p>
-        <p>Longest Streak: </p>
-        <p>Level: </p>
+        </div>
     </div>
+
+    <script>
+        const inventory = document.getElementById("accounts_inventory");
+
+        for (let i = 0; i < 27; i++) {
+            const slot = document.createElement("div");
+
+            slot.className = `
+                w-20 h-20
+                bg-gray-600
+                border-4 border-black
+                shadow-[inset_-6px_-6px_gray,inset_6px_6px_white,4px_4px_0px_black]
+            `;
+
+            inventory.appendChild(slot);
+        }
+    </script>
 
 </body>
 
-<script>
-    const Inventory = document.getElementById('accounts_Inventory');
-
-    // create 27 slots
-    for (let i = 0; i < 27; i++) {
-        const item = document.createElement('div');
-        item.classList.add('accounts_item');
-        Inventory.appendChild(item);
-    }
-
-    const items = document.querySelectorAll('.item');
-
-    items.forEach(item => {
-        item.addEventListener('click', () => {
-            items.forEach(i => i.classList.remove('selected'));
-            item.classList.add('selected');
-        });
-    });
-</script>
 </html>
