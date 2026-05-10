@@ -25,7 +25,7 @@
     </div>
 
     <div class="panel">
-        <h2>Friends Leaderboard</h2>
+        <h2>Daily Leaderboard</h2>
         {% for player in friends_scores %}
             <div class="leaderboard-item">
                 <span>{{ player.name }}</span><span>{{ player.score }}</span>
@@ -41,11 +41,10 @@
     </div>
 
     <div class="panel">
-        <h2>Add Friend</h2>
         <div class="search-box">
             <input type="text" placeholder="Enter username...">
         </div>
-        <button class="btn" style="margin-top:10px;">Send Request</button>
+        <button class="btn" style="margin-top:10px;">Add Friend</button>
     </div>
 
 </div>

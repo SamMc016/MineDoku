@@ -547,10 +547,6 @@ input {
   padding: 8px;
   border-bottom: 1px solid #e0e4e8;
 }
-.friend:hover {
-  background: #f0f2f5;
-  cursor: pointer;
-}
 .leaderboard-item {
   display: flex;
   justify-content: space-between;

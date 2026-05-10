@@ -23,6 +23,10 @@ tableContainer.appendChild(frontFaceLayer);
 /* Opens inventory when a main grid cell is clicked */
 gameCells.forEach(cell => {
     cell.addEventListener("click", () => {
+        if (cell.dataset.block) {
+            return;
+        }
+
         window.currentSquare = cell.id;
         overlay.classList.remove("hidden");
     });
@@ -31,6 +35,20 @@ gameCells.forEach(cell => {
 /* Closes inventory when back button is clicked */
 backButton.addEventListener("click", () => {
     overlay.classList.add("hidden");
+});
+
+/* Clicking it or anywhere outside of the inventory drops the screen */
+overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) {
+        overlay.classList.add("hidden");
+    }
+});
+
+/* Goes to end game page when give up button is clicked */
+const giveUpButton = document.getElementById("give-up");
+
+giveUpButton.addEventListener("click", () => {
+    window.location.href = "/end_game";
 });
 
 /* Places selected inventory block into selected main grid cell */
