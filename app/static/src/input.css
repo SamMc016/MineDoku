@@ -206,6 +206,17 @@ table {
         transform: none;
     }
 
+    @keyframes redFlash {
+        0% {background-color: red; border-color: darkred;}
+        100% {background-color: transparent; border-color: #ffffff;}
+    }
+
+    @keyframes shake {
+        0%, 100% {transform: translateX(0px);}
+        25% {transform: translateX(-20px);}
+        75% {transform: translateX(20px);}
+    }
+
     /* === Side Columns Styling === */
 
     .scores {
@@ -356,7 +367,7 @@ table {
 /* === Panel Styling === */
 
 .panel {
-    background-image: url("../assets/transperant_glass.png");
+    background-image: url("../assets/transparent_glass.png");
     background-repeat: repeat;
     background-size: auto;
     padding: 15px;
@@ -532,3 +543,4 @@ input {
     padding: 10px 20px;
     background: black;
 }
+

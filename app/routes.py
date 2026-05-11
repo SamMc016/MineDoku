@@ -1,11 +1,23 @@
+import random
+from datetime import datetime
 from app import app, db
-from app.models import Blocks
+from app.models import Blocks, Conditions
 from flask import render_template
 
 @app.route("/")
 def index():
     blocks = Blocks.query.all()
-    return render_template("index.html", blocks=blocks)
+    conditions = Conditions.query.all()
+
+    today_seed = datetime.now().strftime("%Y-%m-%d")
+    random.seed(today_seed)
+
+    selected_conditions = random.sample(conditions, 6)
+    top_row = selected_conditions[:3]
+    side_col = selected_conditions[3:]
+
+
+    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col)
 
 @app.route("/friends")
 def friends():

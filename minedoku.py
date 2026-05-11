@@ -1,10 +1,12 @@
-from app import app
-from app.populate_blocks import populate_blocks
-
-with app.app_context():
-    populate_blocks()
+from app import app, db
+from app.populate_blocks import populate_blocks, populate_conditions
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.drop_all()
+        populate_blocks()
+        populate_conditions()
+
     app.run(debug=True)
 
 
@@ -51,3 +53,4 @@ what do i need to do
     change condition/stats to grids
 
 """
+
