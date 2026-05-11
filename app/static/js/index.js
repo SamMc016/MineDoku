@@ -59,15 +59,10 @@ inventoryCells.forEach(cell => {
         const conditionCompatibility = cell.dataset.compatibility.split(",");
 
         const selectedGameCell = document.getElementById(window.currentSquare);
-        if (!selectedGameCell) {
-            console.log("no gamecell with id")
-        }
 
         const reqTop = selectedGameCell.getAttribute("data-top");
-        console.log("Block name:" + blockName + ". Block compatibility:" + conditionCompatibility)
         const reqSide = selectedGameCell.getAttribute("data-side");
         const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
-        console.log("top" + reqTop + "side" + reqSide + "correct" + isCorrect)
 
         if (isCorrect) {
             selectedGameCell.dataset.block = blockName;
@@ -79,9 +74,12 @@ inventoryCells.forEach(cell => {
         } else {
             console.log("else logic")
             const errorClasses = [
+                "is-error",
                 "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
-                "!border-red-500",
-                "!border-4",
+                "!outline-red-500",
+                "!outline-4",
+                "!outline-offset-[-4px]",
+                "!border-transparent"
             ];
 
             overlay.classList.add("hidden");

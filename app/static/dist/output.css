@@ -296,10 +296,6 @@
   .rounded-xl {
     border-radius: var(--radius-xl);
   }
-  .\!border-4 {
-    border-style: var(--tw-border-style) !important;
-    border-width: 4px !important;
-  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
@@ -312,8 +308,8 @@
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
   }
-  .\!border-red-500 {
-    border-color: var(--color-red-500) !important;
+  .\!border-transparent {
+    border-color: transparent !important;
   }
   .border-black {
     border-color: var(--color-black);
@@ -409,6 +405,16 @@
   .shadow-xl {
     --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .\!outline-4 {
+    outline-style: var(--tw-outline-style) !important;
+    outline-width: 4px !important;
+  }
+  .\!outline-offset-\[-4px\] {
+    outline-offset: -4px !important;
+  }
+  .\!outline-red-500 {
+    outline-color: var(--color-red-500) !important;
   }
   .backdrop-blur-md {
     --tw-backdrop-blur: blur(var(--blur-md));
@@ -547,6 +553,8 @@ table {
 .table table {
   position: relative;
   z-index: 1;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 .gameboard-cell {
   border: 1px solid #ffffff;
@@ -610,8 +618,11 @@ table {
     opacity: 1;
   }
 }
-.gameboard-cell:hover {
+.gameboard-cell:not(.is-error):hover {
   outline: 2px solid #ffffff;
+}
+.gameboard-cell(.is-error) {
+  border: transparent;
 }
 .gameboard-cell:active {
   transform: none;
@@ -619,11 +630,11 @@ table {
 @keyframes redFlash {
   0% {
     background-color: red;
-    border-color: darkred;
+    outline-color: darkred;
   }
   100% {
     background-color: transparent;
-    border-color: #ffffff;
+    outline-color: transparent;
   }
 }
 @keyframes shake {
@@ -631,10 +642,10 @@ table {
     transform: translateX(0px);
   }
   25% {
-    transform: translateX(-20px);
+    transform: translateX(-10px);
   }
   75% {
-    transform: translateX(20px);
+    transform: translateX(10px);
   }
 }
 .scores {
@@ -966,6 +977,11 @@ input {
   inherits: false;
   initial-value: 0 0 #0000;
 }
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @property --tw-backdrop-blur {
   syntax: "*";
   inherits: false;
@@ -1022,6 +1038,7 @@ input {
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
       --tw-backdrop-blur: initial;
       --tw-backdrop-brightness: initial;
       --tw-backdrop-contrast: initial;
