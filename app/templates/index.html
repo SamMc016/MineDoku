@@ -30,17 +30,17 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="LTCon">Left Top Condition</p>
+                        <p id="LTCon">{{ conditions[0] }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LMCon">Left Middle Condition</p>
+                        <p id="LMCon">{{ conditions[1] }}</p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LBCon">Left Bottom Condition</p>
+                        <p id="LBCon">{{ conditions[2] }}</p>
                     </td>
                 </tr>
             </table>
@@ -52,13 +52,13 @@
                 <table class="top-row-table">
                     <tr>
                         <td>
-                            <p id="TLCon">Top Left Condition</p>
+                            <p id="TLCon">{{ conditions[3] }}</p>
                         </td>
                         <td>
-                            <p id="TMCon">Top Middle Condition</p>
+                            <p id="TMCon">{{ conditions[4] }}</p>
                         </td>
                         <td>
-                            <p id="TRCon">Top Right Condition</p>
+                            <p id="TRCon">{{ conditions[5] }}</p>
                         </td>
                     </tr>
                 </table>
@@ -108,7 +108,13 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="dur">Durability <span class="scores">9/9</span></p>
+                        <p id="dur">
+                            Durability 
+                            <span class="scores"
+                                  id="durability-score">
+                                9/9
+                            </span>
+                        </p>
                     </td>
                 </tr>
                 <tr>
@@ -129,8 +135,11 @@
             <div class="inventory-display">
                 <div class="inventory-grid">
                     {% for block in blocks %}
-                    <div class="inventory-cell" data-block="{{ block.block_name }}"
-                        data-texture="{{ url_for('static', filename=block.face_texture_path) }}">
+                    <div class="inventory-cell" 
+                        data-block-id="{{ block.block_id }}"
+                        data-block-name="{{ block.block_name }}"
+                        data-block-conditions="{{ block.condition_compatibility }}"
+                        data-block-image="{{ url_for('static', filename=block.face_texture_path) }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
                             alt="{{ block.block_name }}">
                     </div>
@@ -143,6 +152,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 
 </html>

@@ -2,10 +2,29 @@ from app import app, db
 from app.models import Blocks
 from flask import render_template
 
+import random
+
+ALL_CONDITIONS = [
+    "Wood",
+    "Transparent",
+    "Blue",
+    "Craftable",
+    "Natural",
+    "Rare"
+]
+
 @app.route("/")
 def index():
-    blocks = Blocks.query.all()
-    return render_template("index.html", blocks=blocks)
+
+    all_blocks = Blocks.query.all()
+
+    conditions = random.sample(ALL_CONDITIONS, 6)
+
+    return render_template(
+        "index.html",
+        blocks=all_blocks,
+        conditions=conditions
+    )
 
 @app.route("/friends")
 def friends():
@@ -44,3 +63,12 @@ def signup():
 @app.route("/end_game")
 def end_game_page():
         return render_template("end_game.html")
+
+def calculate_us(board_blocks):
+    total = 0
+
+    for block in board_blocks:
+        score = 100 - block.pick_percentage
+        total += score
+
+    return total
