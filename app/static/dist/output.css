@@ -464,7 +464,7 @@
 @font-face {
   font-family: "Minecraft";
   src: url("../assets/minecraft.ttf") format("truetype");
-  font-weight: lighter;
+  font-weight: 150;
   font-style: normal;
 }
 * {
@@ -618,14 +618,24 @@ table {
     opacity: 1;
   }
 }
-.gameboard-cell:not(.is-error):hover {
+.gameboard-cell:not([data-block]):not(.is-error):hover {
   outline: 2px solid #ffffff;
 }
 .gameboard-cell(.is-error) {
   border: transparent;
 }
-.gameboard-cell:active {
-  transform: none;
+.gameboard-cell[data-block]:hover {
+  outline: none;
+  cursor: default;
+}
+.game-over-freeze {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.greyed-out {
+  border: 2px solid #898989;
+  filter: grayscale(100%);
+  opacity: 1;
 }
 @keyframes redFlash {
   0% {
@@ -670,6 +680,11 @@ table {
   align-items: flex-start;
   padding-top: 100px;
 }
+#top-row {
+  display: block;
+  margin: 0 10px;
+  background-clip: padding-box;
+}
 .center-elements {
   display: flex;
   flex-direction: column;
@@ -699,7 +714,15 @@ table {
   transition: background 0.2s ease;
 }
 #give-up:hover {
-  background: #c3c9d1;
+  background: #ff2c2c;
+}
+.text-box {
+  padding: 5px 0 3px;
+  background-color: rgba(16, 1, 1, 0.9);
+  border: 3px solid #2e0563;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
 }
 .inventory-container {
   display: flex;
@@ -765,6 +788,28 @@ table {
 }
 .inventory-cell:hover img {
   transform: scale(1.2);
+}
+.inventory-cell, .gameboard-cell[data-block] {
+  position: relative;
+}
+.inventory-cell:hover::after, .gameboard-cell[data-block]:hover::after {
+  content: attr(data-block);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: rgba(16, 1, 1, 0.9);
+  border: 3px solid #2e0563;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1);
+  font-family: "Minecraft", sans-serif;
+  font-size: 16px;
+  padding: 4px 8px;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .panel {
   background-image: url("../assets/transparent_glass.png");

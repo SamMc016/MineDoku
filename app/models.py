@@ -26,8 +26,9 @@ class Conditions(db.Model):
 class Game_Stats(db.Model):
     game_id = db.Column(db.Integer, primary_key=True)
     global_games_played = db.Column(db.Integer, nullable=False)
-    lowest_uniqueness = db.Column(db.Integer, nullable=False)
-    average_uniqueness = db.Column(db.Integer, nullable=False)
+    lowest_uniqueness = db.Column(db.Integer)
+    average_uniqueness = db.Column(db.Integer)
+    last_reset_date = db.Column(db.String(10), default="2000-01-01")
 
 class Friends(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)

@@ -1,7 +1,7 @@
-let durability = 9;
+let durability = window.maxDurability;
 let placedBlocks = [];
-let currentUS = 900;
- 
+let currentUS = window.initialUS;
+
 const gameCells = document.querySelectorAll(".gameboard-cell");
 const inventoryCells = document.querySelectorAll(".inventory-cell");
 const overlay = document.getElementById("inventory-overlay");
@@ -46,7 +46,12 @@ overlay.addEventListener("click", (event) => {
 const giveUpButton = document.getElementById("give-up");
 
 giveUpButton.addEventListener("click", () => {
-    window.location.href = "/end_game";
+    if (giveUpButton.innerText === "View Results?") {
+        window.location.href = "/end_game";
+    }
+    else {
+        endGame();
+    }
 });
 
 /* Places selected inventory block into selected main grid cell */
@@ -66,6 +71,14 @@ inventoryCells.forEach(cell => {
         const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
 
         if (isCorrect) {
+            const percentage = parseFloat(cell.dataset.blockPercentage) || 0;
+            currentUS = (currentUS - 100) + percentage;
+
+            const usDisplay = document.getElementById("us-score");
+            if (usDisplay) {
+                usDisplay.innerText = Math.round(currentUS);
+            }
+
             selectedGameCell.dataset.block = blockName;
             selectedGameCell.dataset.texture = texturePath;
             selectedGameCell.innerHTML = "";
@@ -78,7 +91,6 @@ inventoryCells.forEach(cell => {
             renderBoard(window.currentSquare);
             overlay.classList.add("hidden");
         } else {
-            console.log("else logic")
             const errorClasses = [
                 "is-error",
                 "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
@@ -98,6 +110,7 @@ inventoryCells.forEach(cell => {
 
         if (durability <= 0) {
             endGame();
+            return;
         }
     });
 });
@@ -113,6 +126,14 @@ function updateDurability() {
 }
 
 function endGame() {
+        durability = 0;
+        updateDurability();
+
+    tableContainer.classList.add("game-over-freeze");
+    gameCells.forEach(cell => {
+        cell.classList.add("greyed-out");
+    });
+    
     fetch("/finish_game", {
         method: "POST",
         headers: {
@@ -126,9 +147,9 @@ function endGame() {
         if (data.success) {
             const finishButton = document.getElementById("give-up");
 
+            finishButton.style.setProperty("background-color", "#3BB143", "important");
+            finishButton.style.setProperty("border-color", "#3BB143", "important");
             finishButton.innerText = "View Results?";
-            finishButton.style.backgroundColor = "#3BB143";
-            finishButton.style.borderColor = "#3BB143";
 
             finishButton.onclick = () => {window.location.href = "/end_game"};
         }
