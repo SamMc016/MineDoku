@@ -8,9 +8,9 @@
 <body>
 
 <div class="top-bar">
-    <button class="btn" onclick="window.location.href='{{ url_for('index') }}'">Back to Game</button>
+    <button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">Back to Game</button>
     <h1 class="page-title">{{ page_title }}</h1>
-    <button class="btn">Account</button>
+    <button class="btn" onclick="window.location.href='{{ url_for('main.account') }}'">Account</button>
 </div>
 
 <div class="container">

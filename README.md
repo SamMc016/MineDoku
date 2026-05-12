@@ -54,6 +54,8 @@ venv\Scripts\activate
 pip install -r requirements.txt
 pip install flask-migrate
 pip install flask-sqlalchemy
+pip install flask-login
+pip install selenium
 ```
 
 ### 4. Create the Database

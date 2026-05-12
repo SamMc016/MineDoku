@@ -11,14 +11,14 @@
 
 <body>
     <header class="top-bar">
-        <button class="btn" onclick="window.location.href='{{ url_for('login') }}'">
+        <button class="btn" onclick="window.location.href='{{ url_for('main.login') }}'">
             Login / Signup
         </button>
 
         <h1 class="page-title">MINEDOKU</h1>
 
         <div class="right-header">
-            <button class="btn" id="rules" onclick="window.location.href='{{ url_for('friends') }}'">
+            <button class="btn" id="rules" onclick="window.location.href='{{ url_for('main.friends') }}'">
                 Friends
             </button>
         </div>
@@ -108,7 +108,7 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="dur">Durability <span class="scores">9/9</span></p>
+                        <p id="dur">Durability <span id="durability-score" class="scores">{{ max_durability }}/{{ max_durability }}</span></p>
                     </td>
                 </tr>
                 <tr>
@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p id="US">US <span class="scores">1000</span></p>
+                        <p id="US">US <span id="us-score" class="scores">1000</span></p>
                     </td>
                 </tr>
             </table>
@@ -131,6 +131,7 @@
                     {% for block in blocks %}
                     <div class="inventory-cell" 
                         data-block="{{ block.block_name }}"
+                        data-block-id="{{ block.block_id }}"
                         data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
                         data-compatibility="{{ block.condition_compatibility }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"

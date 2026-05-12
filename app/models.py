@@ -1,10 +1,16 @@
-from app import db
+from app import db, login
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, primary_key=True) # autoincrement is already active
     username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False) # change if we use hashes
+    pass
+
+    @login.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
 class Blocks(db.Model):
     block_id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +18,6 @@ class Blocks(db.Model):
     condition_compatibility = db.Column(db.String(100), nullable=False) # integers in a csl in a strong. e.g. "1,2,5"
     face_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
     inv_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
-
 
 class Conditions(db.Model):
     condition_id = db.Column(db.Integer, primary_key=True) 
@@ -36,6 +41,7 @@ class Personal_Stats(db.Model):
     total_games_won = db.Column(db.Integer, nullable=False)
     lowest_uniqueness = db.Column(db.Integer)
     average_uniqueness = db.Column(db.Integer)
+    daily_uniqueness = db.Column(db.Integer)
 
 class Current_Game(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True) 

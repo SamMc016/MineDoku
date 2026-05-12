@@ -14,7 +14,7 @@
 
     <!-- HEADER -->
     <header class="top-bar">
-        <button class="btn" onclick="window.location.href='{{ url_for('index') }}'">
+        <button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">
             Back to Game
         </button>
 
@@ -49,7 +49,7 @@
 
             <p class="text-center mt-6 text-white">
                 Don't have an account?
-                <a href="{{ url_for('signup') }}" class="underline font-bold hover:text-gray-200 transition">
+                <a href="{{ url_for('main.signup') }}" class="underline font-bold hover:text-gray-200 transition">
                     Sign up!
                 </a>
             </p>

@@ -1,9 +1,7 @@
-/* 
-finds viable boards 
-sets conditions randomly given they work with the board
-gets viable blocks 
-*/ 
-
+let durability = 9;
+let placedBlocks = [];
+let currentUS = 900;
+ 
 const gameCells = document.querySelectorAll(".gameboard-cell");
 const inventoryCells = document.querySelectorAll(".inventory-cell");
 const overlay = document.getElementById("inventory-overlay");
@@ -60,6 +58,9 @@ inventoryCells.forEach(cell => {
 
         const selectedGameCell = document.getElementById(window.currentSquare);
 
+        durability--;
+        updateDurability();
+
         const reqTop = selectedGameCell.getAttribute("data-top");
         const reqSide = selectedGameCell.getAttribute("data-side");
         const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
@@ -68,6 +69,11 @@ inventoryCells.forEach(cell => {
             selectedGameCell.dataset.block = blockName;
             selectedGameCell.dataset.texture = texturePath;
             selectedGameCell.innerHTML = "";
+
+            placedBlocks.push({
+                block_id: cell.dataset.blockId,
+                cell_id: window.currentSquare
+            })
 
             renderBoard(window.currentSquare);
             overlay.classList.add("hidden");
@@ -89,8 +95,50 @@ inventoryCells.forEach(cell => {
                 selectedGameCell.classList.remove(...errorClasses);
             }, 1500);
         }
+
+        if (durability <= 0) {
+            endGame();
+        }
     });
 });
+
+function updateDurability() {
+    const durabilityElement =
+        document.getElementById("durability-score");
+
+    if (durabilityElement) {
+        durabilityElement.innerText =
+            durability + "/9";
+    }
+}
+
+function endGame() {
+    fetch("/finish_game", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ us_score: currentUS, chosen_blocks: placedBlocks})
+    })
+
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const finishButton = document.getElementById("give-up");
+
+            finishButton.innerText = "View Results?";
+            finishButton.style.backgroundColor = "#3BB143";
+            finishButton.style.borderColor = "#3BB143";
+
+            finishButton.onclick = () => {window.location.href = "/end_game"};
+        }
+    }) 
+
+    .catch(error => {console.error("Error ending game:",error);
+    });
+}
+
+/* UI FUNCTIONS */
 
 function renderBoard(newlyPlacedId = null) {
     window.newlyPlacedId = newlyPlacedId;
