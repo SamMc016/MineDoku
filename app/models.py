@@ -19,7 +19,6 @@ class Blocks(db.Model):
     face_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
     inv_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
 
-
 class Conditions(db.Model):
     condition_id = db.Column(db.Integer, primary_key=True) 
     condition_name = db.Column(db.String(100), nullable=False)
@@ -42,6 +41,7 @@ class Personal_Stats(db.Model):
     total_games_won = db.Column(db.Integer, nullable=False)
     lowest_uniqueness = db.Column(db.Integer)
     average_uniqueness = db.Column(db.Integer)
+    daily_uniqueness = db.Column(db.Integer)
 
 class Current_Game(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True) 

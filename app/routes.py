@@ -1,14 +1,16 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions
-from flask import render_template
+from app.models import Blocks, Conditions, Block_Stats
+from flask import render_template, request, jsonify
+from sqlalchemy import func
 from app.blueprints import main
 
 @main.route("/")
 def index():
     blocks = Blocks.query.all()
     conditions = Conditions.query.all()
+    total_selections = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 1
 
     today_seed = datetime.now().strftime("%Y-%m-%d")
     random.seed(today_seed)
@@ -34,7 +36,7 @@ def index():
         if is_solvable:
             valid_board = True
 
-    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col)
+    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9)
 
 @main.route("/friends")
 def friends():
@@ -73,3 +75,12 @@ def signup():
 @main.route("/end_game")
 def end_game_page():
         return render_template("end_game.html")
+
+@main.route("/finish_game", methods=["POST"])
+def finish_game():
+    data = request.get_json()
+
+    score = data.get("us_score")
+    blocks = data.get("chosen_blocks")
+
+    return jsonify({"success": True})
