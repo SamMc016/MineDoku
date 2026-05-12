@@ -1,11 +1,39 @@
+import random
+from datetime import datetime
 from app import app, db
-from app.models import Blocks
+from app.models import Blocks, Conditions
 from flask import render_template
 
 @app.route("/")
 def index():
     blocks = Blocks.query.all()
-    return render_template("index.html", blocks=blocks)
+    conditions = Conditions.query.all()
+
+    today_seed = datetime.now().strftime("%Y-%m-%d")
+    random.seed(today_seed)
+
+    valid_board = False
+    while not valid_board:
+        selected_conditions = random.sample(conditions, 6)
+        top_row = selected_conditions[:3]
+        side_col = selected_conditions[3:]
+
+        is_solvable = True
+        for top in top_row:
+            for side in side_col:
+                match_exists = any(
+                    str(top.condition_id) in b.condition_compatibility.split(",") and 
+                    str(side.condition_id) in b.condition_compatibility.split(",")
+                    for b in blocks)
+                if not match_exists:
+                    is_solvable = False
+                    break
+            if not is_solvable:
+                break
+        if is_solvable:
+            valid_board = True
+
+    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col)
 
 @app.route("/friends")
 def friends():

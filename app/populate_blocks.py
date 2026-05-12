@@ -1,5 +1,5 @@
 from app import db
-from app.models import Blocks
+from app.models import Blocks, Conditions
 
 blocks_to_add = [
     {"block_name": "Grass", "condition_compatibility": "1,5,7,10,12,13,15,17,18", "inv_texture_path": "assets/inventory_textures/grass.png", "face_texture_path": "assets/game_textures/grass.png"},
@@ -31,6 +31,27 @@ blocks_to_add = [
     {"block_name": "TNT", "condition_compatibility": "1,3,9,12,13,14,15,16", "inv_texture_path": "assets/inventory_textures/tnt.png", "face_texture_path": "assets/game_textures/tnt.png"},
 ]
 
+conditions_to_add = [
+    {"condition_name": "Overworld Block"},
+    {"condition_name": "Other World Block"},
+    {"condition_name": "Red Block"},
+    {"condition_name": "Yellow Block"},
+    {"condition_name": "Green Block"},
+    {"condition_name": "Grey Block"},
+    {"condition_name": "Brown Block"},
+    {"condition_name": "Foodstuff Block"},
+    {"condition_name": "Luxury Block"},
+    {"condition_name": "Surface Block"},
+    {"condition_name": "Underground Block"},
+    {"condition_name": "Block Found In Structures"},
+    {"condition_name": "Naturally Spawning Block"},
+    {"condition_name": "Craftable Block"},
+    {"condition_name": "Block Able To Be Mined By Hand"},
+    {"condition_name": "Interactable Block"},
+    {"condition_name": "Block That Requires Silk Touch To Obtain"},
+    {"condition_name": "Nature Block"}
+]
+
 def populate_blocks():
 
     db.create_all()
@@ -52,3 +73,20 @@ def populate_blocks():
 
     db.session.commit()
     print("Blocks added successfully.")
+
+def populate_conditions():
+    
+    db.create_all()
+
+    for condition_data in conditions_to_add:
+        existing_condition = Conditions.query.filter_by(
+            condition_name=condition_data["condition_name"]
+        ).first()
+
+        if existing_condition is None:
+            condition = Conditions(
+                condition_name=condition_data["condition_name"]
+            )
+        
+            db.session.add(condition)
+        db.session.commit()

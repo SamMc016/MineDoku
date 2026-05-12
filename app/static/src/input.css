@@ -117,6 +117,8 @@ table {
 .table table {
     position: relative;
     z-index: 1;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 /* === 3D Block Styling: Layered Version === */
@@ -198,12 +200,27 @@ table {
     }
 }
 
-    .gameboard-cell:hover {
+    .gameboard-cell:not(.is-error):hover {
         outline: 2px solid #ffffff;
+    }
+
+    .gameboard-cell(.is-error) {
+        border: transparent;
     }
     
     .gameboard-cell:active {
         transform: none;
+    }
+
+    @keyframes redFlash {
+        0% {background-color: red; outline-color: darkred;}
+        100% {background-color: transparent; outline-color: transparent;}
+    }
+
+    @keyframes shake {
+        0%, 100% {transform: translateX(0px);}
+        25% {transform: translateX(-10px);}
+        75% {transform: translateX(10px);}
     }
 
     /* === Side Columns Styling === */
@@ -356,7 +373,7 @@ table {
 /* === Panel Styling === */
 
 .panel {
-    background-image: url("../assets/transperant_glass.png");
+    background-image: url("../assets/transparent_glass.png");
     background-repeat: repeat;
     background-size: auto;
     padding: 15px;
@@ -532,3 +549,4 @@ input {
     padding: 10px 20px;
     background: black;
 }
+

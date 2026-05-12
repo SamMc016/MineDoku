@@ -56,15 +56,39 @@ inventoryCells.forEach(cell => {
     cell.addEventListener("click", () => {
         const blockName = cell.dataset.block;
         const texturePath = cell.dataset.texture;
+        const conditionCompatibility = cell.dataset.compatibility.split(",");
 
         const selectedGameCell = document.getElementById(window.currentSquare);
 
-        selectedGameCell.dataset.block = blockName;
-        selectedGameCell.dataset.texture = texturePath;
-        selectedGameCell.innerHTML = "";
+        const reqTop = selectedGameCell.getAttribute("data-top");
+        const reqSide = selectedGameCell.getAttribute("data-side");
+        const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
 
-        renderBoard(window.currentSquare);
-        overlay.classList.add("hidden");
+        if (isCorrect) {
+            selectedGameCell.dataset.block = blockName;
+            selectedGameCell.dataset.texture = texturePath;
+            selectedGameCell.innerHTML = "";
+
+            renderBoard(window.currentSquare);
+            overlay.classList.add("hidden");
+        } else {
+            console.log("else logic")
+            const errorClasses = [
+                "is-error",
+                "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
+                "!outline-red-500",
+                "!outline-4",
+                "!outline-offset-[-4px]",
+                "!border-transparent"
+            ];
+
+            overlay.classList.add("hidden");
+
+            selectedGameCell.classList.add(...errorClasses);
+            setTimeout(() => {
+                selectedGameCell.classList.remove(...errorClasses);
+            }, 1500);
+        }
     });
 });
 
@@ -250,3 +274,4 @@ function projectTowardPoint(point, target, amount) {
         y: point.y + (target.y - point.y) * amount
     };
 }
+

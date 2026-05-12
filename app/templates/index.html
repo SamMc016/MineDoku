@@ -30,17 +30,17 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="LTCon">Left Top Condition</p>
+                        <p id="LTCon" data-id=" {{side_col[0].condition_id}} "> {{ side_col[0].condition_name }} </p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LMCon">Left Middle Condition</p>
+                        <p id="LMCon" data-id=" {{side_col[1].condition_id}} "> {{ side_col[1].condition_name }} </p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LBCon">Left Bottom Condition</p>
+                        <p id="LBCon" data-id=" {{side_col[2].condition_id}} "> {{ side_col[2].condition_name }} </p>
                     </td>
                 </tr>
             </table>
@@ -52,13 +52,13 @@
                 <table class="top-row-table">
                     <tr>
                         <td>
-                            <p id="TLCon">Top Left Condition</p>
+                            <p id="TLCon" data-id=" {{top_row[0].condition_id}} "> {{ top_row[0].condition_name }} </p>
                         </td>
                         <td>
-                            <p id="TMCon">Top Middle Condition</p>
+                            <p id="TMCon" data-id=" {{top_row[1].condition_id}} "> {{ top_row[1].condition_name }} </p>
                         </td>
                         <td>
-                            <p id="TRCon">Top Right Condition</p>
+                            <p id="TRCon" data-id=" {{top_row[2].condition_id}} "> {{ top_row[2].condition_name }} </p>
                         </td>
                     </tr>
                 </table>
@@ -67,35 +67,35 @@
             <div class="table">
                 <table>
                     <tr>
-                        <td id="1" class="gameboard-cell">
+                        <td id="1" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[0].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
-                        <td id="2" class="gameboard-cell">
+                        <td id="2" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[1].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
-                        <td id="3" class="gameboard-cell">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td id="4" class="gameboard-cell">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="5" class="gameboard-cell">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="6" class="gameboard-cell">
+                        <td id="3" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[2].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                     </tr>
                     <tr>
-                        <td id="7" class="gameboard-cell">
+                        <td id="4" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[0].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
-                        <td id="8" class="gameboard-cell">
+                        <td id="5" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[1].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
-                        <td id="9" class="gameboard-cell">
+                        <td id="6" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[2].condition_id}}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="7" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[0].condition_id}}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                        </td>
+                        <td id="8" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[1].condition_id}}">
+                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                        </td>
+                        <td id="9" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[2].condition_id}}">
                             <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
                         </td>
                     </tr>
@@ -129,8 +129,10 @@
             <div class="inventory-display">
                 <div class="inventory-grid">
                     {% for block in blocks %}
-                    <div class="inventory-cell" data-block="{{ block.block_name }}"
-                        data-texture="{{ url_for('static', filename=block.face_texture_path) }}">
+                    <div class="inventory-cell" 
+                        data-block="{{ block.block_name }}"
+                        data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
+                        data-compatibility="{{ block.condition_compatibility }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
                             alt="{{ block.block_name }}">
                     </div>
