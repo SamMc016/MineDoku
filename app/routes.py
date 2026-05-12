@@ -1,10 +1,11 @@
 import random
 from datetime import datetime
-from app import app, db
+from app import db
 from app.models import Blocks, Conditions
 from flask import render_template
+from app.blueprints import main
 
-@app.route("/")
+@main.route("/")
 def index():
     blocks = Blocks.query.all()
     conditions = Conditions.query.all()
@@ -35,7 +36,7 @@ def index():
 
     return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col)
 
-@app.route("/friends")
+@main.route("/friends")
 def friends():
     friends_list = ["Alice", "Bob", "Charlie", "Dana"]
     friends_scores = [
@@ -57,18 +58,18 @@ def friends():
         all_time_scores=all_time_scores
     )
 
-@app.route("/account")
+@main.route("/account")
 def account():
     return render_template("account.html")
 
-@app.route("/login")
+@main.route("/login")
 def login():
     return render_template("login.html")
 
-@app.route("/signup")
+@main.route("/signup")
 def signup():
     return render_template("signup.html")
 
-@app.route("/end_game")
+@main.route("/end_game")
 def end_game_page():
         return render_template("end_game.html")

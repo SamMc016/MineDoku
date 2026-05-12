@@ -6,7 +6,7 @@ blocks_to_add = [
     {"block_name": "Sand", "condition_compatibility": "1,4,10,12,13,15", "inv_texture_path": "assets/inventory_textures/sand.png", "face_texture_path": "assets/game_textures/sand.png"},
     {"block_name": "Gravel", "condition_compatibility": "1,6,10,12,13,15", "inv_texture_path": "assets/inventory_textures/gravel.png", "face_texture_path": "assets/game_textures/gravel.png"},
     {"block_name": "Clay", "condition_compatibility": "1,6,10,11,12,13,15,17", "inv_texture_path": "assets/inventory_textures/clay.png", "face_texture_path": "assets/game_textures/clay.png"},
-    {"block_name": "Dirt", "condition_compatibility": "1,7,10,11,12,13,15", "inv_texture_path": "assets/inventory_textures/dirt.png", "face_texture_path": "assets/game_textures/dirt.png"},
+    {"block_name": "Dirt", "condition_compatibility": "1,7,10,11,12,13,15,16", "inv_texture_path": "assets/inventory_textures/dirt.png", "face_texture_path": "assets/game_textures/dirt.png"},
     {"block_name": "Cobblestone", "condition_compatibility": "1,6,11,12,13", "inv_texture_path": "assets/inventory_textures/cobblestone.png", "face_texture_path": "assets/game_textures/cobblestone.png"},
     {"block_name": "Stone", "condition_compatibility": "1,6,11,12,13,17", "inv_texture_path": "assets/inventory_textures/stone.png", "face_texture_path": "assets/game_textures/stone.png"},
     {"block_name": "Stone Bricks", "condition_compatibility": "1,6,12,13,14", "inv_texture_path": "assets/inventory_textures/stonebricks.png", "face_texture_path": "assets/game_textures/stonebricks.png"},
@@ -54,8 +54,6 @@ conditions_to_add = [
 
 def populate_blocks():
 
-    db.create_all()
-
     for block_data in blocks_to_add:
         existing_block = Blocks.query.filter_by(
             block_name=block_data["block_name"]
@@ -72,12 +70,9 @@ def populate_blocks():
             db.session.add(block)
 
     db.session.commit()
-    print("Blocks added successfully.")
 
 def populate_conditions():
     
-    db.create_all()
-
     for condition_data in conditions_to_add:
         existing_condition = Conditions.query.filter_by(
             condition_name=condition_data["condition_name"]

@@ -1,10 +1,16 @@
-from app import db
+from app import db, login
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, primary_key=True) # autoincrement is already active
     username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False) # change if we use hashes
+    pass
+
+    @login.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
 class Blocks(db.Model):
     block_id = db.Column(db.Integer, primary_key=True)
