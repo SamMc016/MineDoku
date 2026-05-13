@@ -7,6 +7,7 @@ from flask import render_template, request, jsonify, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
+from app.forms import LoginForm, SignupForm
 
 @main.route("/")
 def index():
@@ -132,12 +133,14 @@ def account():
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username_or_email = request.form.get("username")
-        password = request.form.get("password")
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        username_or_email = form.username.data
+        password = form.password.data
 
         user = User.query.filter(
-            (User.username == username_or_email) | 
+            (User.username == username_or_email) |
             (User.email == username_or_email)
         ).first()
 
@@ -148,22 +151,22 @@ def login():
         login_user(user)
         return redirect(url_for("main.index"))
 
-    return render_template("login.html")
+    if request.method == "POST":
+        print("LOGIN FORM ERRORS:", form.errors)
+
+    return render_template("login.html", form=form)
 
 @main.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == "POST":
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        confirm_password = request.form.get("confirm_password")
+    form = SignupForm()
 
-        if password != confirm_password:
-            flash("Passwords do not match.")
-            return redirect(url_for("main.signup"))
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
 
         existing_user = User.query.filter(
-            (User.username == username) | 
+            (User.username == username) |
             (User.email == email)
         ).first()
 
@@ -195,7 +198,10 @@ def signup():
         login_user(new_user)
         return redirect(url_for("main.index"))
 
-    return render_template("signup.html")
+    if request.method == "POST":
+        print("SIGNUP FORM ERRORS:", form.errors)
+
+    return render_template("signup.html", form=form)
 
 @main.route("/logout")
 @login_required
