@@ -1,10 +1,11 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User
 from app.blueprints import main
-from flask import render_template, request, jsonify
-from flask_login import current_user
+from flask import render_template, request, jsonify, redirect, url_for, flash
+from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
 
 @main.route("/")
@@ -90,13 +91,78 @@ def friends():
 def account():
     return render_template("account.html")
 
-@main.route("/login")
+@main.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        username_or_email = request.form.get("username")
+        password = request.form.get("password")
+
+        user = User.query.filter(
+            (User.username == username_or_email) | 
+            (User.email == username_or_email)
+        ).first()
+
+        if user is None or not check_password_hash(user.password_hash, password):
+            flash("Invalid username/email or password.")
+            return redirect(url_for("main.login"))
+
+        login_user(user)
+        return redirect(url_for("main.index"))
+
     return render_template("login.html")
 
-@main.route("/signup")
+@main.route("/signup", methods=["GET", "POST"])
 def signup():
+    if request.method == "POST":
+        username = request.form.get("username")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for("main.signup"))
+
+        existing_user = User.query.filter(
+            (User.username == username) | 
+            (User.email == email)
+        ).first()
+
+        if existing_user:
+            flash("Username or email already exists.")
+            return redirect(url_for("main.signup"))
+
+        new_user = User(
+            username=username,
+            email=email,
+            password_hash=generate_password_hash(password)
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        new_stats = Personal_Stats(
+            user_id=new_user.user_id,
+            total_games_played=0,
+            total_games_won=0,
+            lowest_uniqueness=None,
+            average_uniqueness=None,
+            daily_uniqueness=None
+        )
+
+        db.session.add(new_stats)
+        db.session.commit()
+
+        login_user(new_user)
+        return redirect(url_for("main.index"))
+
     return render_template("signup.html")
+
+@main.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.index"))
 
 @main.route("/end_game")
 def end_game_page():

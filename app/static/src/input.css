@@ -45,6 +45,11 @@
     flex-shrink: 0;
 }
 
+.right-header {
+    display: flex;
+    gap: 10px;
+}
+
 /* === Page Title Styling === */
 
 .page-title,
@@ -601,3 +606,110 @@ input {
     background: black;
 }
 
+/* === LOGIN PAGE STYLING === */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-panel {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.login-title {
+    font-size: 52px;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 14px 16px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    background: rgba(0, 0, 0, 0.3);
+
+    color: white;
+    font-family: "Minecraft";
+    font-size: 16px;
+
+    box-sizing: border-box;
+}
+
+.login-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: white;
+}
+
+.login-submit {
+    width: 100%;
+    padding: 14px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    background: rgba(255, 255, 255, 0.2);
+
+    font-family: "Minecraft";
+    font-size: 16px;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.login-submit:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.login-link {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.login-link:hover {
+    opacity: 0.8;
+}
+
+.header-spacer {
+    width: 150px;
+}

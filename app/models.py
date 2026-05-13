@@ -2,15 +2,19 @@ from app import db, login
 from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
-    user_id = db.Column(db.Integer, primary_key=True) # autoincrement is already active
-    username = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(100), nullable=False) # change if we use hashes
-    pass
+    user_id = db.Column(db.Integer, primary_key=True)
 
-    @login.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(50), unique=True, nullable=False)
+
+    password_hash = db.Column(db.String(255), nullable=False)
+
+    def get_id(self):
+        return str(self.user_id)
+
+@login.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class Blocks(db.Model):
     block_id = db.Column(db.Integer, primary_key=True)
