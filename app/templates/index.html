@@ -30,17 +30,17 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="LTCon" data-id=" {{side_col[0].condition_id}} "> {{ side_col[0].condition_name }} </p>
+                        <p class="text-box" data-id=" {{side_col[0].condition_id}} "> {{ side_col[0].condition_name }} </p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LMCon" data-id=" {{side_col[1].condition_id}} "> {{ side_col[1].condition_name }} </p>
+                        <p class="text-box" data-id=" {{side_col[1].condition_id}} "> {{ side_col[1].condition_name }} </p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <p id="LBCon" data-id=" {{side_col[2].condition_id}} "> {{ side_col[2].condition_name }} </p>
+                        <p class="text-box" data-id=" {{side_col[2].condition_id}} "> {{ side_col[2].condition_name }} </p>
                     </td>
                 </tr>
             </table>
@@ -52,13 +52,13 @@
                 <table class="top-row-table">
                     <tr>
                         <td>
-                            <p id="TLCon" data-id=" {{top_row[0].condition_id}} "> {{ top_row[0].condition_name }} </p>
+                            <p id="top-row" class="text-box" data-id=" {{top_row[0].condition_id}} "> {{ top_row[0].condition_name }} </p>
                         </td>
                         <td>
-                            <p id="TMCon" data-id=" {{top_row[1].condition_id}} "> {{ top_row[1].condition_name }} </p>
+                            <p id="top-row" class="text-box" data-id=" {{top_row[1].condition_id}} "> {{ top_row[1].condition_name }} </p>
                         </td>
                         <td>
-                            <p id="TRCon" data-id=" {{top_row[2].condition_id}} "> {{ top_row[2].condition_name }} </p>
+                            <p id="top-row" class="text-box" data-id=" {{top_row[2].condition_id}} "> {{ top_row[2].condition_name }} </p>
                         </td>
                     </tr>
                 </table>
@@ -108,7 +108,7 @@
             <table class="side-column-table">
                 <tr>
                     <td>
-                        <p id="dur">Durability <span id="durability-score" class="scores">{{ max_durability }}/{{ max_durability }}</span></p>
+                        <p class="text-box" id="dur">Durability <span id="durability-score" class="scores">{{ max_durability }}/{{ max_durability }}</span></p>
                     </td>
                 </tr>
                 <tr>
@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <p id="US">US <span id="us-score" class="scores">1000</span></p>
+                        <p class="text-box" id="US">US <span id="us-score" class="scores">{{ US }}</span></p>
                     </td>
                 </tr>
             </table>
@@ -132,6 +132,7 @@
                     <div class="inventory-cell" 
                         data-block="{{ block.block_name }}"
                         data-block-id="{{ block.block_id }}"
+                        data-block-percentage="{{ block.selection_percentage|round(2) }}"
                         data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
                         data-compatibility="{{ block.condition_compatibility }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
@@ -145,6 +146,10 @@
         </div>
     </div>
 
+    <script>
+        window.maxDurability = Number("{{ max_durability }}");
+        window.initialUS = Number("{{ US }}");
+    </script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 

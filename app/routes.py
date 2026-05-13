@@ -1,10 +1,11 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions, Block_Stats
-from flask import render_template, request, jsonify
-from sqlalchemy import func
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats
 from app.blueprints import main
+from flask import render_template, request, jsonify
+from flask_login import current_user
+from sqlalchemy import func
 
 @main.route("/")
 def index():
@@ -14,6 +15,27 @@ def index():
 
     today_seed = datetime.now().strftime("%Y-%m-%d")
     random.seed(today_seed)
+
+    global_stats = Game_Stats.query.first()
+
+    if not global_stats:
+        global_stats = Game_Stats(global_games_played=0, last_reset_date=today_seed)
+        db.session.add(global_stats)
+        db.session.commit()
+    elif global_stats.last_reset_date != today_seed:
+        db.session.query(Block_Stats).delete()
+
+        global_stats.lowest_uniqueness = 900
+        global_stats.average_uniqueness = 0
+        global_stats.global_games_played = 0
+
+        db.session.query(Personal_Stats).update({Personal_Stats.daily_uniqueness: 900})
+
+        global_stats.last_reset_date = today_seed
+
+        db.session.commit()
+
+    
 
     valid_board = False
     while not valid_board:
@@ -36,7 +58,11 @@ def index():
         if is_solvable:
             valid_board = True
 
-    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9)
+    for block in blocks:
+            count = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.block_id == block.block_id).scalar() or 0
+            block.selection_percentage = (count / total_selections) * 100
+
+    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9, US=900)
 
 @main.route("/friends")
 def friends():
@@ -78,9 +104,61 @@ def end_game_page():
 
 @main.route("/finish_game", methods=["POST"])
 def finish_game():
-    data = request.get_json()
+    data = request.get_json()    
+    final_us = data.get("us_score")
+    blocks_placed = data.get("chosen_blocks")
+    today_seed = datetime.now().strftime("%Y-%m-%d")
 
-    score = data.get("us_score")
-    blocks = data.get("chosen_blocks")
+    # game stats update
+    global_stats = Game_Stats.query.first()
 
+    if not global_stats:
+        global_stats = Game_Stats(global_games_played=1,lowest_uniqueness=final_us, average_uniqueness=final_us, last_reset_date=today_seed)
+        db.session.add(global_stats)
+    else:
+        global_stats.global_games_played += 1
+        if global_stats.lowest_uniqueness is None or final_us < global_stats.lowest_uniqueness:
+            global_stats.lowest_uniqueness = final_us
+
+        if global_stats.average_uniqueness is None:
+            global_stats.average_uniqueness = final_us
+        else:
+            global_stats.average_uniqueness = round(((global_stats.average_uniqueness + final_us) / 2), 0)
+
+    # person stats update
+    if not current_user.is_authenticated:
+        p_stats = None
+    else:
+        p_stats = Personal_Stats.query.filter_by(user_id=current_user.user_id).first()
+        if not p_stats:
+            p_stats = Personal_Stats(user_id=current_user.user_id, total_games_played=0, total_games_won=0)
+            db.session.add(p_stats)
+        
+        p_stats.total_games_played += 1
+        p_stats.daily_uniqueness = final_us
+
+        if len(blocks_placed) == 9:
+            p_stats.total_games_won += 1
+
+        if p_stats.lowest_uniqueness is None or final_us < p_stats.lowest_uniqueness:
+            p_stats.lowest_uniqueness = final_us
+
+        if p_stats.average_uniqueness:
+            p_stats.average_uniqueness = round(((p_stats.average_uniqueness + final_us) / 2), 0)
+        else:
+            p_stats.average_uniqueness = final_us
+
+    # block stats update 
+    for pair in blocks_placed:
+        b_id = pair.get("block_id")
+        s_id = pair.get("cell_id")
+
+        b_stat = Block_Stats.query.filter_by(block_id=b_id, square_id=s_id).first()
+        if b_stat:
+            b_stat.times_chosen += 1
+        else:
+            new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=0)
+            db.session.add(new_b_stat)
+
+    db.session.commit()
     return jsonify({"success": True})
