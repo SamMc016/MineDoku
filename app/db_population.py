@@ -1,5 +1,6 @@
 from app import db
 from app.models import Blocks, Conditions
+from app.models import User
 
 blocks_to_add = [
     {"block_name": "Grass", "condition_compatibility": "1,5,7,10,12,13,15,17,18", "inv_texture_path": "assets/inventory_textures/grass.png", "face_texture_path": "assets/game_textures/grass.png"},
@@ -52,6 +53,39 @@ conditions_to_add = [
     {"condition_name": "Nature Block"}
 ]
 
+friends_to_add = [
+
+    {
+        "username": "Alice",
+        "email": "alice@test.com"
+    },
+
+    {
+        "username": "Bob",
+        "email": "bob@test.com"
+    },
+
+    {
+        "username": "Charlie",
+        "email": "charlie@test.com"
+    },
+
+    {
+        "username": "Dana",
+        "email": "dana@test.com"
+    },
+
+    {
+        "username": "Alex",
+        "email": "alex@test.com"
+    },
+
+    {
+        "username": "Alicia",
+        "email": "alicia@test.com"
+    }
+]
+
 def populate_blocks():
 
     for block_data in blocks_to_add:
@@ -85,3 +119,23 @@ def populate_conditions():
         
             db.session.add(condition)
         db.session.commit()
+
+def populate_users():
+
+    for friend_data in friends_to_add:
+
+        existing_user = User.query.filter_by(
+            username=friend_data["username"]
+        ).first()
+
+        if existing_user is None:
+
+            user = User(
+                username=friend_data["username"],
+                email=friend_data["email"],
+                password_hash="dummy"
+            )
+
+            db.session.add(user)
+
+    db.session.commit()
