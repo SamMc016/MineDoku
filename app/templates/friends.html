@@ -1,25 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Friends</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="top-bar">
-    <button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">Back to Game</button>
-    <h1 class="page-title">{{ page_title }}</h1>
-    <button class="btn" onclick="window.location.href='{{ url_for('main.account') }}'">Account</button>
-</div>
+{% block title %}Friends{% endblock %}
 
+{% block left_button %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">
+    Back to Game
+</button>
+{% endblock %}
+
+{% block right_button %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.account') }}'">
+    Account
+</button>
+{% endblock %}
+
+{% block content %}
 <div class="container">
 
     <div class="panel friends-panel">
         <h2>Friends</h2>
         <div class="friends-list">
             {% for friend in friends_list %}
-                <div class="friend">{{ friend }}</div>
+            <div class="friend">{{ friend }}</div>
             {% endfor %}
         </div>
     </div>
@@ -27,42 +29,38 @@
     <div class="panel">
         <h2>Daily Leaderboard</h2>
         {% for player in friends_scores %}
-            <div class="leaderboard-item">
-                <span>{{ player.name }}</span>
-                <div class="numbers">
-                    <span>{{ player.score }}</span>
-                </div>
+        <div class="leaderboard-item">
+            <span>{{ player.name }}</span>
+            <div class="numbers">
+                <span>{{ player.score }}</span>
             </div>
+        </div>
         {% endfor %}
 
         <h2>All-time Leaderboard</h2>
         {% for player in all_time_scores %}
-            <div class="leaderboard-item">
-                <span>{{ player.name }}</span>
-                 <div class="numbers">
-                    <span>{{ player.score }}</span>
-                </div>
+        <div class="leaderboard-item">
+            <span>{{ player.name }}</span>
+            <div class="numbers">
+                <span>{{ player.score }}</span>
             </div>
+        </div>
         {% endfor %}
     </div>
 
     <div class="panel">
         <div class="search-box">
-            <input 
-                type="text" 
-                id="friend-search"
-                placeholder="Enter username..."
-                autocomplete="off">
+            <input type="text" id="friend-search" placeholder="Enter username..." autocomplete="off">
         </div>
 
         <div id="search-results"></div>
-        <button class="btn" style="margin-top:10px;">Add Friend</button>
+
+        <button class="btn add-friend-btn">
+            Add Friend
+        </button>
     </div>
 
 </div>
 
-<script src="{{ url_for('static',
-filename='js/friends.js') }}"></script>
-
-</body>
-</html>
+<script src="{{ url_for('static', filename='js/friends.js') }}"></script>
+{% endblock %}

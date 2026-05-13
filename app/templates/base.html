@@ -1,1 +1,26 @@
-<!-- TO BE FILLED WITH COMMON HTML LIKE HEADERS AND SUCH -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.1">
+    <title>{% block title %}MINEDOKU{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+    <header class="top-bar">
+        {% block left_button %}{% endblock %}
+
+        <h1 class="page-title">MINEDOKU</h1>
+
+        <div class="right-header">
+            {% block right_button %}{% endblock %}
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+</body>
+</html>
