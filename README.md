@@ -56,6 +56,8 @@ pip install flask-migrate
 pip install flask-sqlalchemy
 pip install flask-login
 pip install selenium
+pip install flask-wtf
+pip install email-validator
 ```
 
 ### 4. Create the Database

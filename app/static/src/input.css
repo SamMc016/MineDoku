@@ -45,6 +45,11 @@
     flex-shrink: 0;
 }
 
+.right-header {
+    display: flex;
+    gap: 10px;
+}
+
 /* === Page Title Styling === */
 
 .page-title,
@@ -495,6 +500,41 @@ h2 {
     white-space: normal;
 }
 
+.leaderboard-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.numbers {
+    margin-left: auto;
+
+}
+
+
+#search-results {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.search-result {
+    padding: 10px;
+    cursor: pointer;
+
+    background-color: rgba(16, 1, 1, 0.9);
+
+    border: 3px solid #2e0563;
+
+    box-shadow: 0 0 0 2px black;
+}
+
+.search-result:hover {
+    background-color: rgba(60, 20, 90, 0.9);
+}
+
 /* === Input Styling === */
 
 input {
@@ -535,11 +575,13 @@ input {
 .leaderboard-item {
     display: flex;
     justify-content: space-between;
-    padding: 8px;
+    padding: 5px 0 3px;
     margin-bottom: 5px;
-    background: #f7f9fb;
-    border: 1px solid #e1e5ea;
-    border-radius: 4px;
+    background-color: rgba(16, 1, 1, 0.9);
+    border: 3px solid #2e0563;
+    color: #ffffff;
+    text-shadow: 2px 2px 0 #3f3f3f;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
 }
 
 /* === Accounts page Styling CSS === */
@@ -559,6 +601,34 @@ input {
     padding: 20px;
     box-sizing: border-box;
     background: rgba(0, 0, 0, 0.6);
+}
+
+.account-slot-image {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    pointer-events: none;
+    display: block;
+}
+
+.account-slot {
+    width: 80px;
+    height: 80px;
+
+    background: #4b5563;
+    border: 4px solid black;
+
+    box-shadow:
+        inset -6px -6px gray,
+        inset 6px 6px white,
+        4px 4px 0px black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
 }
 
 /* LEFT PANEL */
@@ -648,3 +718,110 @@ input {
     background: black;
 }
 
+/* === LOGIN PAGE STYLING === */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.login-panel {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.login-title {
+    font-size: 52px;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 14px 16px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    background: rgba(0, 0, 0, 0.3);
+
+    color: white;
+    font-family: "Minecraft";
+    font-size: 16px;
+
+    box-sizing: border-box;
+}
+
+.login-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: white;
+}
+
+.login-submit {
+    width: 100%;
+    padding: 14px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    background: rgba(255, 255, 255, 0.2);
+
+    font-family: "Minecraft";
+    font-size: 16px;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.login-submit:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.login-link {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.login-link:hover {
+    opacity: 0.8;
+}
+
+.header-spacer {
+    width: 150px;
+}

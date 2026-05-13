@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
 </head>
 
-<body class="min-h-screen flex flex-col bg-cover bg-center bg-fixed"
-    style="background-image: url('{{ url_for('static', filename='assets/minegif.gif') }}');">
+<body class="min-h-screen flex flex-col bg-cover bg-center bg-fixed">
 
     <!-- HEADER -->
     <header class="top-bar">
@@ -21,9 +20,17 @@
         <h1 class="page-title">MINEDOKU</h1>
 
         <div class="right-header">
-            <button class="btn" onclick="window.location.href='{{ url_for('main.friends') }}'">
+
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.friends') }}'">
                 Friends
             </button>
+        
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.logout') }}'">
+                Logout
+            </button>
+        
         </div>
     </header>
 
@@ -34,7 +41,21 @@
         </h2>
 
         <div class="backdrop-blur-md bg-white/20 border border-white/30 rounded-xl p-8 shadow-xl">
-            <div id="accounts_inventory" class="grid grid-cols-9 gap-4"></div>
+            <div id="accounts_inventory" class="grid grid-cols-9 gap-4">
+
+                {% for block in blocks %}
+                    <div class="account-slot"
+                         data-unlocked="{% if block.block_id in unlocked_block_ids %}true{% else %}false{% endif %}"
+                         data-texture="{{ url_for('static', filename=block.inv_texture_path) }}">
+            
+                        <img class="account-slot-image"
+                             src="{% if block.block_id in unlocked_block_ids %}{{ url_for('static', filename=block.inv_texture_path) }}{% else %}{{ url_for('static', filename='assets/blank_texture.png') }}{% endif %}"
+                             alt="{{ block.block_name }}">
+            
+                    </div>
+                {% endfor %}
+            
+            </div>
         </div>
     </div>
 
@@ -50,22 +71,7 @@
         </div>
     </div>
 
-    <script>
-        const inventory = document.getElementById("accounts_inventory");
-
-        for (let i = 0; i < 27; i++) {
-            const slot = document.createElement("div");
-
-            slot.className = `
-                w-20 h-20
-                bg-gray-600
-                border-4 border-black
-                shadow-[inset_-6px_-6px_gray,inset_6px_6px_white,4px_4px_0px_black]
-            `;
-
-            inventory.appendChild(slot);
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/account.js') }}"></script>
 
 </body>
 

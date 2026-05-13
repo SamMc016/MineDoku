@@ -9,17 +9,32 @@
 
 <body>
     <header class="top-bar">
-        <button class="btn" onclick="window.location.href='{{ url_for('main.login') }}'">
-            Login / Signup
-        </button>
 
+        {% if current_user.is_authenticated %}
+    
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.account') }}'">
+                Account
+            </button>
+    
+        {% else %}
+    
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.login') }}'">
+                Login / Signup
+            </button>
+    
+        {% endif %}
+    
         <h1 class="page-title">MINEDOKU</h1>
-
+    
         <div class="right-header">
-            <button class="btn" id="rules" onclick="window.location.href='{{ url_for('main.friends') }}'">
+            <button class="btn" id="rules"
+                    onclick="window.location.href='{{ url_for('main.friends') }}'">
                 Friends
             </button>
         </div>
+    
     </header>
 
     {% block sub_header %}{% endblock %}
@@ -137,6 +152,7 @@
                         data-block-id="{{ block.block_id }}"
                         data-block-percentage="{{ block.selection_percentage|round(2) }}"
                         data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
+                        data-bottom-texture="{% if block.block_name == 'Grass' %}{{ url_for('static', filename='assets/game_textures/dirt.png') }}{% else %}{{ url_for('static', filename=block.face_texture_path) }}{% endif %}"
                         data-compatibility="{{ block.condition_compatibility }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
                             alt="{{ block.block_name }}">

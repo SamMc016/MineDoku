@@ -1,11 +1,13 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory
 from app.blueprints import main
-from flask import render_template, request, jsonify
-from flask_login import current_user
+from flask import render_template, request, jsonify, redirect, url_for, flash
+from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
+from app.forms import LoginForm, SignupForm
 
 def get_daily_puzzle():
     blocks = Blocks.query.all()
@@ -79,6 +81,17 @@ def friends():
         {"name": "LegendX", "score": 4500}
     ]
 
+    # LOWEST -> HIGHEST
+    friends_scores = sorted(
+        friends_scores,
+        key=lambda player: player["score"]
+    )
+
+    all_time_scores = sorted(
+        all_time_scores,
+        key=lambda player: player["score"]
+    )
+
     return render_template(
         "friends.html",
         page_title="MINEDOKU",
@@ -87,17 +100,130 @@ def friends():
         all_time_scores=all_time_scores
     )
 
+@main.route("/search_friends")
+def search_friends():
+
+    query = request.args.get("q", "").lower()
+
+    if len(query) < 2:
+        return jsonify([])
+
+    users = User.query.filter(
+        User.username.ilike(f"%{query}%")
+    ).limit(5).all()
+
+    matches = [user.username for user in users]
+
+    return jsonify(matches)
+
+
+@main.route("/add_friend", methods=["POST"])
+def add_friend():
+
+    data = request.get_json()
+
+    friend_name = data["friend_name"]
+
+    print(f"Added friend: {friend_name}")
+
+    return jsonify({"success": True})
+
 @main.route("/account")
+@login_required
 def account():
-    return render_template("account.html")
+    blocks = Blocks.query.all()
 
-@main.route("/login")
+    unlocked_inventory = Inventory.query.filter_by(
+        user_id=current_user.user_id
+    ).all()
+
+    unlocked_block_ids = [
+        item.block_id for item in unlocked_inventory
+    ]
+
+    return render_template(
+        "account.html",
+        blocks=blocks,
+        unlocked_block_ids=unlocked_block_ids
+    )
+
+@main.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
 
-@main.route("/signup")
+    if form.validate_on_submit():
+        username_or_email = form.username.data
+        password = form.password.data
+
+        user = User.query.filter(
+            (User.username == username_or_email) |
+            (User.email == username_or_email)
+        ).first()
+
+        if user is None or not check_password_hash(user.password_hash, password):
+            flash("Invalid username/email or password.")
+            return redirect(url_for("main.login"))
+
+        login_user(user)
+        return redirect(url_for("main.index"))
+
+    if request.method == "POST":
+        print("LOGIN FORM ERRORS:", form.errors)
+
+    return render_template("login.html", form=form)
+
+@main.route("/signup", methods=["GET", "POST"])
 def signup():
-    return render_template("signup.html")
+    form = SignupForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+
+        existing_user = User.query.filter(
+            (User.username == username) |
+            (User.email == email)
+        ).first()
+
+        if existing_user:
+            flash("Username or email already exists.")
+            return redirect(url_for("main.signup"))
+
+        new_user = User(
+            username=username,
+            email=email,
+            password_hash=generate_password_hash(password)
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        new_stats = Personal_Stats(
+            user_id=new_user.user_id,
+            total_games_played=0,
+            total_games_won=0,
+            lowest_uniqueness=None,
+            average_uniqueness=None,
+            daily_uniqueness=None
+        )
+
+        db.session.add(new_stats)
+        db.session.commit()
+
+        login_user(new_user)
+        return redirect(url_for("main.index"))
+
+    if request.method == "POST":
+        print("SIGNUP FORM ERRORS:", form.errors)
+
+    return render_template("signup.html", form=form)
+
+@main.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.index"))
 
 @main.route("/end_game")
 def end_game_page():
@@ -200,6 +326,21 @@ def finish_game():
         else:
             new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=1)
             db.session.add(new_b_stat)
+
+        # inventory update
+        # If the user is logged in, remember that they have used this block before.
+        if current_user.is_authenticated:
+            inventory_item = Inventory.query.filter_by(
+                user_id=current_user.user_id,
+                block_id=b_id
+            ).first()
+
+            if not inventory_item:
+                new_inventory_item = Inventory(
+                    user_id=current_user.user_id,
+                    block_id=b_id
+                )
+                db.session.add(new_inventory_item)
 
     db.session.commit()
     return jsonify({"success": True})

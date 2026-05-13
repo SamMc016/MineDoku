@@ -28,26 +28,41 @@
         <h2>Daily Leaderboard</h2>
         {% for player in friends_scores %}
             <div class="leaderboard-item">
-                <span>{{ player.name }}</span><span>{{ player.score }}</span>
+                <span>{{ player.name }}</span>
+                <div class="numbers">
+                    <span>{{ player.score }}</span>
+                </div>
             </div>
         {% endfor %}
 
-        <h2>All-Time Leaderboard</h2>
+        <h2>All-time Leaderboard</h2>
         {% for player in all_time_scores %}
             <div class="leaderboard-item">
-                <span>{{ player.name }}</span><span>{{ player.score }}</span>
+                <span>{{ player.name }}</span>
+                 <div class="numbers">
+                    <span>{{ player.score }}</span>
+                </div>
             </div>
         {% endfor %}
     </div>
 
     <div class="panel">
         <div class="search-box">
-            <input type="text" placeholder="Enter username...">
+            <input 
+                type="text" 
+                id="friend-search"
+                placeholder="Enter username..."
+                autocomplete="off">
         </div>
+
+        <div id="search-results"></div>
         <button class="btn" style="margin-top:10px;">Add Friend</button>
     </div>
 
 </div>
+
+<script src="{{ url_for('static',
+filename='js/friends.js') }}"></script>
 
 </body>
 </html>

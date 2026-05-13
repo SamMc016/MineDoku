@@ -22,90 +22,92 @@ document.addEventListener("DOMContentLoaded", () => {
             overlay.classList.remove("hidden");
         });
     });
+  
+  /* Closes inventory when back button is clicked */
+  backButton.addEventListener("click", () => {
+      overlay.classList.add("hidden");
+  });
 
-    /* Closes inventory when back button is clicked */
-    backButton.addEventListener("click", () => {
-        overlay.classList.add("hidden");
-    });
+  /* Clicking it or anywhere outside of the inventory drops the screen */
+  overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) {
+          overlay.classList.add("hidden");
+      }
+  });
 
-    /* Clicking it or anywhere outside of the inventory drops the screen */
-    overlay.addEventListener("click", (event) => {
-        if (event.target === overlay) {
-            overlay.classList.add("hidden");
-        }
-    });
+  /* Goes to end game page when give up button is clicked */
+  giveUpButton = document.getElementById("give-up");
+  giveUpButton.addEventListener("click", () => {
+      if (giveUpButton.innerText === "View Results?") {
+          window.location.href = "/end_game";
+      }
+      else {
+          endGame();
+      }
+  });
 
-    giveUpButton.addEventListener("click", () => {
-        if (giveUpButton.innerText === "View Results?") {
-            window.location.href = "/end_game";
-        }
-        else {
-            endGame();
-        }
-    });
+      /* Places selected inventory block into selected main grid cell */
+      inventoryCells.forEach(cell => {
+          cell.addEventListener("click", () => {
+              const blockName = cell.dataset.block;
+              const texturePath = cell.dataset.texture;
+              const conditionCompatibility = cell.dataset.compatibility.split(",");
 
-    /* Places selected inventory block into selected main grid cell */
-    inventoryCells.forEach(cell => {
-        cell.addEventListener("click", () => {
-            const blockName = cell.dataset.block;
-            const texturePath = cell.dataset.texture;
-            const conditionCompatibility = cell.dataset.compatibility.split(",");
+              const selectedGameCell = document.getElementById(window.currentSquare);
 
-            const selectedGameCell = document.getElementById(window.currentSquare);
+              durability--;
+              updateDurability();
 
-            durability--;
-            updateDurability();
+              const reqTop = selectedGameCell.getAttribute("data-top");
+              const reqSide = selectedGameCell.getAttribute("data-side");
+              const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
 
-            const reqTop = selectedGameCell.getAttribute("data-top");
-            const reqSide = selectedGameCell.getAttribute("data-side");
-            const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
+              if (isCorrect) {
+                  const percentage = parseFloat(cell.dataset.blockPercentage) || 0;
+                  currentUS = (currentUS - 100) + percentage;
 
-            if (isCorrect) {
-                const percentage = parseFloat(cell.dataset.blockPercentage) || 0;
-                currentUS = (currentUS - 100) + percentage;
+                  const usDisplay = document.getElementById("us-score");
+                  if (usDisplay) {
+                      usDisplay.innerText = Math.round(currentUS);
+                  }
 
-                const usDisplay = document.getElementById("us-score");
-                if (usDisplay) {
-                    usDisplay.innerText = Math.round(currentUS);
-                }
+                  selectedGameCell.dataset.percentage = percentage.toFixed(1) + "%";
 
-                selectedGameCell.dataset.percentage = percentage.toFixed(1) + "%";
+                  selectedGameCell.dataset.block = blockName;
+                  selectedGameCell.dataset.texture = texturePath;
+                  selectedGameCell.innerHTML = "";
 
-                selectedGameCell.dataset.block = blockName;
-                selectedGameCell.dataset.texture = texturePath;
-                selectedGameCell.innerHTML = "";
+                  placedBlocks.push({
+                      block_id: cell.dataset.blockId,
+                      cell_id: window.currentSquare
+                  })
 
-                placedBlocks.push({
-                    block_id: cell.dataset.blockId,
-                    cell_id: window.currentSquare
-                })
+                  renderBoard(window.currentSquare);
+                  overlay.classList.add("hidden");
+              } else {
+                  const errorClasses = [
+                      "is-error",
+                      "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
+                      "!outline-red-500",
+                      "!outline-4",
+                      "!outline-offset-[-4px]",
+                      "!border-transparent"
+                  ];
 
-                renderBoard(window.currentSquare);
-                overlay.classList.add("hidden");
-            } else {
-                const errorClasses = [
-                    "is-error",
-                    "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
-                    "!outline-red-500",
-                    "!outline-4",
-                    "!outline-offset-[-4px]",
-                    "!border-transparent"
-                ];
+                  overlay.classList.add("hidden");
 
-                overlay.classList.add("hidden");
+                  selectedGameCell.classList.add(...errorClasses);
+                  setTimeout(() => {
+                      selectedGameCell.classList.remove(...errorClasses);
+                  }, 1500);
+              }
 
-                selectedGameCell.classList.add(...errorClasses);
-                setTimeout(() => {
-                    selectedGameCell.classList.remove(...errorClasses);
-                }, 1500);
-            }
-
-            if (durability <= 0) {
-                endGame();
-                return;
-            }
-        });
-    });
+              if (durability <= 0) {
+                  endGame();
+                  return;
+              }
+          });
+      });
 });
 
 function updateDurability() {
@@ -189,6 +191,7 @@ function renderBoard(newlyPlacedId = null) {
     gameCells.forEach(cell => {
         const blockName = cell.dataset.block;
         const texturePath = cell.dataset.texture;
+        const bottomTexturePath = cell.dataset.bottomTexture || texturePath;
 
         if (!blockName || !texturePath) {
             return;
@@ -226,7 +229,7 @@ function renderBoard(newlyPlacedId = null) {
         if (isTopRow && !hasBelow) {
             sideFaceLayer.insertAdjacentHTML(
                 "beforeend",
-                createPerspectiveFace(cell, "bottom", texturePath, vanishingPoint, depthAmount, containerRect)
+                createPerspectiveFace(cell, "bottom", bottomTexturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
 

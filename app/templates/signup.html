@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
 </head>
 
-<body
-    class="min-h-screen flex flex-col bg-cover bg-center bg-fixed"
-    style="background-image: url('{{ url_for('static', filename='assets/background_image.jpg') }}');"
->
+<body class="login-page">
 
     <!-- HEADER -->
     <header class="top-bar">
@@ -21,63 +18,56 @@
 
         <h1 class="page-title">MINEDOKU</h1>
 
-        <div class="w-[150px]"></div>
+        <div class="header-spacer"></div>
     </header>
 
     <!-- SIGNUP CONTENT -->
-    <div class="flex flex-1 items-center justify-center px-6">
+    <div class="login-wrapper">
 
-        <div class="backdrop-blur-md bg-white/20 border border-white/30 rounded-xl p-10 shadow-xl w-full max-w-md">
+        <div class="login-panel">
 
-            <h2 class="!text-5xl font-bold text-center text-white mb-8">
+            <h2 class="login-title">
                 Sign Up
             </h2>
 
-            <form action="#" class="space-y-5">
+            <form method="POST" class="login-form">
 
-                <input
-                    type="text"
-                    placeholder="Username"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
-                >
+                {{ form.hidden_tag() }}
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
-                >
-
-                <input
-                    type="password"
-                    placeholder="Password"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
-                >
-
-                <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    required
-                    class="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white"
-                >
-
-                <button
-                    type="submit"
-                    class="w-full py-3 rounded-lg bg-white/20 border border-white/30 hover:bg-white/30 transition text-white font-bold"
-                >
+                <input type="text"
+                       name="username"
+                       placeholder="Username"
+                       required
+                       class="login-input">
+            
+                <input type="email"
+                       name="email"
+                       placeholder="Email"
+                       required
+                       class="login-input">
+            
+                <input type="password"
+                       name="password"
+                       placeholder="Password"
+                       required
+                       class="login-input">
+            
+                <input type="password"
+                       name="confirm_password"
+                       placeholder="Confirm Password"
+                       required
+                       class="login-input">
+            
+                <button type="submit" class="login-submit">
                     Create Account
                 </button>
-
+            
             </form>
 
-            <p class="text-center mt-6 text-white">
+            <p class="login-footer">
                 Already have an account?
-                <a
-                    href="{{ url_for('main.login') }}"
-                    class="underline font-bold hover:text-gray-200 transition"
-                >
+
+                <a href="{{ url_for('main.login') }}" class="login-link">
                     Login!
                 </a>
             </p>
