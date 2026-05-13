@@ -2,119 +2,112 @@ let durability = window.maxDurability;
 let placedBlocks = [];
 let currentUS = window.initialUS;
 
-const gameCells = document.querySelectorAll(".gameboard-cell");
-const inventoryCells = document.querySelectorAll(".inventory-cell");
-const overlay = document.getElementById("inventory-overlay");
-const backButton = document.getElementById("backFromInventory");
-const tableContainer = document.querySelector(".table");
+let gameCells, inventoryCells, overlay, backButton, giveUpButton, tableContainer;
 
-/* Create separate rendering layers */
-const sideFaceLayer = document.createElement("div");
-sideFaceLayer.id = "side-face-layer";
+document.addEventListener("DOMContentLoaded", () => {
+    gameCells = document.querySelectorAll(".gameboard-cell");
+    inventoryCells = document.querySelectorAll(".inventory-cell");
+    overlay = document.getElementById("inventory-overlay");
+    backButton = document.getElementById("backFromInventory");
+    giveUpButton = document.getElementById("give-up");
+    tableContainer = document.querySelector(".table");
 
-const frontFaceLayer = document.createElement("div");
-frontFaceLayer.id = "front-face-layer";
-
-tableContainer.appendChild(sideFaceLayer);
-tableContainer.appendChild(frontFaceLayer);
-
-/* Opens inventory when a main grid cell is clicked */
-gameCells.forEach(cell => {
-    cell.addEventListener("click", () => {
-        if (cell.dataset.block) {
-            return;
-        }
-
-        window.currentSquare = cell.id;
-        overlay.classList.remove("hidden");
-    });
-});
-
-/* Closes inventory when back button is clicked */
-backButton.addEventListener("click", () => {
-    overlay.classList.add("hidden");
-});
-
-/* Clicking it or anywhere outside of the inventory drops the screen */
-overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) {
-        overlay.classList.add("hidden");
-    }
-});
-
-/* Goes to end game page when give up button is clicked */
-const giveUpButton = document.getElementById("give-up");
-
-giveUpButton.addEventListener("click", () => {
-    if (giveUpButton.innerText === "View Results?") {
-        window.location.href = "/end_game";
-    }
-    else {
-        endGame();
-    }
-});
-
-/* Places selected inventory block into selected main grid cell */
-inventoryCells.forEach(cell => {
-    cell.addEventListener("click", () => {
-        const blockName = cell.dataset.block;
-        const texturePath = cell.dataset.texture;
-        const bottomTexturePath = cell.dataset.bottomTexture;
-        const conditionCompatibility = cell.dataset.compatibility.split(",");
-
-        const selectedGameCell = document.getElementById(window.currentSquare);
-
-        durability--;
-        updateDurability();
-
-        const reqTop = selectedGameCell.getAttribute("data-top");
-        const reqSide = selectedGameCell.getAttribute("data-side");
-        const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
-
-        if (isCorrect) {
-            const percentage = parseFloat(cell.dataset.blockPercentage) || 0;
-            currentUS = (currentUS - 100) + percentage;
-
-            const usDisplay = document.getElementById("us-score");
-            if (usDisplay) {
-                usDisplay.innerText = Math.round(currentUS);
+    /* Opens inventory when a main grid cell is clicked */
+    gameCells.forEach(cell => {
+        cell.addEventListener("click", () => {
+            if (cell.dataset.block) {
+                return;
             }
-
-            selectedGameCell.dataset.block = blockName;
-            selectedGameCell.dataset.texture = texturePath;
-            selectedGameCell.dataset.bottomTexture = bottomTexturePath;
-            selectedGameCell.innerHTML = "";
-
-            placedBlocks.push({
-                block_id: cell.dataset.blockId,
-                cell_id: window.currentSquare
-            })
-
-            renderBoard(window.currentSquare);
-            overlay.classList.add("hidden");
-        } else {
-            const errorClasses = [
-                "is-error",
-                "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
-                "!outline-red-500",
-                "!outline-4",
-                "!outline-offset-[-4px]",
-                "!border-transparent"
-            ];
-
-            overlay.classList.add("hidden");
-
-            selectedGameCell.classList.add(...errorClasses);
-            setTimeout(() => {
-                selectedGameCell.classList.remove(...errorClasses);
-            }, 1500);
-        }
-
-        if (durability <= 0) {
-            endGame();
-            return;
-        }
+            window.currentSquare = cell.id;
+            overlay.classList.remove("hidden");
+        });
     });
+  
+  /* Closes inventory when back button is clicked */
+  backButton.addEventListener("click", () => {
+      overlay.classList.add("hidden");
+  });
+
+  /* Clicking it or anywhere outside of the inventory drops the screen */
+  overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) {
+          overlay.classList.add("hidden");
+      }
+  });
+
+  /* Goes to end game page when give up button is clicked */
+  giveUpButton = document.getElementById("give-up");
+  giveUpButton.addEventListener("click", () => {
+      if (giveUpButton.innerText === "View Results?") {
+          window.location.href = "/end_game";
+      }
+      else {
+          endGame();
+      }
+  });
+
+      /* Places selected inventory block into selected main grid cell */
+      inventoryCells.forEach(cell => {
+          cell.addEventListener("click", () => {
+              const blockName = cell.dataset.block;
+              const texturePath = cell.dataset.texture;
+              const conditionCompatibility = cell.dataset.compatibility.split(",");
+
+              const selectedGameCell = document.getElementById(window.currentSquare);
+
+              durability--;
+              updateDurability();
+
+              const reqTop = selectedGameCell.getAttribute("data-top");
+              const reqSide = selectedGameCell.getAttribute("data-side");
+              const isCorrect = conditionCompatibility.includes(reqTop) && conditionCompatibility.includes(reqSide);
+
+              if (isCorrect) {
+                  const percentage = parseFloat(cell.dataset.blockPercentage) || 0;
+                  currentUS = (currentUS - 100) + percentage;
+
+                  const usDisplay = document.getElementById("us-score");
+                  if (usDisplay) {
+                      usDisplay.innerText = Math.round(currentUS);
+                  }
+
+                  selectedGameCell.dataset.percentage = percentage.toFixed(1) + "%";
+
+                  selectedGameCell.dataset.block = blockName;
+                  selectedGameCell.dataset.texture = texturePath;
+                  selectedGameCell.innerHTML = "";
+
+                  placedBlocks.push({
+                      block_id: cell.dataset.blockId,
+                      cell_id: window.currentSquare
+                  })
+
+                  renderBoard(window.currentSquare);
+                  overlay.classList.add("hidden");
+              } else {
+                  const errorClasses = [
+                      "is-error",
+                      "!animate-[redFlash_1.5s_ease-in-out,shake_0.5s_ease-in-out_infinite]",
+                      "!outline-red-500",
+                      "!outline-4",
+                      "!outline-offset-[-4px]",
+                      "!border-transparent"
+                  ];
+
+                  overlay.classList.add("hidden");
+
+                  selectedGameCell.classList.add(...errorClasses);
+                  setTimeout(() => {
+                      selectedGameCell.classList.remove(...errorClasses);
+                  }, 1500);
+              }
+
+              if (durability <= 0) {
+                  endGame();
+                  return;
+              }
+          });
+      });
 });
 
 function updateDurability() {
@@ -165,6 +158,22 @@ function endGame() {
 
 function renderBoard(newlyPlacedId = null) {
     window.newlyPlacedId = newlyPlacedId;
+
+    let sideFaceLayer = document.getElementById("side-face-layer");
+    let frontFaceLayer = document.getElementById("front-face-layer");
+
+    if (!sideFaceLayer) {
+        sideFaceLayer = document.createElement("div");
+        sideFaceLayer.id = "side-face-layer";
+        tableContainer.appendChild(sideFaceLayer);
+    }
+
+    if (!frontFaceLayer) {
+        frontFaceLayer = document.createElement("div");
+        frontFaceLayer.id = "front-face-layer";
+        tableContainer.appendChild(frontFaceLayer);
+    }
+
     sideFaceLayer.innerHTML = "";
     frontFaceLayer.innerHTML = "";
 
@@ -233,26 +242,37 @@ function renderBoard(newlyPlacedId = null) {
 
         frontFaceLayer.insertAdjacentHTML(
             "beforeend",
-            createFrontFace(cell, texturePath, containerRect)
+            createFrontFace(cell, texturePath, containerRect, cell.dataset.percentage)
         );
     });
 }
 
-function createFrontFace(cell, texturePath, containerRect) {
+function createFrontFace(cell, texturePath, containerRect, percentage) {
     const rect = cell.getBoundingClientRect();
-
     const left = rect.left - containerRect.left;
     const top = rect.top - containerRect.top;
+
+    const boxHtml = percentage ?
+        `<span class="percentage-box"> ${percentage}</span>`
+        : '';
 
     return `
         <div
             class="block-face block-front rendered-block-face ${String(cell.id) === String(window.newlyPlacedId) ? 'newly-placed' : ''}"
             data-square-id="${cell.id}"
+            data-block="${cell.dataset.block}"
             style="
                 left: ${left}px;
                 top: ${top}px;
                 background-image: url('${texturePath}');
+
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-end;
+                padding: 8px;
+                box-sizing: border-box;
             ">
+            ${boxHtml}
         </div>
     `;
 }
@@ -346,4 +366,3 @@ function projectTowardPoint(point, target, amount) {
         y: point.y + (target.y - point.y) * amount
     };
 }
-

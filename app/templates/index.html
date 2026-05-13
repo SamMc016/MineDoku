@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- placeholder id's will be marked with a !! in their comment -->
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=2.1">
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
-    <title>MineDoku</title>
+    <title>MineDoku - {% block title %}Puzzle Page{% endblock %} </title>
 </head>
 
 <body>
@@ -39,8 +37,10 @@
     
     </header>
 
-    <div class="game">
+    {% block sub_header %}{% endblock %}
 
+    <div class="game">
+        {% block conditions %}
         <div class="side-column" id="left-conditions">
             <table class="side-column-table">
                 <tr>
@@ -78,7 +78,8 @@
                     </tr>
                 </table>
             </div>
-
+        {% endblock %}
+        {% block gameboard %}  
             <div class="table">
                 <table>
                     <tr>
@@ -116,10 +117,11 @@
                     </tr>
                 </table>
             </div>
-
+        {% endblock %}
         </div>
 
         <div class="side-column" id="extra">
+            {% block stats %}
             <table class="side-column-table">
                 <tr>
                     <td>
@@ -135,10 +137,11 @@
                     </td>
                 </tr>
             </table>
+            {% endblock %}
         </div>
 
     </div>
-
+    {% block inventory %}
     <div id="inventory-overlay" class="hidden">
         <div class="inventory-container">
             <div class="inventory-display">
@@ -161,12 +164,15 @@
             <button id="backFromInventory" class="btn">Back</button>
         </div>
     </div>
+    {% endblock %}
 
-    <script>
-        window.maxDurability = Number("{{ max_durability }}");
-        window.initialUS = Number("{{ US }}");
-    </script>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    {% block scripts %}
+        <script>
+            window.maxDurability = Number("{{ max_durability }}");
+            window.initialUS = Number("{{ US }}");
+        </script>
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    {% endblock %}
 </body>
 
 </html>
