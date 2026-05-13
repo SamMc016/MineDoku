@@ -739,6 +739,31 @@ h2 {
   margin-top: 10px;
   white-space: normal;
 }
+.leaderboard-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.numbers {
+  margin-left: auto;
+}
+#search-results {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.search-result {
+  padding: 10px;
+  cursor: pointer;
+  background-color: rgba(16, 1, 1, 0.9);
+  border: 3px solid #2e0563;
+  box-shadow: 0 0 0 2px black;
+}
+.search-result:hover {
+  background-color: rgba(60, 20, 90, 0.9);
+}
 input {
   width: 100%;
   box-sizing: border-box;
@@ -767,11 +792,13 @@ input {
 .leaderboard-item {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
+  padding: 5px 0 3px;
   margin-bottom: 5px;
-  background: #f7f9fb;
-  border: 1px solid #e1e5ea;
-  border-radius: 4px;
+  background-color: rgba(16, 1, 1, 0.9);
+  border: 3px solid #2e0563;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
 }
 .accounts_body {
   font-family: "Minecraft";

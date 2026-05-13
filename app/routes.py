@@ -79,6 +79,17 @@ def friends():
         {"name": "LegendX", "score": 4500}
     ]
 
+    # LOWEST -> HIGHEST
+    friends_scores = sorted(
+        friends_scores,
+        key=lambda player: player["score"]
+    )
+
+    all_time_scores = sorted(
+        all_time_scores,
+        key=lambda player: player["score"]
+    )
+
     return render_template(
         "friends.html",
         page_title="MINEDOKU",
@@ -86,6 +97,34 @@ def friends():
         friends_scores=friends_scores,
         all_time_scores=all_time_scores
     )
+
+@main.route("/search_friends")
+def search_friends():
+
+    query = request.args.get("q", "").lower()
+
+    if len(query) < 2:
+        return jsonify([])
+
+    users = User.query.filter(
+        User.username.ilike(f"%{query}%")
+    ).limit(5).all()
+
+    matches = [user.username for user in users]
+
+    return jsonify(matches)
+
+
+@main.route("/add_friend", methods=["POST"])
+def add_friend():
+
+    data = request.get_json()
+
+    friend_name = data["friend_name"]
+
+    print(f"Added friend: {friend_name}")
+
+    return jsonify({"success": True})
 
 @main.route("/account")
 def account():
