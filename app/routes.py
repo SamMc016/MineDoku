@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory
 from app.blueprints import main
 from flask import render_template, request, jsonify, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -89,8 +89,23 @@ def friends():
     )
 
 @main.route("/account")
+@login_required
 def account():
-    return render_template("account.html")
+    blocks = Blocks.query.all()
+
+    unlocked_inventory = Inventory.query.filter_by(
+        user_id=current_user.user_id
+    ).all()
+
+    unlocked_block_ids = [
+        item.block_id for item in unlocked_inventory
+    ]
+
+    return render_template(
+        "account.html",
+        blocks=blocks,
+        unlocked_block_ids=unlocked_block_ids
+    )
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
@@ -229,8 +244,23 @@ def finish_game():
         if b_stat:
             b_stat.times_chosen += 1
         else:
-            new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=0)
+            new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=1)
             db.session.add(new_b_stat)
+
+        # inventory update
+        # If the user is logged in, remember that they have used this block before.
+        if current_user.is_authenticated:
+            inventory_item = Inventory.query.filter_by(
+                user_id=current_user.user_id,
+                block_id=b_id
+            ).first()
+
+            if not inventory_item:
+                new_inventory_item = Inventory(
+                    user_id=current_user.user_id,
+                    block_id=b_id
+                )
+                db.session.add(new_inventory_item)
 
     db.session.commit()
     return jsonify({"success": True})

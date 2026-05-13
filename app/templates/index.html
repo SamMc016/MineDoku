@@ -149,6 +149,7 @@
                         data-block-id="{{ block.block_id }}"
                         data-block-percentage="{{ block.selection_percentage|round(2) }}"
                         data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
+                        data-bottom-texture="{% if block.block_name == 'Grass' %}{{ url_for('static', filename='assets/game_textures/dirt.png') }}{% else %}{{ url_for('static', filename=block.face_texture_path) }}{% endif %}"
                         data-compatibility="{{ block.condition_compatibility }}">
                         <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
                             alt="{{ block.block_name }}">

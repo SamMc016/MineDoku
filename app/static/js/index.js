@@ -59,6 +59,7 @@ inventoryCells.forEach(cell => {
     cell.addEventListener("click", () => {
         const blockName = cell.dataset.block;
         const texturePath = cell.dataset.texture;
+        const bottomTexturePath = cell.dataset.bottomTexture;
         const conditionCompatibility = cell.dataset.compatibility.split(",");
 
         const selectedGameCell = document.getElementById(window.currentSquare);
@@ -81,6 +82,7 @@ inventoryCells.forEach(cell => {
 
             selectedGameCell.dataset.block = blockName;
             selectedGameCell.dataset.texture = texturePath;
+            selectedGameCell.dataset.bottomTexture = bottomTexturePath;
             selectedGameCell.innerHTML = "";
 
             placedBlocks.push({
@@ -180,6 +182,7 @@ function renderBoard(newlyPlacedId = null) {
     gameCells.forEach(cell => {
         const blockName = cell.dataset.block;
         const texturePath = cell.dataset.texture;
+        const bottomTexturePath = cell.dataset.bottomTexture || texturePath;
 
         if (!blockName || !texturePath) {
             return;
@@ -217,7 +220,7 @@ function renderBoard(newlyPlacedId = null) {
         if (isTopRow && !hasBelow) {
             sideFaceLayer.insertAdjacentHTML(
                 "beforeend",
-                createPerspectiveFace(cell, "bottom", texturePath, vanishingPoint, depthAmount, containerRect)
+                createPerspectiveFace(cell, "bottom", bottomTexturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
 
