@@ -476,12 +476,13 @@ table {
 /* === Panel Styling === */
 
 .panel {
-    background-image: url("../assets/transparent_glass.png");
-    background-repeat: repeat;
-    background-size: auto;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
     padding: 15px;
-    border-radius: 6px;
-    border: 1px solid #d3d8de;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -824,4 +825,20 @@ input {
 
 .header-spacer {
     width: 150px;
+}
+
+.glass-panel {
+    @apply backdrop-blur-md bg-white/20 border border-white/30 rounded-xl shadow-xl;
+}
+
+.glass-bar {
+    @apply backdrop-blur-md bg-white/20 border-t border-white/30;
+}
+
+.add-friend-btn {
+    margin-top: 10px;
+}
+
+.end-game-layout {
+    padding-top: 0;
 }
