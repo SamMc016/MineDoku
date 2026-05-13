@@ -21,9 +21,17 @@
         <h1 class="page-title">MINEDOKU</h1>
 
         <div class="right-header">
-            <button class="btn" onclick="window.location.href='{{ url_for('main.friends') }}'">
+
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.friends') }}'">
                 Friends
             </button>
+        
+            <button class="btn"
+                    onclick="window.location.href='{{ url_for('main.logout') }}'">
+                Logout
+            </button>
+        
         </div>
     </header>
 
