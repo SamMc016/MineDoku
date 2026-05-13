@@ -575,7 +575,7 @@ table {
   position: absolute;
   inset: 0;
   overflow: visible;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 #side-face-layer {
   z-index: 20;
@@ -588,8 +588,11 @@ table {
   background-size: cover;
   background-repeat: no-repeat;
   image-rendering: pixelated;
-  pointer-events: none;
+  pointer-events: none !important;
   transform-origin: center center;
+}
+.block-front.rendered-block-face {
+  pointer-events: auto !important;
 }
 .block-front {
   width: 166px;
@@ -603,6 +606,7 @@ table {
 }
 .rendered-block-face {
   transform-origin: center center;
+  pointer-events: none;
 }
 .newly-placed {
   animation: placeBlock 0.28s ease-out forwards;
@@ -621,12 +625,25 @@ table {
 .gameboard-cell:not([data-block]):not(.is-error):hover {
   outline: 2px solid #ffffff;
 }
-.gameboard-cell(.is-error) {
+.gameboard-cell.is-error {
   border: transparent;
 }
 .gameboard-cell[data-block]:hover {
   outline: none;
   cursor: default;
+}
+.percentage-box {
+  padding: 5px 0 3px;
+  background-color: rgba(16, 1, 1, 0.9);
+  border: 3px solid #2e0563;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #3f3f3f;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
+  font-family: 'Minecraft', sans-serif;
+  font-size: 14px;
+  pointer-events: none;
+  display: inline-block;
+  z-index: 100;
 }
 .game-over-freeze {
   pointer-events: none;
@@ -663,14 +680,18 @@ table {
 }
 .side-column-table {
   width: 150px;
-  height: 500px;
+  height: 498px;
+  border-collapse: collapse;
   border-style: hidden;
+}
+.side-column-table td {
+  height: 166px;
+  vertical-align: middle;
 }
 .side-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 #left-conditions {
   align-items: flex-end;
@@ -792,7 +813,7 @@ table {
 .inventory-cell, .gameboard-cell[data-block] {
   position: relative;
 }
-.inventory-cell:hover::after, .gameboard-cell[data-block]:hover::after {
+.inventory-cell:hover::after, .gameboard-cell[data-block]:hover::after, .block-front.rendered-block-face:hover::after {
   content: attr(data-block);
   position: absolute;
   bottom: 110%;
@@ -810,6 +831,25 @@ table {
   letter-spacing: 1.5px;
   white-space: nowrap;
   pointer-events: none;
+}
+#empty-data {
+  padding: 40px 60px;
+  font-size: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+}
+.game:has(#empty-data) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 75vh;
+  padding-top: 0;
 }
 .panel {
   background-image: url("../assets/transparent_glass.png");
