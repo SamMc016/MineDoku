@@ -171,6 +171,9 @@
   }
 }
 @layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
   .fixed {
     position: fixed;
   }
@@ -231,11 +234,17 @@
   .h-20 {
     height: calc(var(--spacing) * 20);
   }
+  .h-\[72\%\] {
+    height: 72%;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
   .w-20 {
     width: calc(var(--spacing) * 20);
+  }
+  .w-\[72\%\] {
+    width: 72%;
   }
   .w-full {
     width: 100%;
@@ -266,6 +275,9 @@
   }
   .gap-16 {
     gap: calc(var(--spacing) * 16);
+  }
+  .overflow-hidden {
+    overflow: hidden;
   }
   .rounded-xl {
     border-radius: var(--radius-xl);
@@ -311,6 +323,9 @@
   }
   .bg-center {
     background-position: center;
+  }
+  .object-contain {
+    object-fit: contain;
   }
   .p-6 {
     padding: calc(var(--spacing) * 6);
@@ -814,6 +829,25 @@ input {
   padding: 20px;
   box-sizing: border-box;
   background: rgba(0, 0, 0, 0.6);
+}
+.account-slot-image {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+  display: block;
+}
+.account-slot {
+  width: 80px;
+  height: 80px;
+  background: #4b5563;
+  border: 4px solid black;
+  box-shadow: inset -6px -6px gray, inset 6px 6px white, 4px 4px 0px black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 .accounts_left {
   width: 20%;
