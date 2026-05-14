@@ -974,8 +974,8 @@ input {
   left: 5px;
   bottom: -20px;
   color: #ff2c2c !important;
-  font-size: 13px;
-  text-shadow: 1px 1px #FFF;
+  font-size: 12px;
+  text-shadow: 0.5px 0.5px #FFF;
 }
 .header-spacer {
   width: 150px;

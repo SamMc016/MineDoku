@@ -26,7 +26,7 @@
 
             <div class="input-group">
                 <input type="text" name="username" placeholder="Username" required class="login-input" value="{{ form.username.data or '' }}">
-                {% for error in form.username.errors %}
+                {% if error in form.username.errors %}
                     <span class="field-error">{{ error }}</span>
                 {% endfor %}
             </div>
@@ -39,15 +39,20 @@
             </div>
 
             <div class="input-group">
-                <input type="password" name="password" placeholder="Password" required class="login-input">
+                <input type="password" name="password" placeholder="Password" required class="login-input" value="{{ form.password.data or '' }}">
+                {% for error in form.password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
             </div>
 
             <div class="input-group">
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login-input">
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login-input" value="{{ form.confirm_password.data or '' }}">
+                {% for error in form.confirm_password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
             </div>
 
             <button type="submit" class="login-submit">
-
                 Create Account
             </button>
         </form>
