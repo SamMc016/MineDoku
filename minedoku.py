@@ -1,10 +1,5 @@
-import os
 from app import create_app, db
-from app.db_population import (
-    populate_blocks,
-    populate_conditions,
-    populate_users 
-)
+from app.db_population import populate_blocks, populate_conditions, populate_users, populate_user_stats
 from app.config import DeploymentConfig
 
 app = create_app(DeploymentConfig)
@@ -16,5 +11,6 @@ if __name__ == "__main__":
         populate_blocks()
         populate_conditions()
         populate_users()
+        populate_user_stats()
         
     app.run(debug=True)

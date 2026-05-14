@@ -18,43 +18,77 @@
 <div class="container">
 
     <div class="panel friends-panel">
-        <h2>Friends</h2>
-        <div class="friends-list">
-            {% for friend in friends_list %}
-            <div class="friend">{{ friend }}</div>
-            {% endfor %}
+        <h2 class="friends-title">Friends</h2>
+        <div class="title-seperator"></div>
+        <div class="friends-list" id="friends-list-container">
+            {% if friends_list %}
+                {% for friend in friends_list %}
+                <div class="friend">{{ friend.username }}</div>
+                {% endfor %}
+            {% else %}
+                <div class="friend no-friends">No Friends Added Yet!</div>
+            {% endif %}
         </div>
     </div>
 
     <div class="panel">
-        <h2>Daily Leaderboard</h2>
-        {% for player in friends_scores %}
-        <div class="leaderboard-item">
-            <span>{{ player.name }}</span>
-            <div class="numbers">
-                <span>{{ player.score }}</span>
-            </div>
-        </div>
-        {% endfor %}
+        <h2 class="friends-title">Daily Leaderboard</h2>
+        <div class="title-seperator"></div>
+        <table class="leaderboard-table">
+            {% if daily %}
+            <thead>
+            <tr class="leaderboard-headings leaderboard-item">
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Unique Score</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for row in daily %}
+                    <tr class="leaderboard-item">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ row.username }}</td>
+                        <td>{{ row.daily_uniqueness }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
 
-        <h2>All-time Leaderboard</h2>
-        {% for player in all_time_scores %}
-        <div class="leaderboard-item">
-            <span>{{ player.name }}</span>
-            <div class="numbers">
-                <span>{{ player.score }}</span>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
+        <h2 class="friends-title all-time">All Time Leaderboard</h2>
+        <div class="title-seperator"></div>
+        <table class="leaderboard-table">
+            <thead>
+                {% if all_time %}
+                <tr class="leaderboard-headings leaderboard-item">
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Unique Score</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for row in all_time %}
+                    <tr class="leaderboard-item">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ row.username }}</td>
+                        <td>{{ row.daily_uniqueness }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+    </div>    
+    
     <div class="panel">
-        <div class="search-box">
-            <input type="text" id="friend-search" placeholder="Enter username..." autocomplete="off">
+        <h2 class="friends-title">Add A Friend</h2>
+        <div class="title-seperator"></div>
+        <div class="search-container">
+            <div>
+                <input type="text" id="friend-search" placeholder="Enter username..." autocomplete="off">
+            </div>
+            <div id="search-results"></div>
+            <button class="btn" id="add-friend-btn">Add Friend</button>
         </div>
-
-        <div id="search-results"></div>
-        <button class="btn" id="add-friend-btn" style="margin-top:10px;">Add Friend</button>
     </div>
 
 </div>
