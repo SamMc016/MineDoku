@@ -187,8 +187,12 @@ def signup():
         ).first()
 
         if existing_user:
-            flash("Username or email already exists.")
-            return redirect(url_for("main.signup"))
+            if existing_user.username == username:
+                form.username.errors.append("An account with that username already exists!")
+            if existing_user.email == email:
+                form.email.errors.append("An account with that email already exists!")
+            
+            return render_template("signup.html", form=form)
 
         new_user = User(
             username=username,
@@ -203,9 +207,9 @@ def signup():
             user_id=new_user.user_id,
             total_games_played=0,
             total_games_won=0,
-            lowest_uniqueness=None,
-            average_uniqueness=None,
-            daily_uniqueness=None
+            lowest_uniqueness=0,
+            average_uniqueness=0,
+            daily_uniqueness=0
         )
 
         db.session.add(new_stats)

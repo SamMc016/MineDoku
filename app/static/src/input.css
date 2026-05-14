@@ -773,17 +773,14 @@ input {
 .login-input {
     width: 100%;
     padding: 14px 16px;
-
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.3);
-
     background: rgba(0, 0, 0, 0.3);
-
     color: white;
     font-family: "Minecraft";
     font-size: 16px;
-
     box-sizing: border-box;
+    margin-bottom: 0;
 }
 
 .login-input::placeholder {
@@ -827,6 +824,21 @@ input {
 
 .login-link:hover {
     opacity: 0.8;
+}
+
+.input-group {
+    position: relative;
+    width: 100%;
+
+}
+
+.field-error {
+    position: absolute;
+    left: 5px;
+    bottom: -20px;
+    color: #ff2c2c !important;
+    font-size: 13px;
+    text-shadow: 1px 1px #FFF;
 }
 
 .header-spacer {
