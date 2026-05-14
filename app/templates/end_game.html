@@ -22,7 +22,6 @@
     {% endblock %}
 
     {% block gameboard %}
-    <div class="game" style="padding-top: 0px;">
         {% if no_blocks_placed %}
             <div class="text-box" id="empty-data">
                 <p>NO BLOCKS PLAYED TODAY!</p>
@@ -55,7 +54,7 @@
                 </div>
             </div>
         {% endif %}
-        
+    {% endblock %}    
             {% block stats %}
                 {% if not no_blocks_placed %}
                     <table class="side-column-table">
@@ -77,8 +76,6 @@
                     </table>
                 {% endif %}
             {% endblock %}                
-    </div>
-     {% endblock %}
 
     {% block scripts %}
         <script src="{{ url_for('static', filename='js/index.js') }}"></script>
