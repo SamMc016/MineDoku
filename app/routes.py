@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
 from app.forms import LoginForm, SignupForm
 
+global_friends = ["Alice", "Bob"]
+
 @main.route("/")
 def index():
     blocks = Blocks.query.all()
@@ -68,7 +70,17 @@ def index():
 
 @main.route("/friends")
 def friends():
-    friends_list = ["Alice", "Bob", "Charlie", "Dana"]
+
+    friends_list = [friend.username for friend in current_user.friends]
+    
+    friends_list = [
+
+    friend for friend in global_friends
+
+    if friend != current_user.username
+    
+    ]
+
     friends_scores = [
         {"name": "Alice", "score": 1200},
         {"name": "Bob", "score": 950},
@@ -111,20 +123,58 @@ def search_friends():
         User.username.ilike(f"%{query}%")
     ).limit(5).all()
 
-    matches = [user.username for user in users]
+    matches = [
+        user.username for user in users
+        if user.username.lower() != current_user.username.lower()
+    ]
 
     return jsonify(matches)
 
 
 @main.route("/add_friend", methods=["POST"])
 def add_friend():
+    from flask_login import current_user
+    from app.models import User, db  # Fix import
+
+    global global_friends
 
     data = request.get_json()
 
     friend_name = data["friend_name"]
 
-    print(f"Added friend: {friend_name}")
+    if (
+        friend_name
+        and friend_name not in global_friends
+        and friend_name != current_user.username
+    ):
+        global_friends.append(friend_name)
 
+        print(global_friends)
+
+    return jsonify({"success": True})
+    
+    data = request.get_json()
+    friend_name = data["friend_name"]
+    
+    # Find the friend in database
+    friend = User.query.filter_by(username=friend_name).first()
+    
+    if not friend:
+        return jsonify({"success": False, "error": "User not found"}), 404
+    
+    # Check if trying to add self
+    if friend.user_id == current_user.user_id:  # Use user_id, not id
+        return jsonify({"success": False, "error": "Cannot add yourself"}), 400
+    
+    # Check if already friends
+    if friend in current_user.friends:
+        return jsonify({"success": False, "error": "Already friends"}), 400
+    
+    # Add the friend
+    current_user.friends.append(friend)
+    db.session.commit()
+    
+    print(f"Added friend: {friend_name}")
     return jsonify({"success": True})
 
 @main.route("/account")
