@@ -1,145 +1,86 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=2.1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
-    <title>MineDoku - End Game</title>
-</head>
+{% extends "index.html" %}
 
-<body>
+{% block title %}Game Over{% endblock %}
 
-    <header class="top-bar">
-
-        <button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">
-            ← Back to Game
-        </button>
-
-        <h1 class="page-title">MINEDOKU</h1>
-
-        <div class="right-header">
-            <button class="btn" onclick="window.location.href='{{ url_for('main.friends') }}'">Friends</button>
+    {% block sub_header %}
+        {% if not no_blocks_placed %}
+        <div class="flex justify-center gap-8 mt-6">
+            <button class="btn" onclick="showLeast()">
+                Least Common
+            </button>
+            <button class="btn" onclick="showMost()">
+                Most Common
+            </button>
         </div>
+        {% endif %}
+    {% endblock %}
 
-    </header>
+    {% block conditions %}
+        {% if not no_blocks_placed %}
+            {{ super() }}
+        {% endif %}
+    {% endblock %}
 
-    <!-- NEW BUTTON ROW -->
-    <div class="flex justify-center gap-8 mt-6">
-
-        <button class="btn" onclick="showLeast()">
-            Least Common
-        </button>
-
-        <button class="btn" onclick="showMost()">
-            Most Common
-        </button>
-
-    </div>
-
-    <!-- SAME GAME LAYOUT -->
-    <div class="game" style="padding-top: 0px;">
-
-        <div class="side-column" id="left-conditions">
-
-            <table class="side-column-table">
-                <tr><td><p id="LTCon">Left Top Condition</p></td></tr>
-                <tr><td><p id="LMCon">Left Middle Condition</p></td></tr>
-                <tr><td><p id="LBCon">Left Bottom Condition</p></td></tr>
-            </table>
-
-        </div>
-
-        <div class="center-elements">
-
-            <div class="top-row">
-
-                <table class="top-row-table">
-                    <tr>
-                        <td><p id="TLCon">Top Left Condition</p></td>
-                        <td><p id="TMCon">Top Middle Condition</p></td>
-                        <td><p id="TRCon">Top Right Condition</p></td>
-                    </tr>
-                </table>
-
+    {% block gameboard %}
+    <div class="game end-game-layout">
+        {% if no_blocks_placed %}
+            <div class="text-box" id="empty-data">
+                <p>NO BLOCKS PLAYED TODAY!</p>
             </div>
+        {% else %}
+            <div class="center-elements">
+                <div class="table">
+                        <table>
+                            {% for i in range(3) %}
+                            <tr>
+                                {% for j in range(3) %}
+                                {% set current_id = (i * 3) + j + 1 %}
+                                {% set current_square_data = results[current_id|string] %}
 
-            <div class="table">
+                                <td id="{{ current_id }}" class="gameboard-cell result-cell" 
+                                    data-least="{{ url_for('static', filename=current_square_data.least) }}"
+                                    data-least-name="{{ current_square_data.least_name }}"
+                                    data-least-percent="{{ current_square_data.least_percent }}"
 
-                <table>
-
-                    <tr>
-                        <td id="1" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img1.jpg') }}" alt="">
-                        </td>
-
-                        <td id="2" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img2.jpg') }}" alt="">
-                        </td>
-
-                        <td id="3" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img3.jpg') }}" alt="">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td id="4" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img4.jpg') }}" alt="">
-                        </td>
-
-                        <td id="5" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img5.jpg') }}" alt="">
-                        </td>
-
-                        <td id="6" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img6.jpg') }}" alt="">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td id="7" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img7.jpg') }}" alt="">
-                        </td>
-
-                        <td id="8" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img8.jpg') }}" alt="">
-                        </td>
-
-                        <td id="9" class="gameboard-cell">
-                            <img src="{{ url_for('static', filename='images/img9.jpg') }}" alt="">
-                        </td>
-                    </tr>
-
-                </table>
-
+                                    data-most="{{ url_for('static', filename=current_square_data.most) }}"
+                                    data-most-name="{{ current_square_data.most_name }}"
+                                    data-most-percent="{{ current_square_data.most_percent }}"
+                                >
+                                    <img src="{{ url_for('static', filename=current_square_data.least) }}">
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </table>
+                </div>
             </div>
-
-        </div>
-
-        <div class="side-column" id="extra">
-
-            <table class="side-column-table">
-
-                <tr>
-                    <td>
-                        <p id="dur">Durability <span class="scores">9/9</span></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>  </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <p id="US">US <span class="scores">1000</span></p>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
+        {% endif %}
+        
+            {% block stats %}
+                {% if not no_blocks_placed %}
+                    <table class="side-column-table">
+                        <tr>
+                            <td>
+                                <p class="text-box" id="ggp">Global Games Played <span class="scores">{{ global_stats.global_games_played if global_stats else 0 }}</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>  
+                                <p class="text-box" id="lowest-us">Lowest US <span class="scores">{{ global_stats.lowest_uniqueness if global_stats else 0 }}</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="text-box" id="average-us">Average US <span class="scores">{{ global_stats.average_uniqueness if global_stats else 0 }}</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                {% endif %}
+            {% endblock %}                
     </div>
+     {% endblock %}
 
-</body>
-</html>
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/end_game.js') }}"></script>
+    {% endblock %}

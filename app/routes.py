@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from app import db
-from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory
 from app.blueprints import main
 from flask import render_template, request, jsonify, redirect, url_for, flash
 from flask_login import current_user, login_user, logout_user, login_required
@@ -11,35 +11,11 @@ from app.forms import LoginForm, SignupForm
 
 global_friends = ["Alice", "Bob"]
 
-@main.route("/")
-def index():
+def get_daily_puzzle():
     blocks = Blocks.query.all()
     conditions = Conditions.query.all()
-    total_selections = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 1
-
     today_seed = datetime.now().strftime("%Y-%m-%d")
     random.seed(today_seed)
-
-    global_stats = Game_Stats.query.first()
-
-    if not global_stats:
-        global_stats = Game_Stats(global_games_played=0, last_reset_date=today_seed)
-        db.session.add(global_stats)
-        db.session.commit()
-    elif global_stats.last_reset_date != today_seed:
-        db.session.query(Block_Stats).delete()
-
-        global_stats.lowest_uniqueness = 900
-        global_stats.average_uniqueness = 0
-        global_stats.global_games_played = 0
-
-        db.session.query(Personal_Stats).update({Personal_Stats.daily_uniqueness: 900})
-
-        global_stats.last_reset_date = today_seed
-
-        db.session.commit()
-
-    
 
     valid_board = False
     while not valid_board:
@@ -61,6 +37,30 @@ def index():
                 break
         if is_solvable:
             valid_board = True
+    return top_row, side_col
+
+@main.route("/")
+def index():
+    blocks = Blocks.query.all()
+    today_seed = datetime.now().strftime("%Y-%m-%d")
+    total_selections = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 1
+    top_row, side_col = get_daily_puzzle()
+
+    global_stats = Game_Stats.query.first()
+    if not global_stats:
+        global_stats = Game_Stats(global_games_played=0, last_reset_date=today_seed)
+        db.session.add(global_stats)
+        db.session.commit()
+    elif global_stats.last_reset_date != today_seed:
+        db.session.query(Block_Stats).delete()
+
+        global_stats.lowest_uniqueness = 900
+        global_stats.average_uniqueness = 0
+        global_stats.global_games_played = 0
+
+        db.session.query(Personal_Stats).update({Personal_Stats.daily_uniqueness: 900})
+        global_stats.last_reset_date = today_seed
+        db.session.commit()
 
     for block in blocks:
             count = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.block_id == block.block_id).scalar() or 0
@@ -178,8 +178,23 @@ def add_friend():
     return jsonify({"success": True})
 
 @main.route("/account")
+@login_required
 def account():
-    return render_template("account.html")
+    blocks = Blocks.query.all()
+
+    unlocked_inventory = Inventory.query.filter_by(
+        user_id=current_user.user_id
+    ).all()
+
+    unlocked_block_ids = [
+        item.block_id for item in unlocked_inventory
+    ]
+
+    return render_template(
+        "account.html",
+        blocks=blocks,
+        unlocked_block_ids=unlocked_block_ids
+    )
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
@@ -261,7 +276,47 @@ def logout():
 
 @main.route("/end_game")
 def end_game_page():
-        return render_template("end_game.html")
+    blocks = Blocks.query.all()
+    top_row, side_col = get_daily_puzzle()
+    raw_total = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 0
+    global_stats = Game_Stats.query.first()
+
+    no_blocks_placed = (raw_total == 0)
+    total_selections = raw_total if raw_total > 0 else 1
+        
+    for block in blocks:
+        count = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.block_id == block.block_id).scalar() or 0
+        block.selection_percentage = (count / total_selections) * 100
+
+    results = {}
+
+    for i, side in enumerate(side_col):
+        for j, top in enumerate(top_row):
+            sqaure_id = (i * 3) + j + 1
+
+            valid_options = [b for b in blocks if
+                            str(top.condition_id) in b.condition_compatibility.split(",") and
+                            str(side.condition_id) in b.condition_compatibility.split(",") 
+                            ]
+            valid_options.sort(key=lambda x: x.selection_percentage)
+
+            player_options = [b for b in valid_options if b.selection_percentage > 0]
+            player_options.sort(key=lambda x: x.selection_percentage)
+
+            least_block = player_options[0] if player_options else min(valid_options, key=lambda x: x.selection_percentage)
+            most_block = player_options[-1] if player_options else max(valid_options, key=lambda x: x.selection_percentage)
+
+            results[str(sqaure_id)] = {
+                "least": least_block.face_texture_path,
+                "least_name": least_block.block_name,
+                "least_percent": least_block.selection_percentage, 
+
+                "most": most_block.face_texture_path,
+                "most_name": most_block.block_name,
+                "most_percent": most_block.selection_percentage
+            }
+
+    return render_template("end_game.html", results=results, no_blocks_placed=no_blocks_placed, top_row=top_row, side_col=side_col, global_stats=global_stats, max_durability=9, US=900)
 
 @main.route("/finish_game", methods=["POST"])
 def finish_game():
@@ -318,8 +373,23 @@ def finish_game():
         if b_stat:
             b_stat.times_chosen += 1
         else:
-            new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=0)
+            new_b_stat = Block_Stats(block_id=b_id, square_id=s_id, times_chosen=1)
             db.session.add(new_b_stat)
+
+        # inventory update
+        # If the user is logged in, remember that they have used this block before.
+        if current_user.is_authenticated:
+            inventory_item = Inventory.query.filter_by(
+                user_id=current_user.user_id,
+                block_id=b_id
+            ).first()
+
+            if not inventory_item:
+                new_inventory_item = Inventory(
+                    user_id=current_user.user_id,
+                    block_id=b_id
+                )
+                db.session.add(new_inventory_item)
 
     db.session.commit()
     return jsonify({"success": True})

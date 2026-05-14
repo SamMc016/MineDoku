@@ -1,171 +1,195 @@
-<!DOCTYPE html>
-<html lang="en">
-<!-- placeholder id's will be marked with a !! in their comment -->
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=2.1">
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
-    <title>MineDoku</title>
-</head>
+{% block title %}Puzzle Page{% endblock %}
 
-<body>
-    <header class="top-bar">
+{% block left_button %}
+{% if current_user.is_authenticated %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.account') }}'">
+    Account
+</button>
+{% else %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.login') }}'">
+    Login / Signup
+</button>
+{% endif %}
+{% endblock %}
 
-        {% if current_user.is_authenticated %}
-    
-            <button class="btn"
-                    onclick="window.location.href='{{ url_for('main.account') }}'">
-                Account
-            </button>
-    
-        {% else %}
-    
-            <button class="btn"
-                    onclick="window.location.href='{{ url_for('main.login') }}'">
-                Login / Signup
-            </button>
-    
-        {% endif %}
-    
-        <h1 class="page-title">MINEDOKU</h1>
-    
-        <div class="right-header">
-            <button class="btn" id="rules"
-                    onclick="window.location.href='{{ url_for('main.friends') }}'">
-                Friends
-            </button>
-        </div>
-    
-    </header>
+{% block right_button %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.friends') }}'">
+    Friends
+</button>
+{% endblock %}
 
-    <div class="game">
+{% block content %}
 
-        <div class="side-column" id="left-conditions">
-            <table class="side-column-table">
+{% block sub_header %}{% endblock %}
+
+<div class="game"
+     data-max-durability="{{ max_durability }}"
+     data-initial-us="{{ US }}">
+
+    {% block conditions %}
+    <div class="side-column" id="left-conditions">
+        <table class="side-column-table">
+            <tr>
+                <td>
+                    <p class="text-box" data-id="{{ side_col[0].condition_id }}">
+                        {{ side_col[0].condition_name }}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="text-box" data-id="{{ side_col[1].condition_id }}">
+                        {{ side_col[1].condition_name }}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="text-box" data-id="{{ side_col[2].condition_id }}">
+                        {{ side_col[2].condition_name }}
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="center-elements">
+
+        <div class="top-row">
+            <table class="top-row-table">
                 <tr>
                     <td>
-                        <p class="text-box" data-id=" {{side_col[0].condition_id}} "> {{ side_col[0].condition_name }} </p>
+                        <p class="text-box" data-id="{{ top_row[0].condition_id }}">
+                            {{ top_row[0].condition_name }}
+                        </p>
                     </td>
-                </tr>
-                <tr>
                     <td>
-                        <p class="text-box" data-id=" {{side_col[1].condition_id}} "> {{ side_col[1].condition_name }} </p>
+                        <p class="text-box" data-id="{{ top_row[1].condition_id }}">
+                            {{ top_row[1].condition_name }}
+                        </p>
                     </td>
-                </tr>
-                <tr>
                     <td>
-                        <p class="text-box" data-id=" {{side_col[2].condition_id}} "> {{ side_col[2].condition_name }} </p>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="center-elements">
-
-            <div class="top-row">
-                <table class="top-row-table">
-                    <tr>
-                        <td>
-                            <p id="top-row" class="text-box" data-id=" {{top_row[0].condition_id}} "> {{ top_row[0].condition_name }} </p>
-                        </td>
-                        <td>
-                            <p id="top-row" class="text-box" data-id=" {{top_row[1].condition_id}} "> {{ top_row[1].condition_name }} </p>
-                        </td>
-                        <td>
-                            <p id="top-row" class="text-box" data-id=" {{top_row[2].condition_id}} "> {{ top_row[2].condition_name }} </p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="table">
-                <table>
-                    <tr>
-                        <td id="1" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[0].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="2" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[1].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="3" class="gameboard-cell" data-side="{{side_col[0].condition_id}}" data-top="{{top_row[2].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td id="4" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[0].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="5" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[1].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="6" class="gameboard-cell" data-side="{{side_col[1].condition_id}}" data-top="{{top_row[2].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td id="7" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[0].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="8" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[1].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                        <td id="9" class="gameboard-cell" data-side="{{side_col[2].condition_id}}" data-top="{{top_row[2].condition_id}}">
-                            <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-        </div>
-
-        <div class="side-column" id="extra">
-            <table class="side-column-table">
-                <tr>
-                    <td>
-                        <p class="text-box" id="dur">Durability <span id="durability-score" class="scores">{{ max_durability }}/{{ max_durability }}</span></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td><button id="give-up">Give Up?</button></td>
-                </tr>
-                <tr>
-                    <td>
-                        <p class="text-box" id="US">US <span id="us-score" class="scores">{{ US }}</span></p>
+                        <p class="text-box" data-id="{{ top_row[2].condition_id }}">
+                            {{ top_row[2].condition_name }}
+                        </p>
                     </td>
                 </tr>
             </table>
         </div>
+        {% endblock %}
+
+        {% block gameboard %}
+        <div class="table">
+            <table>
+                <tr>
+                    <td id="1" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
+                        data-top="{{ top_row[0].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="2" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
+                        data-top="{{ top_row[1].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="3" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
+                        data-top="{{ top_row[2].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="4" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
+                        data-top="{{ top_row[0].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="5" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
+                        data-top="{{ top_row[1].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="6" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
+                        data-top="{{ top_row[2].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="7" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
+                        data-top="{{ top_row[0].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="8" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
+                        data-top="{{ top_row[1].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                    <td id="9" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
+                        data-top="{{ top_row[2].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endblock %}
 
     </div>
 
-    <div id="inventory-overlay" class="hidden">
-        <div class="inventory-container">
-            <div class="inventory-display">
-                <div class="inventory-grid">
-                    {% for block in blocks %}
-                    <div class="inventory-cell" 
-                        data-block="{{ block.block_name }}"
-                        data-block-id="{{ block.block_id }}"
-                        data-block-percentage="{{ block.selection_percentage|round(2) }}"
-                        data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
-                        data-compatibility="{{ block.condition_compatibility }}">
-                        <img src="{{ url_for('static', filename=block.inv_texture_path) }}"
-                            alt="{{ block.block_name }}">
-                    </div>
-                    {% endfor %}
+    <div class="side-column" id="extra">
+        {% block stats %}
+        <table class="side-column-table">
+            <tr>
+                <td>
+                    <p class="text-box" id="dur">
+                        Durability
+                        <span id="durability-score" class="scores">
+                            {{ max_durability }}/{{ max_durability }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="give-up">Give Up?</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="text-box" id="US">
+                        US
+                        <span id="us-score" class="scores">
+                            {{ US }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+        </table>
+        {% endblock %}
+    </div>
+
+</div>
+
+{% block inventory %}
+<div id="inventory-overlay" class="hidden">
+    <div class="inventory-container">
+        <div class="inventory-display">
+            <div class="inventory-grid">
+                {% for block in blocks %}
+                <div class="inventory-cell" data-block="{{ block.block_name }}" data-block-id="{{ block.block_id }}"
+                    data-block-percentage="{{ block.selection_percentage|round(2) }}"
+                    data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
+                    data-bottom-texture="{% if block.block_name == 'Grass' %}{{ url_for('static', filename='assets/game_textures/dirt.png') }}{% else %}{{ url_for('static', filename=block.face_texture_path) }}{% endif %}"
+                    data-compatibility="{{ block.condition_compatibility }}">
+
+                    <img src="{{ url_for('static', filename=block.inv_texture_path) }}" alt="{{ block.block_name }}">
                 </div>
+                {% endfor %}
             </div>
-
-            <button id="backFromInventory" class="btn">Back</button>
         </div>
+
+        <button id="backFromInventory" class="btn">Back</button>
     </div>
+</div>
+{% endblock %}
 
-    <script>
-        window.maxDurability = Number("{{ max_durability }}");
-        window.initialUS = Number("{{ US }}");
-    </script>
+{% endblock %}
+
+{% block scripts %}
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-</body>
-
-</html>
+{% endblock %}

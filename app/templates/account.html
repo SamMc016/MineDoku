@@ -1,80 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=2.1">
-    <title>Account</title>
+{% block title %}Account{% endblock %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
-</head>
+{% block body_class %}
+min-h-screen flex flex-col bg-cover bg-center bg-fixed
+{% endblock %}
 
-<body class="min-h-screen flex flex-col bg-cover bg-center bg-fixed"
-    style="background-image: url('{{ url_for('static', filename='assets/minegif.gif') }}');">
+{% block left_button %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">
+    Back to Game
+</button>
+{% endblock %}
 
-    <!-- HEADER -->
-    <header class="top-bar">
-        <button class="btn" onclick="window.location.href='{{ url_for('main.index') }}'">
-            Back to Game
-        </button>
+{% block right_button %}
+<button class="btn" onclick="window.location.href='{{ url_for('main.friends') }}'">
+    Friends
+</button>
 
-        <h1 class="page-title">MINEDOKU</h1>
+<button class="btn" onclick="window.location.href='{{ url_for('main.logout') }}'">
+    Logout
+</button>
+{% endblock %}
 
-        <div class="right-header">
+{% block content %}
+<div class="flex flex-col items-center justify-center flex-1 px-6 pb-28">
 
-            <button class="btn"
-                    onclick="window.location.href='{{ url_for('main.friends') }}'">
-                Friends
-            </button>
-        
-            <button class="btn"
-                    onclick="window.location.href='{{ url_for('main.logout') }}'">
-                Logout
-            </button>
-        
-        </div>
-    </header>
+    <h2 class="!text-4xl font-bold mb-4 text-white">
+        Inventory
+    </h2>
 
-    <!-- MAIN CONTENT -->
-    <div class="flex flex-col items-center justify-center flex-1 px-6 pb-28">
-        <h2 class="!text-4xl font-bold mb-4 text-white">
-            Inventory
-        </h2>
+    <div class="glass-panel p-8">
+        <div id="accounts_inventory" class="grid grid-cols-9 gap-4">
 
-        <div class="backdrop-blur-md bg-white/20 border border-white/30 rounded-xl p-8 shadow-xl">
-            <div id="accounts_inventory" class="grid grid-cols-9 gap-4"></div>
-        </div>
-    </div>
+            {% for block in blocks %}
+            <div class="account-slot"
+                data-unlocked="{% if block.block_id in unlocked_block_ids %}true{% else %}false{% endif %}"
+                data-texture="{{ url_for('static', filename=block.inv_texture_path) }}">
 
-    <!-- STATS BAR -->
-    <div class="fixed bottom-0 left-0 w-full backdrop-blur-md bg-white/20 border-t border-white/30 p-6">
-        <div class="flex justify-center gap-16 text-white font-semibold">
+                <img class="account-slot-image"
+                    src="{% if block.block_id in unlocked_block_ids %}{{ url_for('static', filename=block.inv_texture_path) }}{% else %}{{ url_for('static', filename='assets/blank_texture.png') }}{% endif %}"
+                    alt="{{ block.block_name }}">
 
-            <div>Games Played: --</div>
-            <div>Games Won: --</div>
-            <div>Lowest US: --</div>
-            <div>Avg US: --</div>
+            </div>
+            {% endfor %}
 
         </div>
     </div>
 
-    <script>
-        const inventory = document.getElementById("accounts_inventory");
+</div>
 
-        for (let i = 0; i < 27; i++) {
-            const slot = document.createElement("div");
+<div class="fixed bottom-0 left-0 w-full glass-bar p-6">
+    <div class="flex justify-center gap-16 text-white font-semibold">
 
-            slot.className = `
-                w-20 h-20
-                bg-gray-600
-                border-4 border-black
-                shadow-[inset_-6px_-6px_gray,inset_6px_6px_white,4px_4px_0px_black]
-            `;
+        <div>Games Played: --</div>
+        <div>Games Won: --</div>
+        <div>Lowest US: --</div>
+        <div>Avg US: --</div>
 
-            inventory.appendChild(slot);
-        }
-    </script>
+    </div>
+</div>
 
-</body>
-
-</html>
+<script src="{{ url_for('static', filename='js/account.js') }}"></script>
+{% endblock %}
