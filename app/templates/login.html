@@ -27,19 +27,28 @@
 
             {{ form.hidden_tag() }}
 
-            <input type="text" name="username" placeholder="Username or Email" required class="login-input">
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username or Email" required class="login-input" value="{{ form.username.data or '' }}">
+                {% for error in form.username.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-            <input type="password" name="password" placeholder="Password" required class="login-input">
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required class="login-input" value="{{ form.password.data or '' }}">
+                {% for error in form.password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
             <button type="submit" class="login-submit">
-                Go
+                Sign in
             </button>
-
+            
         </form>
 
         <p class="login-footer">
             Don't have an account?
-
             <a href="{{ url_for('main.signup') }}" class="login-link">
                 Sign up!
             </a>

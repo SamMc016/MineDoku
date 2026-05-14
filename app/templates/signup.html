@@ -13,12 +13,9 @@
 {% block right_button %}
 <div class="header-spacer"></div>
 {% endblock %}
-
 {% block content %}
 <div class="login-wrapper">
-
     <div class="login-panel">
-
         <h2 class="login-title">
             Sign Up
         </h2>
@@ -27,29 +24,44 @@
 
             {{ form.hidden_tag() }}
 
-            <input type="text" name="username" placeholder="Username" required class="login-input">
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username" required class="login-input" value="{{ form.username.data or '' }}">
+                {% for error in form.username.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-            <input type="email" name="email" placeholder="Email" required class="login-input">
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Email" required class="login-input" value="{{ form.email.data or '' }}">
+                {% for error in form.email.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-            <input type="password" name="password" placeholder="Password" required class="login-input">
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required class="login-input" value="{{ form.password.data or '' }}">
+                {% for error in form.password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login-input">
+            <div class="input-group">
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required class="login-input" value="{{ form.confirm_password.data or '' }}">
+                {% for error in form.confirm_password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
 
             <button type="submit" class="login-submit">
                 Create Account
             </button>
-
         </form>
-
         <p class="login-footer">
             Already have an account?
-
             <a href="{{ url_for('main.login') }}" class="login-link">
                 Login!
             </a>
         </p>
-
     </div>
-
 </div>
 {% endblock %}

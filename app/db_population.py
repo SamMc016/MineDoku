@@ -133,7 +133,7 @@ def populate_users():
             user = User(
                 username=friend_data["username"],
                 email=friend_data["email"],
-                password_hash="dummy"
+                password_hash="dummy12345"
             )
 
             db.session.add(user)

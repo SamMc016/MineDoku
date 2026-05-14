@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+from markupsafe import Markup
 from app import db
 from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory
 from app.blueprints import main
@@ -69,17 +70,10 @@ def index():
     return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9, US=900)
 
 @main.route("/friends")
+@login_required
 def friends():
 
-    friends_list = [friend.username for friend in current_user.friends]
-    
-    friends_list = [
-
-    friend for friend in global_friends
-
-    if friend != current_user.username
-    
-    ]
+    friends_list = [friend.username for friend in current_user.friends if friend != current_user.username]
 
     friends_scores = [
         {"name": "Alice", "score": 1200},
@@ -103,13 +97,7 @@ def friends():
         key=lambda player: player["score"]
     )
 
-    return render_template(
-        "friends.html",
-        page_title="MINEDOKU",
-        friends_list=friends_list,
-        friends_scores=friends_scores,
-        all_time_scores=all_time_scores
-    )
+    return render_template("friends.html", friends_list=friends_list, friends_scores=friends_scores, all_time_scores=all_time_scores)
 
 @main.route("/search_friends")
 def search_friends():
@@ -142,16 +130,10 @@ def add_friend():
 
     friend_name = data["friend_name"]
 
-    if (
-        friend_name
-        and friend_name not in global_friends
-        and friend_name != current_user.username
-    ):
+    if (friend_name and friend_name not in global_friends and friend_name != current_user.username):
         global_friends.append(friend_name)
-
         print(global_friends)
-
-    return jsonify({"success": True})
+        return jsonify({"success": True})
     
     data = request.get_json()
     friend_name = data["friend_name"]
@@ -214,15 +196,16 @@ def login():
             (User.email == username_or_email)
         ).first()
 
-        if user is None or not check_password_hash(user.password_hash, password):
-            flash("Invalid username/email or password.")
-            return redirect(url_for("main.login"))
-
+        if user is None:
+            form.username.errors.append("An account with that username/email does not exist!")
+        elif not check_password_hash(user.password_hash, password):
+            form.password.errors.append("Incorrect password!")
+        
+        if form.errors:
+            return render_template("login.html", form=form)
+        
         login_user(user)
         return redirect(url_for("main.index"))
-
-    if request.method == "POST":
-        print("LOGIN FORM ERRORS:", form.errors)
 
     return render_template("login.html", form=form)
 
@@ -230,19 +213,24 @@ def login():
 def signup():
     form = SignupForm()
 
-    if form.validate_on_submit():
+    if request.method == "POST":
+        form.validate()
+
         username = form.username.data
         email = form.email.data
-        password = form.password.data
+        password = form.email.data
 
-        existing_user = User.query.filter(
-            (User.username == username) |
-            (User.email == email)
-        ).first()
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
 
         if existing_user:
-            flash("Username or email already exists.")
-            return redirect(url_for("main.signup"))
+            if existing_user.username == username:
+                form.username.errors.append("An account with that username already exists!")
+
+            if existing_user.email == email:
+                form.email.errors.append("An account with that email already exists!")
+            
+        if form.errors:
+            return render_template("signup.html", form=form)
 
         new_user = User(
             username=username,
@@ -257,9 +245,9 @@ def signup():
             user_id=new_user.user_id,
             total_games_played=0,
             total_games_won=0,
-            lowest_uniqueness=None,
-            average_uniqueness=None,
-            daily_uniqueness=None
+            lowest_uniqueness=0,
+            average_uniqueness=0,
+            daily_uniqueness=0
         )
 
         db.session.add(new_stats)
@@ -267,9 +255,6 @@ def signup():
 
         login_user(new_user)
         return redirect(url_for("main.index"))
-
-    if request.method == "POST":
-        print("SIGNUP FORM ERRORS:", form.errors)
 
     return render_template("signup.html", form=form)
 
