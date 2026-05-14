@@ -37,7 +37,7 @@
                                 {% set current_id = (i * 3) + j + 1 %}
                                 {% set current_square_data = results[current_id|string] %}
 
-                                <td id="{{ current_id }}" class="gameboard-cell result-cell" 
+                                <td id="{{ current_id }}" class="gameboard-cell result-cell {{ 'is-blank' if current_square_data.least == 'assets/blank.png' else '' }}" 
                                     data-least="{{ url_for('static', filename=current_square_data.least) }}"
                                     data-least-name="{{ current_square_data.least_name }}"
                                     data-least-percent="{{ current_square_data.least_percent }}"
@@ -55,7 +55,8 @@
                 </div>
             </div>
         {% endif %}
-        
+    </div>
+    {% endblock %}    
             {% block stats %}
                 {% if not no_blocks_placed %}
                     <table class="side-column-table">
@@ -77,8 +78,6 @@
                     </table>
                 {% endif %}
             {% endblock %}                
-    </div>
-     {% endblock %}
 
     {% block scripts %}
         <script src="{{ url_for('static', filename='js/index.js') }}"></script>

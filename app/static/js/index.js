@@ -135,16 +135,14 @@ function endGame() {
     
     fetch("/finish_game", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ us_score: currentUS, chosen_blocks: placedBlocks})
     })
 
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const finishButton = document.getElementById("give-up");
+            let finishButton = giveUpButton;
 
             finishButton.style.setProperty("background-color", "#3BB143", "important");
             finishButton.style.setProperty("border-color", "#3BB143", "important");
