@@ -181,6 +181,9 @@ def account():
         blocks=blocks,
         unlocked_block_ids=unlocked_block_ids,
         lowest_us=p_stats.lowest_uniqueness,
+        average_us=p_stats.average_uniqueness,
+        games_played=p_stats.total_games_played,
+        games_won=p_stats.total_games_won,
     )
 
 @main.route("/login", methods=["GET", "POST"])
