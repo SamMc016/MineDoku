@@ -14,6 +14,9 @@ The application is designed to be simple and accessible, allowing users to quick
 * Uniqueness Score (US) based scoring
 * Progress saving
 * Optional login
+* Friends leaderboard system
+* Inventory unlock system
+* Persistent account statistics
 
 ## How It Works
 
@@ -52,40 +55,81 @@ venv\Scripts\activate
 
 ```bash
 pip install -r requirements.txt
-pip install flask-migrate
-pip install flask-sqlalchemy
-pip install flask-login
-pip install selenium
-pip install flask-wtf
-pip install email-validator
+```
+
+If any packages are missing:
+
+```bash
+pip install flask-migrate flask-sqlalchemy flask-login selenium flask-wtf email-validator
 ```
 
 ### 4. Create the Database
 
-```bash
-flask shell
-```
-
-Inside the Flask shell:
-
-```python
-db.create_all()
-exit()
-```
-
-### 5. Run the Flask Application
+Run:
 
 ```bash
 python3 minedoku.py
 ```
 
-### 6. Open in Browser
+The application will automatically create and populate the database on first launch.
+
+### 5. Open in Browser
 
 Open the local server URL shown in the terminal (usually):
 
 ```text
 http://127.0.0.1:5000
 ```
+
+---
+
+## Testing
+
+MINEDOKU includes both unit tests and Selenium browser tests.
+
+### Unit Tests
+
+Unit tests verify backend logic, database models, and route behaviour.
+
+Covered functionality includes:
+
+* Block condition compatibility validation
+* User creation and database persistence
+* Friend relationship creation
+* Login route rendering
+* Signup route rendering
+* Authentication protection for account pages
+
+Run unit tests with:
+
+```bash
+python3 -m unittest app.tests -v
+```
+
+### Selenium Browser Tests
+
+Selenium tests verify end-to-end browser functionality and user interactions.
+
+Covered functionality includes:
+
+* Login page rendering
+* Signup page rendering
+* Navigation from login to signup
+* Back-to-game button navigation
+
+Before running Selenium tests, start the Flask server:
+
+```bash
+python3 minedoku.py
+```
+
+Then in a separate terminal:
+
+```bash
+python3 -m unittest app.selenium_tests -v
+```
+
+---
 
 ## Development Team
 
@@ -96,4 +140,4 @@ Developed as part of a university project for CITS3403.
 | 244443977  | Ben Holiday       | DigBatt         |
 | 24222455   | Hamsa Yusuf Ahmed | Hamsa123346     |
 | 23484347   | Nate Htut         | tnh06           |
-| 24650953   | Sam McCrum        | SamMc016        |
+| 24650953   | Sam McCrum        | SamMc016        |◊
