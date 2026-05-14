@@ -1,6 +1,5 @@
 from app import db
-from app.models import Blocks, Conditions
-from app.models import User
+from app.models import Blocks, Conditions, User, Personal_Stats
 
 blocks_to_add = [
     {"block_name": "Grass", "condition_compatibility": "1,5,7,10,12,13,15,17,18", "inv_texture_path": "assets/inventory_textures/grass.png", "face_texture_path": "assets/game_textures/grass.png"},
@@ -54,36 +53,21 @@ conditions_to_add = [
 ]
 
 friends_to_add = [
+    {"username": "Alice", "email": "alice@test.com"},
+    {"username": "Bob", "email": "bob@test.com"},
+    {"username": "Charlie", "email": "charlie@test.com"},
+    {"username": "Dana", "email": "dana@test.com"},
+    {"username": "Ellen", "email": "ellen@test.com"},
+    {"username": "Frank", "email": "frank@test.com"},
+]
 
-    {
-        "username": "Alice",
-        "email": "alice@test.com"
-    },
-
-    {
-        "username": "Bob",
-        "email": "bob@test.com"
-    },
-
-    {
-        "username": "Charlie",
-        "email": "charlie@test.com"
-    },
-
-    {
-        "username": "Dana",
-        "email": "dana@test.com"
-    },
-
-    {
-        "username": "Alex",
-        "email": "alex@test.com"
-    },
-
-    {
-        "username": "Alicia",
-        "email": "alicia@test.com"
-    }
+friends_stats_to_add = [
+    {"user_id": 1, "total_games_played": 1, "total_games_won": 0, "lowest_uniqueness": 100, "average_uniqueness": 100, "daily_uniqueness": 100},
+    {"user_id": 2, "total_games_played": 2, "total_games_won": 1, "lowest_uniqueness": 10, "average_uniqueness": 200, "daily_uniqueness": 200},
+    {"user_id": 3, "total_games_played": 3, "total_games_won": 2, "lowest_uniqueness": 20, "average_uniqueness": 300, "daily_uniqueness": 300} ,   
+    {"user_id": 4, "total_games_played": 4, "total_games_won": 3, "lowest_uniqueness": 30, "average_uniqueness": 400, "daily_uniqueness": 400},
+    {"user_id": 5, "total_games_played": 5, "total_games_won": 4, "lowest_uniqueness": 40, "average_uniqueness": 500, "daily_uniqueness": 500},
+    {"user_id": 6, "total_games_played": 6, "total_games_won": 5, "lowest_uniqueness": 200, "average_uniqueness": 600, "daily_uniqueness": 600}
 ]
 
 def populate_blocks():
@@ -122,20 +106,36 @@ def populate_conditions():
 
 def populate_users():
 
-    for friend_data in friends_to_add:
-
+    for friends in friends_to_add:
         existing_user = User.query.filter_by(
-            username=friend_data["username"]
+            username=friends["username"]
         ).first()
 
         if existing_user is None:
-
             user = User(
-                username=friend_data["username"],
-                email=friend_data["email"],
+                username=friends["username"],
+                email=friends["email"],
                 password_hash="dummy12345"
             )
 
             db.session.add(user)
+    db.session.commit()
 
+def populate_user_stats():
+
+    for friend_stats in friends_stats_to_add:
+        existing_stats = Personal_Stats.query.filter_by(
+            user_id=friend_stats["user_id"]
+        ).first()
+
+        if existing_stats is None:
+            stats = Personal_Stats(
+                user_id=friend_stats["user_id"],
+                total_games_played=friend_stats["total_games_played"],
+                total_games_won=friend_stats["total_games_won"],
+                lowest_uniqueness=friend_stats["lowest_uniqueness"],
+                average_uniqueness=friend_stats["average_uniqueness"],
+                daily_uniqueness=friend_stats["daily_uniqueness"]
+            )
+            db.session.add(stats)
     db.session.commit()

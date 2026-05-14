@@ -18,8 +18,7 @@ class User(UserMixin, db.Model):
         secondary='friends_table',
         primaryjoin=(user_id == friends_table.c.user_id),
         secondaryjoin=(user_id == friends_table.c.friend_id),
-        backref='friend_of',
-        lazy='dynamic'
+        backref='friend_of'
     )
 
     def get_id(self):
@@ -46,12 +45,6 @@ class Game_Stats(db.Model):
     lowest_uniqueness = db.Column(db.Integer)
     average_uniqueness = db.Column(db.Integer)
     last_reset_date = db.Column(db.String(10), default="2000-01-01")
-
-class Friends(db.Model):
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
-    friend_username = db.Column(db.String(20),  db.ForeignKey("user.username"), primary_key=True)
-    friend_daily_uniqueness = db.Column(db.Integer)
-    friend_all_time_uniqueness = db.Column(db.Integer)
 
 class Personal_Stats(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)

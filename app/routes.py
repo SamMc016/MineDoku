@@ -69,39 +69,41 @@ def index():
 
     return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9, US=900)
 
+
 @main.route("/friends")
 @login_required
 def friends():
+    user_friend_ids = [friend.user_id for friend in current_user.friends]
+    user_friend_ids.append(current_user.user_id)
 
-    friends_list = [friend.username for friend in current_user.friends if friend != current_user.username]
-
-    friends_scores = [
-        {"name": "Alice", "score": 1200},
-        {"name": "Bob", "score": 950},
-        {"name": "Charlie", "score": 870}
-    ]
-    all_time_scores = [
-        {"name": "ProGamer1", "score": 5000},
-        {"name": "SpeedKing", "score": 4800},
-        {"name": "LegendX", "score": 4500}
-    ]
-
-    # LOWEST -> HIGHEST
-    friends_scores = sorted(
-        friends_scores,
-        key=lambda player: player["score"]
+    base_query = db.session.query(
+        User.user_id,
+        User.username,
+        Personal_Stats.daily_uniqueness,
+        Personal_Stats.lowest_uniqueness
+    ).join(
+        Personal_Stats, User.user_id == Personal_Stats.user_id
+    ).filter(
+        User.user_id.in_(user_friend_ids)
     )
 
-    all_time_scores = sorted(
-        all_time_scores,
-        key=lambda player: player["score"]
-    )
+    daily_leaderboard = base_query.filter(
+        Personal_Stats.daily_uniqueness != 0
+        ).order_by(
+        Personal_Stats.daily_uniqueness.asc()
+        ).all()
+    all_time_leaderboard = base_query.filter(
+        Personal_Stats.lowest_uniqueness != 0
+        ).order_by(
+        Personal_Stats.lowest_uniqueness.desc()
+        ).all()
 
-    return render_template("friends.html", friends_list=friends_list, friends_scores=friends_scores, all_time_scores=all_time_scores)
+    return render_template("friends.html", daily=daily_leaderboard, all_time=all_time_leaderboard, friends_list=current_user.friends)
+
 
 @main.route("/search_friends")
+@login_required
 def search_friends():
-
     query = request.args.get("q", "").lower()
 
     if len(query) < 2:
@@ -120,43 +122,26 @@ def search_friends():
 
 
 @main.route("/add_friend", methods=["POST"])
+@login_required
 def add_friend():
-    from flask_login import current_user
-    from app.models import User, db  # Fix import
 
-    global global_friends
+    friends_list = current_user.friends
 
     data = request.get_json()
-
     friend_name = data["friend_name"]
-
-    if (friend_name and friend_name not in global_friends and friend_name != current_user.username):
-        global_friends.append(friend_name)
-        print(global_friends)
-        return jsonify({"success": True})
-    
-    data = request.get_json()
-    friend_name = data["friend_name"]
-    
-    # Find the friend in database
     friend = User.query.filter_by(username=friend_name).first()
-    
+
+
     if not friend:
         return jsonify({"success": False, "error": "User not found"}), 404
-    
-    # Check if trying to add self
-    if friend.user_id == current_user.user_id:  # Use user_id, not id
+    if friend_name.lower() == current_user.username.lower():
         return jsonify({"success": False, "error": "Cannot add yourself"}), 400
-    
-    # Check if already friends
     if friend in current_user.friends:
         return jsonify({"success": False, "error": "Already friends"}), 400
     
-    # Add the friend
     current_user.friends.append(friend)
     db.session.commit()
     
-    print(f"Added friend: {friend_name}")
     return jsonify({"success": True})
 
 @main.route("/account")

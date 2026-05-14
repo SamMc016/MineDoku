@@ -479,7 +479,15 @@ table {
 
 /* === FRIENDS STYLES === */
 
-/* === Panel Styling === */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 15px;
+    padding: 15px;
+    width: 100%;
+    max-width: 100vw;
+    height: calc(100vh - 78px);
+}
 
 .panel {
     background: rgba(255, 255, 255, 0.18);
@@ -487,7 +495,6 @@ table {
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -495,10 +502,83 @@ table {
     min-height: 0;
 }
 
-h2 {
-    margin-top: 0;
+.friends-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.title-seperator {
+    width: 100%;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.7);
+    margin-bottom: 10px;
+}
+
+.friends-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.friend {
+    padding: 8px;
+    border-bottom: 1px solid #e0e4e8;
     font-size: 16px;
-    color: #444;
+}
+
+.friend:first-child {
+    border-top: 1px solid #e0e4e8;
+}
+
+.leaderboard-table {
+    width: 100%;
+    height: auto;
+    border-collapse: separate;
+}
+
+.leaderboard-table thead .leaderboard-item {
+    display: flex;
+    background-color: rgba(239, 254, 254, 0.9) !important;
+    border: 3px solid #d1fa9c !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 1) !important;
+}
+
+.leaderboard-table thead th {
+    font-size: 18px !important;
+    padding: 0 5px;
+    color: #000000 !important;
+    text-shadow: 2px 2px 0 #C0C0C0 !important;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 3px 3px;
+    margin-bottom: 5px;
+    background-color: rgba(16, 1, 1, 0.9);
+    border: 3px solid #2e0563;
+    text-shadow: 2px 2px 0 #3f3f3f;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
+    position: relative;
+    align-items: center;
+    font-size: 16px;
+}
+
+.all-time {
+    margin-top: 10px;
+}
+
+.search-container {
+    position: relative;
+}
+
+#search-results {
+    position: absolute;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 10;
+    width: 100%;
 }
 
 .panel .btn {
@@ -507,39 +587,23 @@ h2 {
     white-space: normal;
 }
 
-.leaderboard-item {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.numbers {
-    margin-left: auto;
-
-}
-
-
-#search-results {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
 .search-result {
+    position: relative;
     padding: 10px;
     cursor: pointer;
-
-    background-color: rgba(16, 1, 1, 0.9);
-
+    background-color: rgba(16, 1, 1, 1);
     border: 3px solid #2e0563;
-
     box-shadow: 0 0 0 2px black;
 }
 
 .search-result:hover {
-    background-color: rgba(60, 20, 90, 0.9);
+    background-color: rgba(60, 20, 90, 1);
+}
+
+.add-friend-btn {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
 }
 
 /* === Input Styling === */
@@ -550,45 +614,6 @@ input {
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #c9ced6;
-}
-
-/* === Main Styling === */
-
-.container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 15px;
-    padding: 15px;
-    width: 100%;
-    max-width: 100vw;
-    min-height: calc(100vh - 78px);
-}
-
-/* === Friends List Styling === */
-
-.friends-list {
-    flex: 1;
-    overflow-y: auto;
-    margin-top: 10px;
-}
-
-.friend {
-    padding: 8px;
-    border-bottom: 1px solid #e0e4e8;
-}
-
-/* === Leaderboard Styling === */
-
-.leaderboard-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0 3px;
-    margin-bottom: 5px;
-    background-color: rgba(16, 1, 1, 0.9);
-    border: 3px solid #2e0563;
-    color: #ffffff;
-    text-shadow: 2px 2px 0 #3f3f3f;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 1);
 }
 
 /* === Accounts page Styling CSS === */
@@ -829,7 +854,6 @@ input {
 .input-group {
     position: relative;
     width: 100%;
-
 }
 
 .field-error {
@@ -851,10 +875,6 @@ input {
 
 .glass-bar {
     @apply backdrop-blur-md bg-white/20 border-t border-white/30;
-}
-
-.add-friend-btn {
-    margin-top: 10px;
 }
 
 .end-game-layout {
