@@ -213,6 +213,7 @@ def signup():
 
         username = form.username.data
         email = form.email.data
+        password = form.email.data
 
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
 
