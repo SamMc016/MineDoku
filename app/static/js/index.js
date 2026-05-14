@@ -1,6 +1,10 @@
-let durability = window.maxDurability;
+const game = document.querySelector(".game");
+const maxDurability = Number(game.dataset.maxDurability);
+const initialUS = Number(game.dataset.initialUs);
+
+let durability = maxDurability;
 let placedBlocks = [];
-let currentUS = window.initialUS;
+let currentUS = initialUS;
 
 let gameCells, inventoryCells, overlay, backButton, giveUpButton, tableContainer;
 
