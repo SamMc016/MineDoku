@@ -26,7 +26,7 @@
 
             <div class="input-group">
                 <input type="text" name="username" placeholder="Username" required class="login-input" value="{{ form.username.data or '' }}">
-                {% if error in form.username.errors %}
+                {% for error in form.username.errors %}
                     <span class="field-error">{{ error }}</span>
                 {% endfor %}
             </div>
