@@ -190,10 +190,15 @@ def account():
         item.block_id for item in unlocked_inventory
     ]
 
+    p_stats = Personal_Stats.query.filter_by(
+        user_id=current_user.user_id
+    ).first()
+
     return render_template(
         "account.html",
         blocks=blocks,
-        unlocked_block_ids=unlocked_block_ids
+        unlocked_block_ids=unlocked_block_ids,
+        lowest_us=p_stats.lowest_uniqueness,
     )
 
 @main.route("/login", methods=["GET", "POST"])
