@@ -15,6 +15,9 @@ class User(UserMixin, db.Model):
 
     password_hash = db.Column(db.String(255), nullable=False)
 
+    lowest_us = db.Column(db.Integer, default=9999)
+    average_us = db.Column(db.Float, default=0)
+
     friends = db.relationship(
         'User',
         secondary='friends_table',
