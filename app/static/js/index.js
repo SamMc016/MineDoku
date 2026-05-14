@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
           cell.addEventListener("click", () => {
               const blockName = cell.dataset.block;
               const texturePath = cell.dataset.texture;
+              const bottomTexturePath = cell.dataset.bottomTexture;
               const conditionCompatibility = cell.dataset.compatibility.split(",");
 
               const selectedGameCell = document.getElementById(window.currentSquare);
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                   selectedGameCell.dataset.block = blockName;
                   selectedGameCell.dataset.texture = texturePath;
+                  selectedGameCell.dataset.bottomTexture = bottomTexturePath;
                   selectedGameCell.innerHTML = "";
 
                   placedBlocks.push({
