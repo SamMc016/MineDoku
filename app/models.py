@@ -1,6 +1,12 @@
 from app import db, login
 from flask_login import UserMixin
 
+# Association table for friends
+friends_table = db.Table('friends_table',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('friend_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+)
+
 class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
 
@@ -8,6 +14,15 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
 
     password_hash = db.Column(db.String(255), nullable=False)
+
+    friends = db.relationship(
+        'User',
+        secondary='friends_table',
+        primaryjoin=(user_id == friends_table.c.user_id),
+        secondaryjoin=(user_id == friends_table.c.friend_id),
+        backref='friend_of',
+        lazy='dynamic'
+    )
 
     def get_id(self):
         return str(self.user_id)
