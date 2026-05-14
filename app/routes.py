@@ -244,27 +244,47 @@ def end_game_page():
     for i, side in enumerate(side_col):
         for j, top in enumerate(top_row):
             sqaure_id = (i * 3) + j + 1
-
+            square_total = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.square_id == sqaure_id).scalar() or 0
+            
+            if square_total == 0:
+                results[str(sqaure_id)] = {
+                    "least": "assets/blank.png",
+                    "least_name": "",
+                    "least_percent": 0,
+                    "most": 'assets/blank.png',
+                    "most_name": "",
+                    "most_percent": 0,
+                }
+                continue
+        
+            square_results = []
             valid_options = [b for b in blocks if
                             str(top.condition_id) in b.condition_compatibility.split(",") and
                             str(side.condition_id) in b.condition_compatibility.split(",") 
                             ]
-            valid_options.sort(key=lambda x: x.selection_percentage)
+            
+            for block in valid_options:
+                count = db.session.query(func.sum(Block_Stats.times_chosen))\
+                    .filter(Block_Stats.block_id == block.block_id, Block_Stats.square_id == sqaure_id).scalar() or 0
+                block_percent = round((count / square_total) * 100, 1) if square_total > 0 else 0
 
-            player_options = [b for b in valid_options if b.selection_percentage > 0]
-            player_options.sort(key=lambda x: x.selection_percentage)
+                if block_percent > 0:
+                    square_results.append({
+                        "texture": block.face_texture_path,
+                        "name": block.block_name,
+                        "percent": block_percent
+                    })
 
-            least_block = player_options[0] if player_options else min(valid_options, key=lambda x: x.selection_percentage)
-            most_block = player_options[-1] if player_options else max(valid_options, key=lambda x: x.selection_percentage)
+            square_results.sort(key=lambda x: x["percent"])
 
             results[str(sqaure_id)] = {
-                "least": least_block.face_texture_path,
-                "least_name": least_block.block_name,
-                "least_percent": least_block.selection_percentage, 
+                "least": square_results[0]["texture"],
+                "least_name": square_results[0]["name"],
+                "least_percent":square_results[0]["percent"],
 
-                "most": most_block.face_texture_path,
-                "most_name": most_block.block_name,
-                "most_percent": most_block.selection_percentage
+                "most": square_results[-1]["texture"],
+                "most_name": square_results[-1]["name"],
+                "most_percent":square_results[-1]["percent"]
             }
 
     return render_template("end_game.html", results=results, no_blocks_placed=no_blocks_placed, top_row=top_row, side_col=side_col, global_stats=global_stats, max_durability=9, US=900)
@@ -280,10 +300,11 @@ def finish_game():
     global_stats = Game_Stats.query.first()
 
     if not global_stats:
-        global_stats = Game_Stats(global_games_played=1,lowest_uniqueness=final_us, average_uniqueness=final_us, last_reset_date=today_seed)
+        global_stats = Game_Stats(global_games_played=1, lowest_uniqueness=final_us, average_uniqueness=final_us, last_reset_date=today_seed)
         db.session.add(global_stats)
     else:
         global_stats.global_games_played += 1
+
         if global_stats.lowest_uniqueness is None or final_us < global_stats.lowest_uniqueness:
             global_stats.lowest_uniqueness = final_us
 

@@ -218,11 +218,15 @@ table {
         border: transparent;
     }
 
-    .gameboard-cell[data-block]:hover {
+    .gameboard-cell:[data-block]:hover {
         outline: none;
         cursor: default;
     }
 
+    .is-blank {
+        pointer-events: none;
+    }
+    
     .percentage-box {
         padding: 5px 0 3px;
         background-color: rgba(16, 1, 1, 0.9);
@@ -314,6 +318,8 @@ table {
         height: 100px;
         table-layout: fixed;
         border-style: hidden;
+        border-collapse: separate;
+        border-spacing: 10px 0;
     }
 
     .top-row-table td {
