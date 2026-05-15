@@ -17,6 +17,7 @@
 {% block content %}
 <div class="container">
 
+    <!-- Displays the current user's friends, or a fallback message if none exist. -->
     <div class="panel friends-panel">
         <h2 class="friends-title">Friends</h2>
         <div class="title-seperator"></div>
@@ -32,6 +33,7 @@
     </div>
 
     <div class="panel">
+        <!-- Daily leaderboard shows the top 5 users by today's uniqueness score. -->
         <h2 class="friends-title">Daily Leaderboard - Top 5</h2>
         <div class="title-seperator"></div>
         <table class="leaderboard-table">
@@ -54,12 +56,13 @@
             </tbody>
             {% endif %}
         </table>
-
+        
+        <!-- All-time leaderboard shows the top 5 users by their best uniqueness score. -->
         <h2 class="friends-title all-time">All Time Leaderboard - Top 5</h2>
         <div class="title-seperator"></div>
         <table class="leaderboard-table">
+            {% if all_time %}
             <thead>
-                {% if all_time %}
                 <tr class="leaderboard-headings leaderboard-item">
                 <th>Rank</th>
                 <th>Username</th>
@@ -94,5 +97,8 @@
 
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script src="{{ url_for('static', filename='js/friends.js') }}"></script>
 {% endblock %}

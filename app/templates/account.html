@@ -31,7 +31,8 @@ min-h-screen flex flex-col bg-cover bg-center bg-fixed
 
     <div class="glass-panel p-8">
         <div id="accounts_inventory" class="grid grid-cols-9 gap-4">
-
+            
+            <!-- Locked blocks show the blank texture; unlocked blocks show their real inventory texture. -->
             {% for block in blocks %}
             <div class="account-slot"
                 data-unlocked="{% if block.block_id in unlocked_block_ids %}true{% else %}false{% endif %}"
@@ -49,6 +50,7 @@ min-h-screen flex flex-col bg-cover bg-center bg-fixed
 
 </div>
 
+<!-- Fixed account stats bar displayed at the bottom of the page. -->
 <div class="fixed bottom-0 left-0 w-full glass-bar p-6">
     <div class="flex justify-center gap-16 text-white font-semibold">
 

@@ -9,14 +9,14 @@ let placedBlocks = [];
 let currentUS = initialUS;
 let isGameOver;
 
-let  userIsLoggedIn, $gameCells, $inventoryCells, $overlay, $backButton, $giveUpButton, $tableContainer;
+let userIsLoggedIn, $gameCells, $inventoryCells, $overlay, $backButton, $giveUpButton, $tableContainer;
 
 $(document).ready(() => {
     $tableContainer = $(".table");
     $gameCells = $(".gameboard-cell");
 
     if (window.location.pathname.includes("/end_game")) {
-        console.log("on end game page. skipping index.js init.")
+        console.log("on end game page. skipping index.js init.");
         return;
     }
 
@@ -26,17 +26,17 @@ $(document).ready(() => {
     $backButton = $("#backFromInventory");
     $giveUpButton = $("#give-up");
 
-    loadPuzzleSession()
-    
+    loadPuzzleSession();
+
     if (durability <= 0 || isGameOver) {
-        endGame(); 
+        endGame();
         return;
     }
 
     /* Opens inventory when a main grid cell is clicked */
     $gameCells.on("click", function() {
         if (durability <= 0 || isGameOver) {
-            endGame(); 
+            endGame();
             return;
         }
 
@@ -44,7 +44,7 @@ $(document).ready(() => {
         if ($cell.data("block")) {
             return;
         }
-    
+
         window.currentSquare = $cell.attr("id");
         const squareData = square_percentages[window.currentSquare] || square_percentages[Number(window.currentSquare)];
 
@@ -59,18 +59,19 @@ $(document).ready(() => {
                     displayPercent = stat.percentage + "%";
                 }
             }
+
             $invCell.find(".percentage-display").text(displayPercent);
-        })
+        });
 
         $overlay.removeClass("hidden");
     });
-  
+
     /* Closes inventory when back button is clicked */
     $backButton.on("click", () => {
         $overlay.addClass("hidden");
     });
 
-    /* Clicking it or anywhere outside of the inventory drops the screen */
+    /* Clicking anywhere outside the inventory closes the inventory overlay */
     $overlay.on("click", (event) => {
         if ($(event.target).is($overlay)) {
             $overlay.addClass("hidden");
@@ -86,22 +87,23 @@ $(document).ready(() => {
         }
     });
 
-      /* Places selected inventory block into selected main grid cell */
-    $inventoryCells.on ("click", function() {
+    /* Places selected inventory block into selected main grid cell */
+    $inventoryCells.on("click", function() {
         const $invCell = $(this);
         const blockName = $invCell.data("block");
-        const blockId = $invCell.data("blockId");
+        const blockId = Number($invCell.data("blockId"));
         const texturePath = $invCell.data("texture");
-        const bottomTexturePath = $invCell.data("bottomTexture");
+        const bottomTexturePath = $invCell.data("bottomTexture") || texturePath;
         const conditionCompatibility = String($invCell.data("compatibility")).split(",");
 
         const $selectedGameCell = $(`#${window.currentSquare}`);
-        
-        const squareData = square_percentages[window.currentSquare];
+
+        const squareData = square_percentages[window.currentSquare] || square_percentages[Number(window.currentSquare)];
         let sPercent = 0;
+
         if (squareData) {
-            const blockStat = squareData.find(item => item.block_id === blockId);
-            sPercent = blockStat? blockStat.percentage : 0;            
+            const blockStat = squareData.find(item => Number(item.block_id) === blockId);
+            sPercent = blockStat ? blockStat.percentage : 0;
         }
 
         durability--;
@@ -119,15 +121,15 @@ $(document).ready(() => {
                 $usDisplay.text(Math.round(currentUS));
             }
 
-            $selectedGameCell.attr("data-percentage", sPercent.toFixed(1) + "%"); 
-            $selectedGameCell.attr("data-block", blockName); 
-            $selectedGameCell.attr("data-texture", texturePath); 
-            $selectedGameCell.attr("data-bottomTexture", bottomTexturePath); 
-            $selectedGameCell.attr("data-block-id", $invCell.data("blockId")); 
+            $selectedGameCell.attr("data-percentage", sPercent.toFixed(1) + "%");
+            $selectedGameCell.attr("data-block", blockName);
+            $selectedGameCell.attr("data-texture", texturePath);
+            $selectedGameCell.attr("data-bottom-texture", bottomTexturePath);
+            $selectedGameCell.attr("data-block-id", blockId);
             $selectedGameCell.empty();
 
             placedBlocks.push({
-                block_id: $invCell.data("blockId"),
+                block_id: blockId,
                 cell_id: window.currentSquare
             });
 
@@ -144,16 +146,17 @@ $(document).ready(() => {
                 "!outline-offset-[-4px]",
                 "!border-transparent"
             ];
+
             $overlay.addClass("hidden");
             $selectedGameCell.addClass(errorClasses);
-            
+
             setTimeout(() => {
                 $selectedGameCell.removeClass(errorClasses);
             }, 1500);
         }
 
         if (durability <= 0 || isGameOver) {
-            endGame(); 
+            endGame();
             return;
         }
     });
@@ -172,27 +175,29 @@ function endGame() {
 
     $tableContainer.addClass("game-over-freeze");
     $gameCells.addClass("greyed-out");
-    
+
     $.ajax({
         url: "/api/finish_game",
         method: "POST",
         contentType: "application/json",
-        data: JSON.stringify({ us_score: currentUS, chosen_blocks: placedBlocks}),
+        data: JSON.stringify({ us_score: currentUS, chosen_blocks: placedBlocks }),
         success: (data) => {
             if (data.success) {
                 handleBoardUpdate(true);
 
                 $giveUpButton.attr(
-                    "style", "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;"
+                    "style",
+                    "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;"
                 );
+
                 $giveUpButton.text("View Results?").off("click").on("click", () => {
                     window.location.href = "/end_game";
                 });
-            }  
-        }, 
-        error: (xhs, status, error) => {
-            console.error("Error ending game:",error);
-        }   
+            }
+        },
+        error: (xhr, status, error) => {
+            console.error("Error ending game:", error);
+        }
     });
 }
 
@@ -202,14 +207,21 @@ function loadPuzzleSession() {
     if (localSession && localSession.date === todaysDate) {
         console.log("restoring session data from local data");
         restoreBoardFromJSON(localSession.board_state);
-    
+
         if (localSession.isGameOver) {
             $tableContainer.addClass("game-over-freeze");
             $gameCells.addClass("greyed-out");
-            $giveUpButton.attr("style", "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;");
+
+            $giveUpButton.attr(
+                "style",
+                "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;"
+            );
+
             $giveUpButton.text("View Results?").on("click", () => {
-            window.location.href = "/end_game"});
+                window.location.href = "/end_game";
+            });
         }
+
         return;
     }
 
@@ -219,19 +231,22 @@ function loadPuzzleSession() {
                 const parsedState = JSON.parse(data.board_state);
                 console.log("restoring session data from login");
 
-                    durability = Number(data.durability);
-                    currentUS = Number(data.us_score);
+                durability = Number(data.durability);
+                currentUS = Number(data.us_score);
 
-                    updateDurability();
-                    const $usDisplay = $("#us-score");
-                    if ($usDisplay.length) $usDisplay.text(currentUS);
+                updateDurability();
 
-                    restoreBoardFromJSON(parsedState);
+                const $usDisplay = $("#us-score");
+                if ($usDisplay.length) {
+                    $usDisplay.text(currentUS);
+                }
 
-                    if (durability <= 0 || isGameOver) {
-                        endGame(); 
-                        return;
-                    }
+                restoreBoardFromJSON(parsedState);
+
+                if (durability <= 0 || isGameOver) {
+                    endGame();
+                    return;
+                }
 
                 sessionStorage.setItem("minedoku_live_session", JSON.stringify({
                     date: todaysDate,
@@ -248,19 +263,30 @@ function handleBoardUpdate(isGameOver = false) {
 
     $gameCells.each(function() {
         const $cell = $(this);
+
         if ($cell.attr("data-block")) {
             currentGridState[$cell.attr("id")] = {
                 block: $cell.attr("data-block"),
                 texture: $cell.attr("data-texture"),
-                bottomTexture: $cell.attr("data-bottomTexture"),
+                bottomTexture: $cell.attr("data-bottom-texture"),
                 percentage: $cell.attr("data-percentage"),
-                blockId: $cell.attr("data-block-id"),
+                blockId: $cell.attr("data-block-id")
             };
         }
     });
 
-    const savePayload = {cells: currentGridState, durability: durability, currentUS: currentUS};
-    const sessionPayload = {date: todaysDate, board_state: savePayload, isGameOver: isGameOver};
+    const savePayload = {
+        cells: currentGridState,
+        durability: durability,
+        currentUS: currentUS
+    };
+
+    const sessionPayload = {
+        date: todaysDate,
+        board_state: savePayload,
+        isGameOver: isGameOver
+    };
+
     sessionStorage.setItem("minedoku_live_session", JSON.stringify(sessionPayload));
 
     if (userIsLoggedIn) {
@@ -268,7 +294,11 @@ function handleBoardUpdate(isGameOver = false) {
             url: "/api/save_game",
             method: "POST",
             contentType: "application/json",
-            data: JSON.stringify({board_state: JSON.stringify(currentGridState), durability: durability, us_score: currentUS}),
+            data: JSON.stringify({
+                board_state: JSON.stringify(currentGridState),
+                durability: durability,
+                us_score: currentUS
+            })
         }).fail((err) => console.error("login session state save failed:", err));
     }
 }
@@ -289,6 +319,7 @@ function restoreBoardFromJSON(savedData) {
 
     if (savedData.currentUS !== undefined) {
         currentUS = Number(savedData.currentUS);
+
         const $usDisplay = $("#us-score");
         if ($usDisplay.length) {
             $usDisplay.text(Math.round(currentUS));
@@ -302,7 +333,7 @@ function restoreBoardFromJSON(savedData) {
         if ($cellElement.length) {
             $cellElement.attr("data-block", cellData.block);
             $cellElement.attr("data-texture", cellData.texture);
-            $cellElement.attr("data-bottomTexture", cellData.bottomTexture);
+            $cellElement.attr("data-bottom-texture", cellData.bottomTexture || cellData.texture);
             $cellElement.attr("data-percentage", cellData.percentage);
             $cellElement.attr("data-block-id", cellData.blockId);
             $cellElement.empty();
@@ -313,26 +344,27 @@ function restoreBoardFromJSON(savedData) {
             });
         }
     });
-    renderBoard()
-}
 
+    renderBoard();
+}
 
 /* UI FUNCTIONS */
 
 function renderBoard(newlyPlacedId = null) {
     window.newlyPlacedId = newlyPlacedId;
 
-    $("#front-face-layer, #front-face-layer").remove();
+    $("#side-face-layer, #front-face-layer").remove();
 
     let $sideFaceLayer = $("#side-face-layer");
     let $frontFaceLayer = $("#front-face-layer");
 
     if (!$sideFaceLayer.length) {
-        $sideFaceLayer = $("<div>", {id: "side-face-layer"});
+        $sideFaceLayer = $("<div>", { id: "side-face-layer" });
         $tableContainer.append($sideFaceLayer);
     }
+
     if (!$frontFaceLayer.length) {
-        $frontFaceLayer = $("<div>", {id: "front-face-layer"});
+        $frontFaceLayer = $("<div>", { id: "front-face-layer" });
         $tableContainer.append($frontFaceLayer);
     }
 
@@ -350,7 +382,7 @@ function renderBoard(newlyPlacedId = null) {
         const $cell = $(this);
         const blockName = $cell.attr("data-block");
         const texturePath = $cell.attr("data-texture");
-        const bottomTexturePath = $cell.data("bottomTexture") || texturePath;
+        const bottomTexturePath = $cell.attr("data-bottom-texture") || texturePath;
 
         if (!blockName || !texturePath) {
             return;
@@ -376,21 +408,25 @@ function renderBoard(newlyPlacedId = null) {
                 createPerspectiveFace($cell[0], "right", texturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
+
         if (isRightColumn && !hasLeft) {
             $sideFaceLayer.append(
                 createPerspectiveFace($cell[0], "left", texturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
+
         if (isTopRow && !hasBelow) {
             $sideFaceLayer.append(
                 createPerspectiveFace($cell[0], "bottom", bottomTexturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
+
         if (isBottomRow && !hasAbove) {
             $sideFaceLayer.append(
                 createPerspectiveFace($cell[0], "top", texturePath, vanishingPoint, depthAmount, containerRect)
             );
         }
+
         $frontFaceLayer.append(
             createFrontFace($cell[0], texturePath, containerRect, $cell.attr("data-percentage"))
         );
@@ -403,12 +439,12 @@ function createFrontFace(cell, texturePath, containerRect, percentage) {
     const top = rect.top - containerRect.top;
 
     const $cell = $(cell);
-    
-    const boxHtml = percentage ? `<span class="percentage-box"> ${percentage}</span>` : '';
+
+    const boxHtml = percentage ? `<span class="percentage-box"> ${percentage}</span>` : "";
 
     return `
         <div
-            class="block-face block-front rendered-block-face ${String($cell.attr("id")) === String(window.newlyPlacedId) ? 'newly-placed' : ''}"
+            class="block-face block-front rendered-block-face ${String($cell.attr("id")) === String(window.newlyPlacedId) ? "newly-placed" : ""}"
             data-square-id="${$cell.attr("id")}"
             data-block="${$cell.attr("data-block")}"
             style="
@@ -441,15 +477,35 @@ function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmo
 
     let edgeStart, edgeEnd, className;
 
-    if (side === "right") {edgeStart = corners.topRight; edgeEnd = corners.bottomRight; className = "block-side";}
-    if (side === "left") {edgeStart = corners.bottomLeft; edgeEnd = corners.topLeft; className = "block-side";}
-    if (side === "top") {edgeStart = corners.topLeft; edgeEnd = corners.topRight; className = "block-top";}
-    if (side === "bottom") {edgeStart = corners.bottomRight; edgeEnd = corners.bottomLeft; className = "block-bottom";}
+    if (side === "right") {
+        edgeStart = corners.topRight;
+        edgeEnd = corners.bottomRight;
+        className = "block-side";
+    }
+
+    if (side === "left") {
+        edgeStart = corners.bottomLeft;
+        edgeEnd = corners.topLeft;
+        className = "block-side";
+    }
+
+    if (side === "top") {
+        edgeStart = corners.topLeft;
+        edgeEnd = corners.topRight;
+        className = "block-top";
+    }
+
+    if (side === "bottom") {
+        edgeStart = corners.bottomRight;
+        edgeEnd = corners.bottomLeft;
+        className = "block-bottom";
+    }
 
     const projectedStart = projectTowardPoint(edgeStart, vanishingPoint, depthAmount);
     const projectedEnd = projectTowardPoint(edgeEnd, vanishingPoint, depthAmount);
 
     const points = [edgeStart, edgeEnd, projectedEnd, projectedStart];
+
     const localPoints = points.map(point => ({
         x: point.x - containerRect.left,
         y: point.y - containerRect.top
@@ -470,8 +526,8 @@ function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmo
     }).join(", ");
 
     return `
-        <div 
-            class="block-face ${className} rendered-block-face ${String($cell.attr("id")) === String(window.newlyPlacedId) ? 'newly-placed' : ''}"
+        <div
+            class="block-face ${className} rendered-block-face ${String($cell.attr("id")) === String(window.newlyPlacedId) ? "newly-placed" : ""}"
             data-square-id="${$cell.attr("id")}"
             style="
                 left: ${minX}px;
@@ -486,6 +542,8 @@ function createPerspectiveFace(cell, side, texturePath, vanishingPoint, depthAmo
 }
 
 function projectTowardPoint(point, target, amount) {
-    return {x: point.x + (target.x - point.x) * amount, 
-            y: point.y + (target.y - point.y) * amount};
+    return {
+        x: point.x + (target.x - point.x) * amount,
+        y: point.y + (target.y - point.y) * amount
+    };
 }

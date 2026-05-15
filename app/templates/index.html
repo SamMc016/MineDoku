@@ -24,11 +24,13 @@
 
 {% block sub_header %}{% endblock %}
 
+<!-- Game state values are stored as data attributes so index.js can read them. -->
 <div class="game"
      data-max-durability="{{ max_durability }}"
      data-initial-us="{{ US }}">
 
     {% block conditions %}
+    <!-- Row and column conditions define the valid block combinations for each square. -->
     <div class="side-column" id="left-conditions">
         <table class="side-column-table">
             <tr>
@@ -81,50 +83,22 @@
         {% endblock %}
 
         {% block gameboard %}
+        <!-- 3x3 puzzle board. Each cell stores its row and column condition IDs for validation. -->
         <div class="table">
             <table>
+                {% for i in range(3) %}
                 <tr>
-                    <td id="1" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
-                        data-top="{{ top_row[0].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
+                    {% for j in range(3) %}
+                    {% set cell_id = (i * 3) + j + 1 %}
+                    <td id="{{ cell_id }}"
+                        class="gameboard-cell"
+                        data-side="{{ side_col[i].condition_id }}"
+                        data-top="{{ top_row[j].condition_id }}">
+                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}" alt="">
                     </td>
-                    <td id="2" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
-                        data-top="{{ top_row[1].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                    <td id="3" class="gameboard-cell" data-side="{{ side_col[0].condition_id }}"
-                        data-top="{{ top_row[2].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
+                    {% endfor %}
                 </tr>
-                <tr>
-                    <td id="4" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
-                        data-top="{{ top_row[0].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                    <td id="5" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
-                        data-top="{{ top_row[1].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                    <td id="6" class="gameboard-cell" data-side="{{ side_col[1].condition_id }}"
-                        data-top="{{ top_row[2].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                </tr>
-                <tr>
-                    <td id="7" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
-                        data-top="{{ top_row[0].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                    <td id="8" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
-                        data-top="{{ top_row[1].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                    <td id="9" class="gameboard-cell" data-side="{{ side_col[2].condition_id }}"
-                        data-top="{{ top_row[2].condition_id }}">
-                        <img class="blank" src="{{ url_for('static', filename='assets/blank.png') }}">
-                    </td>
-                </tr>
+                {% endfor %}
             </table>
         </div>
         {% endblock %}
@@ -167,9 +141,11 @@
 
 {% block inventory %}
 <div id="inventory-overlay" class="hidden">
-    <div id="block-percentages" data-percentages= '{{ square_percentages|tojson }}''></div>
+    <!-- Stores square percentage data for index.js without visually rendering it. -->
+    <div id="block-percentages" data-percentages='{{ square_percentages|tojson }}'></div>
     <div class="inventory-container">
         <div class="inventory-display">
+            <!-- Inventory blocks are rendered from the database and selected by index.js. -->
             <div class="inventory-grid">
                 {% for block in blocks %}
                 <div class="inventory-cell" 
