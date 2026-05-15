@@ -139,7 +139,7 @@
                     <p class="text-box" id="dur">
                         Durability
                         <span id="durability-score" class="scores">
-                            {{ max_durability }}/{{ max_durability }}
+                            {{ max_durability }}/9
                         </span>
                     </p>
                 </td>
@@ -167,17 +167,20 @@
 
 {% block inventory %}
 <div id="inventory-overlay" class="hidden">
+    <div id="block-percentages" data-percentages= '{{ square_percentages|tojson }}''></div>
     <div class="inventory-container">
         <div class="inventory-display">
             <div class="inventory-grid">
                 {% for block in blocks %}
-                <div class="inventory-cell" data-block="{{ block.block_name }}" data-block-id="{{ block.block_id }}"
-                    data-block-percentage="{{ block.selection_percentage|round(2) }}"
+                <div class="inventory-cell" 
+                    data-block="{{ block.block_name }}" 
+                    data-block-id="{{ block.block_id }}"
                     data-texture="{{ url_for('static', filename=block.face_texture_path) }}"
                     data-bottom-texture="{% if block.block_name == 'Grass' %}{{ url_for('static', filename='assets/game_textures/dirt.png') }}{% else %}{{ url_for('static', filename=block.face_texture_path) }}{% endif %}"
                     data-compatibility="{{ block.condition_compatibility }}">
 
                     <img src="{{ url_for('static', filename=block.inv_texture_path) }}" alt="{{ block.block_name }}">
+                    
                 </div>
                 {% endfor %}
             </div>

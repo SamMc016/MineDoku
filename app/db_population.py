@@ -19,7 +19,7 @@ blocks_to_add = [
     {"block_name": "Magma Block", "condition_compatibility": "1,2,3,12,13,14", "inv_texture_path": "assets/inventory_textures/magmablock.png", "face_texture_path": "assets/game_textures/magmablock.png"},
     {"block_name": "Nether Brick", "condition_compatibility": "2,3,12,13,14", "inv_texture_path": "assets/inventory_textures/netherbrick.png", "face_texture_path": "assets/game_textures/netherbrick.png"},
     {"block_name": "Hay Bale", "condition_compatibility": "1,4,8,10,12,13,14,15,18", "inv_texture_path": "assets/inventory_textures/haybale.png", "face_texture_path": "assets/game_textures/haybale.png"},
-    {"block_name": "Melon", "condition_compatibility": "1,5,8,10,12,13,14,17,18", "inv_texture_path": "assets/inventory_textures/melon.png", "face_texture_path": "assets/game_textures/melon.png"},
+    {"block_name": "Melon", "condition_compatibility": "1,5,8,10,12,13,14,15,17,18", "inv_texture_path": "assets/inventory_textures/melon.png", "face_texture_path": "assets/game_textures/melon.png"},
     {"block_name": "Pumpkin", "condition_compatibility": "1,8,10,12,13,15,16,18", "inv_texture_path": "assets/inventory_textures/pumpkin.png", "face_texture_path": "assets/game_textures/pumpkin.png"},
     {"block_name": "Diamond Block", "condition_compatibility": "1,9,12,13,14", "inv_texture_path": "assets/inventory_textures/diamondblock.png", "face_texture_path": "assets/game_textures/diamondblock.png"},
     {"block_name": "Gold Block", "condition_compatibility": "1,2,4,9,12,13,14", "inv_texture_path": "assets/inventory_textures/goldblock.png", "face_texture_path": "assets/game_textures/goldblock.png"},

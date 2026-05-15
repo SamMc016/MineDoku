@@ -1,40 +1,55 @@
 window.addEventListener("load", () => {
-    const resultCells = document.querySelectorAll(".gameboard-cell");
     const tableDiv = document.querySelector(".table");
 
-    if (!tableDiv || resultCells.length === 0) return;
-
-    resultCells.forEach(cell => {
-        const img = cell.querySelector("img");
-        cell.dataset.block = cell.dataset.leastName;
-        cell.dataset.texture = img.src;
-        let pct = parseFloat(cell.dataset.leastPercent) || 0;
-        cell.dataset.percentage = pct.toFixed(1) + "%";
-        img.style.visibility = "hidden";
-    });
+    if (!tableDiv) return;
     if (typeof renderBoard === "function") {
-        setTimeout(() => {
-            renderBoard();
-        }, 100);
+        setTimeout(() => updateEndGame("least"), 100);
     }
 });
 
-function showLeast() {
-    document.querySelectorAll(".result-cell").forEach(cell => {
-        cell.dataset.block = cell.dataset.leastName;
-        cell.dataset.texture = cell.dataset.least;
-        let pct = parseFloat(cell.dataset.leastPercent) || 0;
-        cell.dataset.percentage = pct.toFixed(1) + "%";
+function updateEndGame(type) {    
+    const resultCells = document.querySelectorAll(".gameboard-cell");
+
+    resultCells.forEach(cell => {
+        let name, texture, percent;
+
+        if (type === "least") {
+            name = cell.getAttribute("data-least-name");
+            texture = cell.getAttribute("data-least");
+            percent = cell.getAttribute("data-least-percent");
+        } else {
+            name = cell.getAttribute("data-most-name");
+            texture = cell.getAttribute("data-most");
+            percent = cell.getAttribute("data-most-percent");
+        }
+
+        if (name && name !== "") {
+            cell.setAttribute("data-block", name);
+            cell.setAttribute("data-texture", texture);
+            cell.setAttribute("data-percentage", percent + "%");
+        } else {
+            cell.setAttribute("data-block", "");
+            cell.setAttribute("data-texture", "");
+            cell.setAttribute("data-percentage", "");
+        }
     });
-    renderBoard();
-}    
+    
+    if (typeof renderBoard === "function") {
+        renderBoard();
+    }
+}
+
+document.getElementById("leastBtn").addEventListener("click", () => {
+    showLeast();
+});
+document.getElementById("mostBtn").addEventListener("click", () => {
+    showMost();
+});
+
+function showLeast() {
+    console.log("swapping to least");
+    updateEndGame('least');}
 
 function showMost() {
-    document.querySelectorAll(".result-cell").forEach(cell => {
-        cell.dataset.block = cell.dataset.mostName;
-        cell.dataset.texture = cell.dataset.most;
-        let pct = parseFloat(cell.dataset.mostPercent) || 0;
-        cell.dataset.percentage = pct.toFixed(1) + "%";
-    });
-    renderBoard();
-}    
+    console.log("swapping to most");
+    updateEndGame('most');}

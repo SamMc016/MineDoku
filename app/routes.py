@@ -2,15 +2,13 @@ import random
 from datetime import datetime
 from markupsafe import Markup
 from app import db
-from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory
+from app.models import Blocks, Conditions, Block_Stats, Personal_Stats, Game_Stats, User, Inventory, Current_Game
 from app.blueprints import main
-from flask import render_template, request, jsonify, redirect, url_for, flash
+from flask import render_template, jsonify, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
 from app.forms import LoginForm, SignupForm
-
-global_friends = ["Alice", "Bob"]
 
 def get_daily_puzzle():
     blocks = Blocks.query.all()
@@ -40,11 +38,57 @@ def get_daily_puzzle():
             valid_board = True
     return top_row, side_col
 
+@main.route("/api/save_game", methods=["POST"])
+@login_required
+def save_game():
+    data = request.get_json()
+    if not data or "board_state" not in data:
+        return jsonify({"error": "Invalid data"}), 400
+    
+    game_session = Current_Game.query.filter_by(user_id=current_user.user_id).first()
+    durability = data.get("durability", 9)
+    us_score = data.get("us_score", 900)
+    today_seed = datetime.now().strftime("%Y-%m-%d")
+
+    if not game_session:
+        game_session = Current_Game(
+            user_id = current_user.user_id,
+            board_state = str(data["board_state"]),
+            puzzle_date = today_seed,
+            current_durability = durability,
+            current_us = us_score
+        )
+        db.session.add(game_session)
+    else:
+        game_session.board_state = str(data["board_state"])
+        game_session.puzzle_date = today_seed
+        game_session.current_durability = durability
+        game_session.current_us = us_score
+    
+    db.session.commit()
+    return jsonify({"status": "success"})
+
+@main.route("/api/get_game", methods=["GET"])
+@login_required
+def get_game():
+    game_session = Current_Game.query.filter_by(user_id=current_user.user_id).first()
+    today_seed = datetime.now().strftime("%Y-%m-%d")
+
+    if not game_session or hasattr(game_session, "puzzle_date") and game_session.puzzle_date != today_seed:
+        if game_session:
+            db.session.delete(game_session)
+            db.session.commit()
+            return jsonify({"board_state": "none", "durability": 9, "us_score": 900})
+    
+    if not game_session.board_state:
+        return jsonify({"board_state": "none", "durability": 9, "us_score": 900})
+
+    return jsonify({"board_state": game_session.board_state, "durability": game_session.current_durability, "us_score": game_session.current_us})
+
 @main.route("/")
 def index():
     blocks = Blocks.query.all()
     today_seed = datetime.now().strftime("%Y-%m-%d")
-    total_selections = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 1
     top_row, side_col = get_daily_puzzle()
 
     global_stats = Game_Stats.query.first()
@@ -63,11 +107,56 @@ def index():
         global_stats.last_reset_date = today_seed
         db.session.commit()
 
-    for block in blocks:
-            count = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.block_id == block.block_id).scalar() or 0
-            block.selection_percentage = (count / total_selections) * 100
+    square_percentages = {}
 
-    return render_template("index.html", blocks=blocks, top_row=top_row, side_col=side_col, max_durability=9, US=900)
+    for i in range(3):
+        for j in range(3):
+            square_id = (i * 3) + j + 1
+            square_total = db.session.query(func.sum(Block_Stats.times_chosen))\
+                            .filter(Block_Stats.square_id == square_id).scalar() or 0
+
+            current_top_con = top_row[i].condition_id
+            current_side_con = side_col[i].condition_id
+
+            valid_options = [b for b in blocks if
+                            str(current_top_con) in b.condition_compatibility.split(",") and
+                            str(current_side_con) in b.condition_compatibility.split(",")]
+            num_options = len(valid_options)
+
+            square_percentages[square_id] = []
+
+            for block in blocks:
+                count = db.session.query(func.sum(Block_Stats.times_chosen))\
+                        .filter(Block_Stats.square_id == square_id, Block_Stats.block_id == block.block_id).scalar() or 0    
+                percentage = 0
+                
+                if square_total == 0:
+                    percentage = 100.0
+                else:
+                    percentage = ((count + 1) / (square_total + num_options)) * 100
+                    #print("block_id=" + str(block.block_id), "square_id=" + str(square_id), "count=" + str(count + 1), "square_total=" + str(square_total + 1), "percent=" + str(percentage))
+
+                square_percentages[square_id].append({
+                    "block_id": block.block_id,
+                    "name": block.block_name,
+                    "percentage": round(percentage, 1)
+                })
+    
+    live_durability = 9
+    live_us = 900
+
+    if current_user.is_authenticated:
+        game_session = Current_Game.query.filter_by(user_id=current_user.user_id).first()
+
+        if game_session and game_session.puzzle_date == today_seed:
+            live_durability = game_session.current_durability
+            live_us = game_session.current_us
+        elif game_session and game_session.puzzle_date != today_seed:
+            db.session.delete(game_session)
+            db.session.commit()
+        
+
+    return render_template("index.html", blocks=blocks, square_percentages=square_percentages, top_row=top_row, side_col=side_col, max_durability=live_durability, US=live_us)
 
 
 @main.route("/friends")
@@ -95,13 +184,13 @@ def friends():
     all_time_leaderboard = base_query.filter(
         Personal_Stats.lowest_uniqueness != 0
         ).order_by(
-        Personal_Stats.lowest_uniqueness.desc()
+        Personal_Stats.lowest_uniqueness.asc()
         ).all()
 
     return render_template("friends.html", daily=daily_leaderboard, all_time=all_time_leaderboard, friends_list=current_user.friends)
 
 
-@main.route("/search_friends")
+@main.route("/api/search_friends")
 @login_required
 def search_friends():
     query = request.args.get("q", "").lower()
@@ -121,23 +210,20 @@ def search_friends():
     return jsonify(matches)
 
 
-@main.route("/add_friend", methods=["POST"])
+@main.route("/api/add_friend", methods=["POST"])
 @login_required
 def add_friend():
-
     friends_list = current_user.friends
-
     data = request.get_json()
     friend_name = data["friend_name"]
     friend = User.query.filter_by(username=friend_name).first()
 
-
     if not friend:
-        return jsonify({"success": False, "error": "User not found"}), 404
+        return jsonify({"success": False, "error": "No user found with that username!"}), 404
     if friend_name.lower() == current_user.username.lower():
-        return jsonify({"success": False, "error": "Cannot add yourself"}), 400
+        return jsonify({"success": False, "error": "You cannot add yourself as a friend!"}), 400
     if friend in current_user.friends:
-        return jsonify({"success": False, "error": "Already friends"}), 400
+        return jsonify({"success": False, "error": "You are already friends with this user!"}), 400
     
     current_user.friends.append(friend)
     db.session.commit()
@@ -206,7 +292,7 @@ def signup():
 
         username = form.username.data
         email = form.email.data
-        password = form.email.data
+        password = form.password.data
 
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
 
@@ -258,23 +344,17 @@ def end_game_page():
     top_row, side_col = get_daily_puzzle()
     raw_total = db.session.query(func.sum(Block_Stats.times_chosen)).scalar() or 0
     global_stats = Game_Stats.query.first()
-
     no_blocks_placed = (raw_total == 0)
-    total_selections = raw_total if raw_total > 0 else 1
-        
-    for block in blocks:
-        count = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.block_id == block.block_id).scalar() or 0
-        block.selection_percentage = (count / total_selections) * 100
 
     results = {}
 
     for i, side in enumerate(side_col):
         for j, top in enumerate(top_row):
-            sqaure_id = (i * 3) + j + 1
-            square_total = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.square_id == sqaure_id).scalar() or 0
-            
+            square_id = (i * 3) + j + 1
+            square_total = db.session.query(func.sum(Block_Stats.times_chosen)).filter(Block_Stats.square_id == square_id).scalar() or 0
+
             if square_total == 0:
-                results[str(sqaure_id)] = {
+                results[str(square_id)] = {
                     "least": "assets/blank.png",
                     "least_name": "",
                     "least_percent": 0,
@@ -285,16 +365,18 @@ def end_game_page():
                 continue
         
             square_results = []
+
             valid_options = [b for b in blocks if
                             str(top.condition_id) in b.condition_compatibility.split(",") and
-                            str(side.condition_id) in b.condition_compatibility.split(",") 
-                            ]
+                            str(side.condition_id) in b.condition_compatibility.split(",")]
+            num_options = len(valid_options)
             
             for block in valid_options:
                 count = db.session.query(func.sum(Block_Stats.times_chosen))\
-                    .filter(Block_Stats.block_id == block.block_id, Block_Stats.square_id == sqaure_id).scalar() or 0
-                block_percent = round((count / square_total) * 100, 1) if square_total > 0 else 0
-
+                    .filter(Block_Stats.block_id == block.block_id, Block_Stats.square_id == square_id).scalar() or 0
+                
+                block_percent = round(((count + 1) / (square_total + num_options)) * 100, 1) if square_total > 0 else 0
+                
                 if block_percent > 0:
                     square_results.append({
                         "texture": block.face_texture_path,
@@ -304,7 +386,7 @@ def end_game_page():
 
             square_results.sort(key=lambda x: x["percent"])
 
-            results[str(sqaure_id)] = {
+            results[str(square_id)] = {
                 "least": square_results[0]["texture"],
                 "least_name": square_results[0]["name"],
                 "least_percent":square_results[0]["percent"],
@@ -314,9 +396,10 @@ def end_game_page():
                 "most_percent":square_results[-1]["percent"]
             }
 
-    return render_template("end_game.html", results=results, no_blocks_placed=no_blocks_placed, top_row=top_row, side_col=side_col, global_stats=global_stats, max_durability=9, US=900)
+    square_percentages = {}
+    return render_template("end_game.html", results=results, no_blocks_placed=no_blocks_placed, top_row=top_row, side_col=side_col, global_stats=global_stats, max_durability=9, US=900, square_percentages=square_percentages)
 
-@main.route("/finish_game", methods=["POST"])
+@main.route("/api/finish_game", methods=["POST"])
 def finish_game():
     data = request.get_json()    
     final_us = data.get("us_score")
@@ -355,7 +438,7 @@ def finish_game():
         if len(blocks_placed) == 9:
             p_stats.total_games_won += 1
 
-        if p_stats.lowest_uniqueness is None or final_us < p_stats.lowest_uniqueness:
+        if p_stats.lowest_uniqueness == 0 or final_us < p_stats.lowest_uniqueness:
             p_stats.lowest_uniqueness = final_us
 
         if p_stats.average_uniqueness:

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
 </head>
 
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" data-is-logged-in="{{ 'true' if current_user.is_authenticated else 'false' }}">
 
     <header class="top-bar">
         {% block left_button %}{% endblock %}
@@ -21,6 +21,8 @@
     </header>
 
     {% block content %}{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     {% block scripts %}{% endblock %}
 

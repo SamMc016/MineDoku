@@ -10,3 +10,5 @@ node_modules/
 .DS_Store
 # ignores the database file
 *.db
+# ignores secret files
+.env

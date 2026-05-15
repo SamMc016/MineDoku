@@ -1,7 +1,7 @@
 const searchInput = document.getElementById("friend-search");
 const resultsBox = document.getElementById("search-results");
 const addButton = document.getElementById("add-friend-btn");
-
+const errorMsg = document.getElementById("friend-error");
 let selectedFriend = "";
 
 const appendFriendToList = (username) => {
@@ -26,7 +26,7 @@ searchInput.addEventListener("input", async () => {
     }
 
     const response =
-        await fetch(`/search_friends?q=${query}`);
+        await fetch(`/api/search_friends?q=${query}`);
     const matches = await response.json();
     resultsBox.innerHTML = "";
 
@@ -49,28 +49,22 @@ addButton.addEventListener("click", async () => {
     if (!selectedFriend) {
         return;
     }
-
-    const response = await fetch("/add_friend", {
+    errorMsg.textContent = "";
+    const response = await fetch("/api/add_friend", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({friend_name: selectedFriend})
     });
-    if (response.ok) {
-        appendFriendToList(selectedFriend);
 
+    const status = await response.json();
+    if (response.ok && status.success) {
+        appendFriendToList(selectedFriend);
         searchInput.value = "";
         selectedFriend = "";
         resultsBox.innerHTML = "";
     } else {
-        console.error("server returned an error");
+        if (status.error) {
+            errorMsg.textContent = status.error;
+        }
     }
 });
-
-/* 
-{% for friend in friends_list %}
-                <div class="friend">{{ friend.username }}</div>
-            {% else %}
-                <div class="friend no-friends">No Friends Added Yet!</div>
-            {% endfor %}
-        </div>
-        */
