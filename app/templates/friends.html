@@ -32,7 +32,7 @@
     </div>
 
     <div class="panel">
-        <h2 class="friends-title">Daily Leaderboard</h2>
+        <h2 class="friends-title">Daily Leaderboard - Top 5</h2>
         <div class="title-seperator"></div>
         <table class="leaderboard-table">
             {% if daily %}
@@ -44,18 +44,18 @@
             </tr>
             </thead>
             <tbody>
-                {% for row in daily %}
-                    <tr class="leaderboard-item">
+                {% for row in daily[:5] %}
+                    <tr class="leaderboard-item {% if row.user_id == current_user.user_id %}current-user-row{% endif %}">
                         <td>{{ loop.index }}</td>
                         <td>{{ row.username }}</td>
-                        <td>{{ row.daily_uniqueness }}</td>
+                        <td>{{ row.daily_uniqueness | round | int }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
             {% endif %}
         </table>
 
-        <h2 class="friends-title all-time">All Time Leaderboard</h2>
+        <h2 class="friends-title all-time">All Time Leaderboard - Top 5</h2>
         <div class="title-seperator"></div>
         <table class="leaderboard-table">
             <thead>
@@ -67,11 +67,11 @@
             </tr>
             </thead>
             <tbody>
-                {% for row in all_time %}
-                    <tr class="leaderboard-item">
+                {% for row in all_time[:5] %}
+                    <tr class="leaderboard-item {% if row.user_id == current_user.user_id %}current-user-row{% endif %}">
                         <td>{{ loop.index }}</td>
                         <td>{{ row.username }}</td>
-                        <td>{{ row.daily_uniqueness }}</td>
+                        <td>{{ row.lowest_uniqueness | round | int }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -86,6 +86,7 @@
             <div>
                 <input type="text" id="friend-search" placeholder="Enter username..." autocomplete="off">
             </div>
+            <div id="friend-error"></div>
             <div id="search-results"></div>
             <button class="btn" id="add-friend-btn">Add Friend</button>
         </div>

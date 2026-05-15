@@ -17,7 +17,7 @@ min-h-screen flex flex-col bg-cover bg-center bg-fixed
     Friends
 </button>
 
-<button class="btn" onclick="window.location.href='{{ url_for('main.logout') }}'">
+<button class="btn" id="logout-btn">
     Logout
 </button>
 {% endblock %}
@@ -54,11 +54,12 @@ min-h-screen flex flex-col bg-cover bg-center bg-fixed
 
         <div>Games Played: {{ games_played }}</div>
         <div>Games Won: {{ games_won }}</div>
-        <div>Lowest US: {{ lowest_us }}</div>
-        <div>Avg US: {{ average_us }}</div>
+        <div>Lowest US: {{ lowest_us | round | int }}</div>
+        <div>Avg US: {{ average_us | round | int }}</div>
 
     </div>
 </div>
-
+{% endblock %}
+{% block scripts %}
 <script src="{{ url_for('static', filename='js/account.js') }}"></script>
 {% endblock %}

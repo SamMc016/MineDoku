@@ -1,5 +1,6 @@
 from app import db, login
 from flask_login import UserMixin
+import datetime
 
 # Association table for friends
 friends_table = db.Table('friends_table',
@@ -56,19 +57,17 @@ class Personal_Stats(db.Model):
 
 class Current_Game(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True) 
-    game_id = db.Column(db.Integer, db.ForeignKey("game__stats.game_id"), primary_key=True)
-    square_id = db.Column(db.Integer, nullable=False)
-    uniqueness = db.Column(db.Integer, nullable=False)
+    board_state = db.Column(db.Text, nullable=False, default="{}")
+    puzzle_date = db.Column(db.String(10), nullable=False, default="2000-01-01")
+    current_durability = db.Column(db.Integer, default=9)
+    current_us = db.Column(db.Integer, default=900)
+
+    def is_expired(self):
+        return self.puzzle_date != datetime.now().strftime("%Y-%m-%d")
 
 class Inventory(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True) 
     block_id = db.Column(db.Integer, db.ForeignKey("blocks.block_id"), primary_key=True) 
-
-class Gameboard(db.Model):
-    square_id = db.Column(db.Integer, primary_key=True)
-    block_id = db.Column(db.Integer, db.ForeignKey("blocks.block_id"), primary_key=True) 
-    row_condition_id = db.Column(db.Integer, db.ForeignKey("conditions.condition_id"), nullable=False)
-    column_condition_id = db.Column(db.Integer, db.ForeignKey("conditions.condition_id"), nullable=False) 
 
 class Block_Stats(db.Model):
     square_id = db.Column(db.Integer, primary_key=True)
