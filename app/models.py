@@ -2,19 +2,19 @@ from app import db, login
 from flask_login import UserMixin
 import datetime
 
-# Association table for friends
+# Association table for friends. Association tables represention relationships rather than entities.
 friends_table = db.Table('friends_table',
     db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
     db.Column('friend_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
 )
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model): # UserMixin allows flask-login to track things such as is_authenticated, etc... 
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False) # Stored as a salted hash in the database for security
 
-    friends = db.relationship(
+    friends = db.relationship( # Joins the User and friends table to allow for the association table to exist
         'User',
         secondary='friends_table',
         primaryjoin=(user_id == friends_table.c.user_id),
@@ -22,19 +22,19 @@ class User(UserMixin, db.Model):
         backref='friend_of'
     )
 
-    def get_id(self):
+    def get_id(self): # Necessary for UserMixin to work
         return str(self.user_id)
 
-@login.user_loader
+@login.user_loader # Is essentially the memory of UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 class Blocks(db.Model):
     block_id = db.Column(db.Integer, primary_key=True)
     block_name = db.Column(db.String(100), nullable=False)
-    condition_compatibility = db.Column(db.String(100), nullable=False) # integers in a csl in a strong. e.g. "1,2,5"
-    face_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
-    inv_texture_path = db.Column(db.String(200), nullable=False) # stores a string with the path to the image file
+    condition_compatibility = db.Column(db.String(100), nullable=False) # Stored as integers in a comma seperated list in a string
+    face_texture_path = db.Column(db.String(200), nullable=False) 
+    inv_texture_path = db.Column(db.String(200), nullable=False) 
 
 class Conditions(db.Model):
     condition_id = db.Column(db.Integer, primary_key=True) 
@@ -62,7 +62,7 @@ class Current_Game(db.Model):
     current_durability = db.Column(db.Integer, default=9)
     current_us = db.Column(db.Integer, default=900)
 
-    def is_expired(self):
+    def is_expired(self): # Returns true if the date of the puzzle is not the current date
         return self.puzzle_date != datetime.now().strftime("%Y-%m-%d")
 
 class Inventory(db.Model):
