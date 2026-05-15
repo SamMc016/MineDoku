@@ -10,16 +10,14 @@
 </button>
 {% endblock %}
 
-{% block right_button %}
-<div class="header-spacer"></div>
-{% endblock %}
 {% block content %}
 <div class="login-wrapper">
     <div class="login-panel">
         <h2 class="login-title">
             Sign Up
         </h2>
-
+        
+        <!-- Signup form posts new account details and includes CSRF protection. -->
         <form method="POST" class="login-form">
 
             {{ form.hidden_tag() }}

@@ -10,18 +10,23 @@
 
 <body class="{% block body_class %}{% endblock %}" data-is-logged-in="{{ 'true' if current_user.is_authenticated else 'false' }}">
 
+    <!-- Shared header used across all pages. Child templates control the left and right buttons. -->
     <header class="top-bar">
         {% block left_button %}{% endblock %}
 
         <h1 class="page-title">MINEDOKU</h1>
 
         <div class="right-header">
-            {% block right_button %}{% endblock %}
+            {% block right_button %}
+            <div class="header-spacer"></div>
+            {% endblock %}
         </div>
     </header>
 
+    <!-- Main page content is injected by child templates. -->
     {% block content %}{% endblock %}
 
+    <!-- jQuery is loaded globally because several page scripts depend on it. -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     {% block scripts %}{% endblock %}

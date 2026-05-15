@@ -2,88 +2,101 @@
 
 {% block title %}Game Over{% endblock %}
 
-    {% block sub_header %}
-        {% if not no_blocks_placed %}
-        <div class="flex justify-center gap-8 mt-6">
-            <button class="btn" id="leastBtn">
-                Least Common
-            </button>
-            <button class="btn" id="mostBtn">
-                Most Common
-            </button>
-        </div>
-        {% endif %}
-    {% endblock %}
-
-    {% block conditions %}
-        {% if not no_blocks_placed %}
-            {{ super() }}
-        {% endif %}
-    {% endblock %}
-
-    {% block gameboard %}
-    <div class="game end-game-layout">
-        {% if no_blocks_placed %}
-            <div class="text-box" id="empty-data">
-                <p>NO BLOCKS PLAYED TODAY!</p>
-            </div>
-        {% else %}
-            <div class="center-elements">
-                <div class="table">
-                        <table>
-                            {% for i in range(3) %}
-                            <tr>
-                                {% for j in range(3) %}
-                                {% set current_id = (i * 3) + j + 1 %}
-                                {% set current_square_data = results[current_id|string] %}
-
-                                <td id="{{ current_id }}" class="gameboard-cell result-cell {{ 'is-blank' if current_square_data.least == 'assets/blank.png' else '' }}" 
-                                    data-texture="{{ url_for('static', filename=current_square_data.least) }}"
-                                    data-block="{{ current_square_data.least_name }}"
-                                    data-percentage="{{ current_square_data.least_percent }}" 
-
-                                    data-least="{{ url_for('static', filename=current_square_data.least) }}"
-                                    data-least-name="{{ current_square_data.least_name }}"
-                                    data-least-percent="{{ current_square_data.least_percent }}"
-
-                                    data-most="{{ url_for('static', filename=current_square_data.most) }}"
-                                    data-most-name="{{ current_square_data.most_name }}"
-                                    data-most-percent="{{ current_square_data.most_percent }}"
-                                >
-                                    
-                                </td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </table>
-                </div>
-            </div>
-        {% endif %}
+{% block sub_header %}
+    {% if not no_blocks_placed %}
+    <!-- Toggles the result board between least common and most common block placements. -->
+    <div class="flex justify-center gap-8 mt-6">
+        <button class="btn" id="leastBtn">Least Common</button>
+        <button class="btn" id="mostBtn">Most Common</button>
     </div>
-    {% endblock %}    
-            {% block stats %}
-                {% if not no_blocks_placed %}
-                    <table class="side-column-table">
-                        <tr>
-                            <td>
-                                <p class="text-box" id="ggp">Global Games Played <span class="scores">{{ global_stats.global_games_played if global_stats else 0 }}</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>  
-                                <p class="text-box" id="lowest-us">Lowest US <span class="scores">{{ global_stats.lowest_uniqueness if global_stats else 0 }}</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="text-box" id="average-us">Average US <span class="scores">{{ global_stats.average_uniqueness if global_stats else 0 }}</span></p>
-                            </td>
-                        </tr>
-                    </table>
-                {% endif %}
-            {% endblock %}                
+    {% endif %}
+{% endblock %}
 
-    {% block scripts %}
-        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/end_game.js') }}"></script>
-    {% endblock %}
+{% block conditions %}
+    {% if not no_blocks_placed %}
+        {{ super() }}
+    {% endif %}
+{% endblock %}
+
+{% block gameboard %}
+<div class="end-game-layout">
+    {% if no_blocks_placed %}
+        <div class="text-box" id="empty-data">
+            <p>NO BLOCKS PLAYED TODAY!</p>
+        </div>
+    {% else %}
+        <div class="center-elements">
+            <div class="table">
+                <table>
+                    {% for i in range(3) %}
+                    <tr>
+                        {% for j in range(3) %}
+                        {% set current_id = (i * 3) + j + 1 %}
+                        {% set current_square_data = results[current_id|string] %}
+
+                        <!-- Stores both result states so end_game.js can toggle between least and most common blocks. -->
+                        <td id="{{ current_id }}"
+                            class="gameboard-cell result-cell {{ 'is-blank' if current_square_data.least == 'assets/blank.png' else '' }}"
+                            data-texture="{{ url_for('static', filename=current_square_data.least) }}"
+                            data-block="{{ current_square_data.least_name }}"
+                            data-percentage="{{ current_square_data.least_percent }}"
+
+                            data-least="{{ url_for('static', filename=current_square_data.least) }}"
+                            data-least-name="{{ current_square_data.least_name }}"
+                            data-least-percent="{{ current_square_data.least_percent }}"
+
+                            data-most="{{ url_for('static', filename=current_square_data.most) }}"
+                            data-most-name="{{ current_square_data.most_name }}"
+                            data-most-percent="{{ current_square_data.most_percent }}">
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block stats %}
+    {% if not no_blocks_placed %}
+    <table class="side-column-table">
+        <tr>
+            <td>
+                <p class="text-box" id="ggp">
+                    Global Games Played
+                    <span class="scores">
+                        {{ global_stats.global_games_played if global_stats else 0 }}
+                    </span>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="text-box" id="lowest-us">
+                    Lowest US
+                    <span class="scores">
+                        {{ global_stats.lowest_uniqueness if global_stats else 0 }}
+                    </span>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p class="text-box" id="average-us">
+                    Average US
+                    <span class="scores">
+                        {{ global_stats.average_uniqueness if global_stats else 0 }}
+                    </span>
+                </p>
+            </td>
+        </tr>
+    </table>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script src="{{ url_for('static', filename='js/end_game.js') }}"></script>
+{% endblock %}

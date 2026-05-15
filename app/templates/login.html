@@ -10,10 +10,6 @@
 </button>
 {% endblock %}
 
-{% block right_button %}
-<div class="header-spacer"></div>
-{% endblock %}
-
 {% block content %}
 <div class="login-wrapper">
 
@@ -23,6 +19,7 @@
             Login
         </h2>
 
+        <!-- Login form posts back to the Flask route and includes CSRF protection. -->
         <form method="POST" class="login-form">
 
             {{ form.hidden_tag() }}
