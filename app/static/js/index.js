@@ -183,7 +183,7 @@ function endGame() {
                 handleBoardUpdate(true);
 
                 $giveUpButton.attr(
-                    "style", "background-color: #3BB143 !important; border-color: #3BB143 !important;"
+                    "style", "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;"
                 );
                 $giveUpButton.text("View Results?").off("click").on("click", () => {
                     window.location.href = "/end_game";
@@ -206,7 +206,7 @@ function loadPuzzleSession() {
         if (localSession.isGameOver) {
             $tableContainer.addClass("game-over-freeze");
             $gameCells.addClass("greyed-out");
-            $giveUpButton.attr("style", "background-color: #3BB143 !important; border-color: #3BB143 !important;");
+            $giveUpButton.attr("style", "background-color: rgba(59, 177, 67, 1) !important; border-color: rgba(59, 177, 67, 1) !important;");
             $giveUpButton.text("View Results?").on("click", () => {
             window.location.href = "/end_game"});
         }
