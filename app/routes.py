@@ -432,6 +432,12 @@ def finish_game(): # A function that is responible for committing all necessary 
     blocks_placed = data.get("chosen_blocks", [])
     today_seed = datetime.datetime.now().strftime("%Y-%m-%d")
 
+    if current_user.is_authenticated:
+        p_stats = Personal_Stats.query.filter_by(user_id=current_user.user_id).first()
+
+        if p_stats and p_stats.daily_uniqueness not in (0, 900, None):
+            return jsonify({"success": True, "already_finished": True})
+
     # Update the global stats
     global_stats = Game_Stats.query.first()
     if not global_stats:
