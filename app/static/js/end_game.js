@@ -1,3 +1,6 @@
+
+/* End Game Logic */
+
 window.addEventListener("load", () => {
     const resultCells = document.querySelectorAll(".gameboard-cell");
     const tableDiv = document.querySelector(".table");

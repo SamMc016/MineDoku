@@ -100,21 +100,35 @@ def friends():
     return render_template("friends.html", friends_list=friends_list, friends_scores=friends_scores, all_time_scores=all_time_scores)
 
 @main.route("/search_friends")
+@login_required
 def search_friends():
 
     query = request.args.get("q", "").lower()
 
+    # Do not search until user types 2+ characters
     if len(query) < 2:
         return jsonify([])
 
-    users = User.query.filter(
-        User.username.ilike(f"%{query}%")
-    ).limit(5).all()
+    # Get all users from database
+    users = User.query.all()
 
-    matches = [
-        user.username for user in users
-        if user.username.lower() != current_user.username.lower()
-    ]
+    matches = []
+
+    for user in users:
+
+        username = user.username.lower()
+
+        # Prevent showing current logged in user
+        if user.user_id == current_user.user_id:
+            continue
+
+        # Partial matching
+        if query in username:
+            matches.append(user.username)
+
+        # Limit to 5 results
+        if len(matches) >= 5:
+            break
 
     return jsonify(matches)
 
