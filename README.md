@@ -56,24 +56,24 @@ venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+### 4. Create the Secret Key
 
-If any packages are missing:
+Create a new file in the root directory named `.env`. Inside type:
 
 ```bash
-pip install flask-migrate flask-sqlalchemy flask-login selenium flask-wtf email-validator
+SECRET_KEY=demo_secret_key
 ```
-
-### 4. Create the Database
+### 5. Create the Database and Launch the App
 
 Run:
 
 ```bash
-python3 minedoku.py
+python minedoku.py
 ```
 
 The application will automatically create and populate the database on first launch.
 
-### 5. Open in Browser
+### 6. Open in Browser
 
 Open the local server URL shown in the terminal (usually):
 
@@ -85,7 +85,7 @@ http://127.0.0.1:5000
 
 ## Testing
 
-MINEDOKU includes both unit tests and Selenium browser tests.
+MINEDOKU includes both unit and system tests, the later by way of Selenium browser tests.
 
 ### Unit Tests
 
@@ -96,6 +96,7 @@ Covered functionality includes:
 * Block condition compatibility validation
 * User creation and database persistence
 * Friend relationship creation
+* User statistics validation
 * Login route rendering
 * Signup route rendering
 * Authentication protection for account pages
@@ -103,12 +104,12 @@ Covered functionality includes:
 Run unit tests with:
 
 ```bash
-python3 -m unittest app.tests -v
+python -m unittest app.tests -v
 ```
 
-### Selenium Browser Tests
+### Selenium Browser System Tests
 
-Selenium tests verify end-to-end browser functionality and user interactions.
+System tests verify end-to-end browser functionality and user interactions.
 
 Covered functionality includes:
 
@@ -116,17 +117,21 @@ Covered functionality includes:
 * Signup page rendering
 * Navigation from login to signup
 * Back-to-game button navigation
+* Game button alteration on interaction
+* Button redirection validity
+* Game interaction checks
+* Game logic checks
 
 Before running Selenium tests, start the Flask server:
 
 ```bash
-python3 minedoku.py
+python minedoku.py
 ```
 
-Then in a separate terminal:
+Then, in a separate terminal:
 
 ```bash
-python3 -m unittest app.selenium_tests -v
+python -m unittest app.selenium_tests -v
 ```
 
 ---

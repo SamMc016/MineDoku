@@ -1,6 +1,7 @@
 from app import db
 from app.models import Blocks, Conditions, User, Personal_Stats
 
+# Pre-determined set of 27 blocks to use
 blocks_to_add = [
     {"block_name": "Grass", "condition_compatibility": "1,5,7,10,12,13,15,17,18", "inv_texture_path": "assets/inventory_textures/grass.png", "face_texture_path": "assets/game_textures/grass.png"},
     {"block_name": "Sand", "condition_compatibility": "1,4,10,12,13,15", "inv_texture_path": "assets/inventory_textures/sand.png", "face_texture_path": "assets/game_textures/sand.png"},
@@ -31,6 +32,7 @@ blocks_to_add = [
     {"block_name": "TNT", "condition_compatibility": "1,3,9,12,13,14,15,16", "inv_texture_path": "assets/inventory_textures/tnt.png", "face_texture_path": "assets/game_textures/tnt.png"},
 ]
 
+# Pre-determined set of 18 conditions to constrain blocks allowed to be played
 conditions_to_add = [
     {"condition_name": "Overworld Block"},
     {"condition_name": "Other World Block"},
@@ -52,7 +54,8 @@ conditions_to_add = [
     {"condition_name": "Nature Block"}
 ]
 
-friends_to_add = [
+# Pre-determined set of 6 users to showcase online functionality
+users_to_add = [
     {"username": "Alice", "email": "alice@test.com"},
     {"username": "Bob", "email": "bob@test.com"},
     {"username": "Charlie", "email": "charlie@test.com"},
@@ -61,7 +64,8 @@ friends_to_add = [
     {"username": "Frank", "email": "frank@test.com"},
 ]
 
-friends_stats_to_add = [
+# Pre-determined set of 6 users stats to showcase online functionality
+users_stats_to_add = [
     {"user_id": 1, "total_games_played": 1, "total_games_won": 0, "lowest_uniqueness": 100, "average_uniqueness": 100, "daily_uniqueness": 100},
     {"user_id": 2, "total_games_played": 2, "total_games_won": 1, "lowest_uniqueness": 10, "average_uniqueness": 200, "daily_uniqueness": 200},
     {"user_id": 3, "total_games_played": 3, "total_games_won": 2, "lowest_uniqueness": 20, "average_uniqueness": 300, "daily_uniqueness": 300} ,   
@@ -70,8 +74,7 @@ friends_stats_to_add = [
     {"user_id": 6, "total_games_played": 6, "total_games_won": 5, "lowest_uniqueness": 200, "average_uniqueness": 600, "daily_uniqueness": 600}
 ]
 
-def populate_blocks():
-
+def populate_blocks(): # A function to populate the Blocks table in the database
     for block_data in blocks_to_add:
         existing_block = Blocks.query.filter_by(
             block_name=block_data["block_name"]
@@ -84,13 +87,11 @@ def populate_blocks():
                 inv_texture_path=block_data["inv_texture_path"],
                 face_texture_path=block_data["face_texture_path"]
             )
-
             db.session.add(block)
-
     db.session.commit()
 
-def populate_conditions():
-    
+
+def populate_conditions(): # A function to populate the Conditions table in the database
     for condition_data in conditions_to_add:
         existing_condition = Conditions.query.filter_by(
             condition_name=condition_data["condition_name"]
@@ -100,42 +101,40 @@ def populate_conditions():
             condition = Conditions(
                 condition_name=condition_data["condition_name"]
             )
-        
             db.session.add(condition)
-        db.session.commit()
+    db.session.commit()
 
-def populate_users():
 
-    for friends in friends_to_add:
+def populate_users(): # A function to populate the Users table in the database
+    for user in users_to_add:
         existing_user = User.query.filter_by(
-            username=friends["username"]
+            username=user["username"]
         ).first()
 
         if existing_user is None:
-            user = User(
-                username=friends["username"],
-                email=friends["email"],
+            new_user = User(
+                username=user["username"],
+                email=user["email"],
                 password_hash="dummy12345"
             )
-
-            db.session.add(user)
+            db.session.add(new_user)
     db.session.commit()
 
-def populate_user_stats():
 
-    for friend_stats in friends_stats_to_add:
+def populate_user_stats(): # A function to populate the Users table in the database
+    for user_stats in users_stats_to_add:
         existing_stats = Personal_Stats.query.filter_by(
-            user_id=friend_stats["user_id"]
+            user_id=user_stats["user_id"]
         ).first()
 
         if existing_stats is None:
             stats = Personal_Stats(
-                user_id=friend_stats["user_id"],
-                total_games_played=friend_stats["total_games_played"],
-                total_games_won=friend_stats["total_games_won"],
-                lowest_uniqueness=friend_stats["lowest_uniqueness"],
-                average_uniqueness=friend_stats["average_uniqueness"],
-                daily_uniqueness=friend_stats["daily_uniqueness"]
+                user_id=user_stats["user_id"],
+                total_games_played=user_stats["total_games_played"],
+                total_games_won=user_stats["total_games_won"],
+                lowest_uniqueness=user_stats["lowest_uniqueness"],
+                average_uniqueness=user_stats["average_uniqueness"],
+                daily_uniqueness=user_stats["daily_uniqueness"]
             )
             db.session.add(stats)
     db.session.commit()

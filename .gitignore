@@ -12,3 +12,5 @@ node_modules/
 *.db
 # ignores secret files
 .env
+# ignores testing database folder
+instance/
