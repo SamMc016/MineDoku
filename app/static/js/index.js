@@ -547,3 +547,9 @@ function projectTowardPoint(point, target, amount) {
         y: point.y + (target.y - point.y) * amount
     };
 }
+
+document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+        location.reload();
+    }
+});
