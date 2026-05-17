@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 
-from flask import render_template, jsonify, redirect, url_for, request
+from flask import render_template, jsonify, redirect, url_for, request, session 
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import func
@@ -334,6 +334,7 @@ def signup(): # A function that handles signing up users
 @login_required
 def logout(): # A function that logs out the current user
     logout_user()
+    session.clear()
     return redirect(url_for("main.index"))
 
 
@@ -432,6 +433,13 @@ def finish_game(): # A function that is responible for committing all necessary 
     blocks_placed = data.get("chosen_blocks", [])
     today_seed = datetime.datetime.now().strftime("%Y-%m-%d")
 
+    # Allows correct state functionality to take place
+    user_identifier = str(current_user.user_id) if current_user.is_authenticated else "guest"
+    session_key = f"last_finished_{user_identifier}"
+
+    if session.get(session_key) == today_seed:
+        return jsonify({"success": True, "message": "Already submitted today."})
+
     if current_user.is_authenticated:
         p_stats = Personal_Stats.query.filter_by(user_id=current_user.user_id).first()
 
@@ -489,6 +497,7 @@ def finish_game(): # A function that is responible for committing all necessary 
             inv_exists = Inventory.query.filter_by(user_id=current_user.user_id, block_id=b_id).first()
             if not inv_exists:
                 db.session.add(Inventory(user_id=current_user.user_id, block_id=b_id))
-            
+
+    session[session_key] = today_seed   
     db.session.commit()
     return jsonify({"success": True})
